@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "bCF9CGsQm2Q80Ug7ND3DWA0gE9s7RojWmmtf1s2gqbI=",
+  "Hash": "yodtjUm/fghrUVvUt2kxY3ER3mOxjVfwGRFG/Jse/CM=",
   "Source": "CineNiche",
   "BasePath": "_content/CineNiche",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }
