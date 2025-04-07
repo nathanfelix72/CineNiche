@@ -19,9 +19,20 @@ namespace CineNiche.Controllers
         }
 
         [HttpGet("AllMovies")]
-        public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
+        public IActionResult GetMovies(
+            int pageSize = 10,
+            int pageNum = 1,
+            [FromQuery] List<string>? movieTypes = null,
+            [FromQuery] string? searchQuery = null
+        )
         {
             var query = _moviesContext.MoviesTitles.AsQueryable();
+
+            // If there is a search query, filter movies based on title using LIKE for case-insensitive search
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(m => EF.Functions.Like(m.Title, $"%{searchQuery}%"));
+            }
 
             if (movieTypes != null && movieTypes.Any())
             {
@@ -30,18 +41,12 @@ namespace CineNiche.Controllers
 
             var totalNumMovies = query.Count();
 
-            var something = query
+            var result = query
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            var someObject = new
-            {
-                Movies = something,
-                TotalNumMovies = totalNumMovies
-            };
-
-            return Ok(someObject);
+            return Ok(new { Movies = result, TotalNumMovies = totalNumMovies });
         }
 
         [HttpGet("GetMovieTypes")]
@@ -120,8 +125,6 @@ namespace CineNiche.Controllers
             return Ok(existingMovie);
         }
 
-
-
         [HttpDelete("DeleteMovie/{showId}")]
         public IActionResult DeleteMovie(int showId)
         {
@@ -138,5 +141,15 @@ namespace CineNiche.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetMovieById(int id)
+        {
+            var movie = _moviesContext.MoviesTitles.FirstOrDefault(m => m.ShowId == id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return Ok(movie);
+        }
     }
 }
