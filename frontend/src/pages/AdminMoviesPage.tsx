@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Book } from '../types/Book';
-import { deleteBook, fetchBooks } from '../api/BooksAPI';
+import { Movie } from '../types/Movie';
+import { deleteMovie, fetchMovies } from '../api/MoviesAPI';
 import Pagination from '../components/Pagination.tsx';
 import NewBookForm from '../components/NewBookForm';
 import EditBookForm from '../components/EditBookForm';
@@ -39,8 +39,8 @@ const AdminMoviesPage = () => {
 
     try {
       await deleteMovie(showId);
-      setMovies(movies.filter((m) => m.movieId !== showId));
-    } catch (error) {
+      setMovies(movies.filter((m) => m.showId !== showId));
+    } catch {
       alert('Failed to delete movie. Please try again.');
     }
   };
@@ -90,39 +90,29 @@ const AdminMoviesPage = () => {
         <thead className="table-dark">
           <tr>
             <th>ID</th>
+            <th>Type</th>
             <th>Title</th>
-            <th>Author</th>
-            <th>Publisher</th>
-            <th>ISBN</th>
-            <th>Classification</th>
-            <th>Category</th>
-            <th>Page Count</th>
-            <th>Price</th>
+            <th>Rating</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {movies.map((b) => (
-            <tr key={b.showId}>
-              <td>{b.bookId}</td>
-              <td>{b.title}</td>
-              <td>{b.author}</td>
-              <td>{b.publisher}</td>
-              <td>{b.isbn}</td>
-              <td>{b.classification}</td>
-              <td>{b.category}</td>
-              <td>{b.pageCount}</td>
-              <td>{b.price}</td>
+          {movies.map((m) => (
+            <tr key={m.showId}>
+              <td>{m.showId}</td>
+              <td>{m.type}</td>
+              <td>{m.title}</td>
+              <td>{m.rating}</td>
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"
-                  onClick={() => setEditingMovie(b)}
+                  onClick={() => setEditingMovie(m)}
                 >
                   Edit
                 </button>
                 <button
                   className="btn btn-danger btn-sm w-100"
-                  onClick={() => handleDelete(b.showId)}
+                  onClick={() => handleDelete(m.showId)}
                 >
                   Delete
                 </button>
