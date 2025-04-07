@@ -103,10 +103,13 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     e.preventDefault();
 
     // Set all genre values to 0 (false)
-    const updatedGenres: Partial<Record<GenreKey, number>> = GENRES.reduce((acc, genre) => {
-      acc[genre] = 0;
-      return acc;
-    }, {} as Partial<Record<GenreKey, number>>);
+    const updatedGenres: Partial<Record<GenreKey, number>> = GENRES.reduce(
+      (acc, genre) => {
+        acc[genre] = 0;
+        return acc;
+      },
+      {} as Partial<Record<GenreKey, number>>
+    );
 
     // Set selected genre to 1 (true)
     if (selectedGenre) {

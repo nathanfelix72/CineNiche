@@ -103,10 +103,13 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     e.preventDefault();
 
     // Reset all genre values to 0
-    const updatedGenres = genreOptions.reduce((acc, genre) => {
-      acc[genre] = genre === selectedGenre ? 1 : 0; // Set selected genre to 1, others to 0
-      return acc;
-    }, {} as Record<string, number>);
+    const updatedGenres = genreOptions.reduce(
+      (acc, genre) => {
+        acc[genre] = genre === selectedGenre ? 1 : 0; // Set selected genre to 1, others to 0
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const movieToSubmit = {
       ...formData,
@@ -115,11 +118,11 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
 
     console.log('Submitting new movie:', movieToSubmit);
     const newMovieWithStringRating = {
-        ...movieToSubmit,
-        rating: movieToSubmit.rating.toString(), // Ensure the rating is sent as a string
-      };
-      
-      await addMovie(newMovieWithStringRating);
+      ...movieToSubmit,
+      rating: movieToSubmit.rating.toString(), // Ensure the rating is sent as a string
+    };
+
+    await addMovie(newMovieWithStringRating);
     onSuccess();
   };
 
