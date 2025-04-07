@@ -1,19 +1,19 @@
 import { SetStateAction, useEffect, useState } from 'react';
-import { Movie } from '../types/Movie';
+import { MoviesTitle } from '../types/MoviesTitle.ts';
 import { deleteMovie, fetchMovies } from '../api/MoviesAPI';
 import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
 
 const AdminMoviesPage = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<MoviesTitle[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [showForm, setShowForm] = useState(false);
-  const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const [editingMovie, setEditingMovie] = useState<MoviesTitle | null>(null);
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -61,7 +61,7 @@ const AdminMoviesPage = () => {
         </button>
       )}
 
-      {showForm && (
+      {showForm && !editingMovie && (
         <NewMovieForm
           onSuccess={() => {
             setShowForm(false);
@@ -73,9 +73,9 @@ const AdminMoviesPage = () => {
         />
       )}
 
-      {editingMovie && (
+      {editingMovie && !showForm && (
         <EditMovieForm
-          movie={editingMovie}
+          moviesTitle={editingMovie}
           onSuccess={() => {
             setEditingMovie(null);
             fetchMovies(pageSize, pageNum, []).then((data) =>
