@@ -1,32 +1,107 @@
 import { useState } from 'react';
-import { updateBook } from '../api/BooksAPI';
-import { Book } from '../types/Book';
+import { updateMovie } from '../api/MoviesAPI';
+import { Movie } from '../types/Movie';
 
-
-interface EditBookFormProps {
-    book: Book;
+interface EditMovieFormProps {
+  movie: Movie;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-const EditBookForm = ({ book, onSuccess, onCancel }: EditBookFormProps) => {
-  const [formData, setFormData] = useState<Book>({...book});
+// 1. Define the genre keys
+type GenreKey = keyof Pick<Movie,
+  'action' |
+  'adventure' |
+  'animeSeriesInternationalTvShows' |
+  'britishTvShowsDocuseriesInternationalTvShows' |
+  'children' |
+  'comedies' |
+  'comediesDramasInternationalMovies' |
+  'comediesInternationalMovies' |
+  'comediesRomanticMovies' |
+  'crimeTvShowsDocuseries' |
+  'documentaries' |
+  'documentariesInternationalMovies' |
+  'docuseries' |
+  'dramas' |
+  'dramasInternationalMovies' |
+  'dramasRomanticMovies' |
+  'familyMovies' |
+  'fantasy' |
+  'horrorMovies' |
+  'internationalMoviesThrillers' |
+  'internationalTvShowsRomanticTvShowsTvDramas' |
+  'kidsTv' |
+  'languageTvShows' |
+  'musicals' |
+  'natureTv' |
+  'realityTv' |
+  'spirituality' |
+  'tvAction' |
+  'tvComedies' |
+  'tvDramas' |
+  'talkShowsTvComedies' |
+  'thrillers'
+>;
+
+const GENRES: GenreKey[] = [
+  'action', 'adventure', 'animeSeriesInternationalTvShows',
+  'britishTvShowsDocuseriesInternationalTvShows', 'children', 'comedies',
+  'comediesDramasInternationalMovies', 'comediesInternationalMovies',
+  'comediesRomanticMovies', 'crimeTvShowsDocuseries', 'documentaries',
+  'documentariesInternationalMovies', 'docuseries', 'dramas',
+  'dramasInternationalMovies', 'dramasRomanticMovies', 'familyMovies',
+  'fantasy', 'horrorMovies', 'internationalMoviesThrillers',
+  'internationalTvShowsRomanticTvShowsTvDramas', 'kidsTv', 'languageTvShows',
+  'musicals', 'natureTv', 'realityTv', 'spirituality', 'tvAction',
+  'tvComedies', 'tvDramas', 'talkShowsTvComedies', 'thrillers'
+];
+
+const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
+  const [formData, setFormData] = useState<Movie>({ ...movie });
+
+  // Find currently selected genre
+  const currentGenre = GENRES.find((genre) => formData[genre]) || '';
+
+  const [selectedGenre, setSelectedGenre] = useState<GenreKey | ''>(currentGenre);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = e.target.value as GenreKey;
+    setSelectedGenre(selected);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateBook(formData.bookId, formData);
+
+    // Set all genre booleans to false
+    const updatedGenres: Partial<Record<GenreKey, boolean>> = GENRES.reduce((acc, genre) => {
+      acc[genre] = false;
+      return acc;
+    }, {} as Partial<Record<GenreKey, boolean>>);
+
+    // Set selected genre to true
+    if (selectedGenre) {
+      updatedGenres[selectedGenre] = true;
+    }
+
+    const updatedMovie: Movie = {
+      ...formData,
+      ...updatedGenres
+    };
+
+    await updateMovie(updatedMovie.showId, updatedMovie);
     onSuccess();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Add New Book</h2>
+      <h2>Edit Movie</h2>
       <label>
-        Book Title:
+        Movie Title:
         <input
           type="text"
           name="title"
@@ -35,69 +110,89 @@ const EditBookForm = ({ book, onSuccess, onCancel }: EditBookFormProps) => {
         />
       </label>
       <label>
-        Author:
+        Type:
         <input
           type="text"
-          name="author"
-          value={formData.author}
+          name="type"
+          value={formData.type}
           onChange={handleChange}
         />
       </label>
       <label>
-        Publisher:
+        Director:
         <input
           type="text"
-          name="publisher"
-          value={formData.publisher}
+          name="director"
+          value={formData.director}
           onChange={handleChange}
         />
       </label>
       <label>
-        ISBN:
+        Cast:
         <input
           type="text"
-          name="isbn"
-          value={formData.isbn}
+          name="cast"
+          value={formData.cast}
           onChange={handleChange}
         />
       </label>
       <label>
-        Classification:
+        Country:
         <input
           type="text"
-          name="classification"
-          value={formData.classification}
+          name="country"
+          value={formData.country}
           onChange={handleChange}
         />
       </label>
       <label>
-        Category:
-        <input
-          type="text"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Page Count:
+        Release Year:
         <input
           type="number"
-          name="pageCount"
-          value={formData.pageCount}
+          name="releaseYear"
+          value={formData.releaseYear}
           onChange={handleChange}
         />
       </label>
       <label>
-        Price:
+        Rating:
         <input
           type="number"
-          name="price"
-          value={formData.price}
+          name="rating"
+          value={formData.rating}
           onChange={handleChange}
         />
       </label>
-      <button type="submit">Update Book</button>
+      <label>
+        Duration:
+        <input
+          type="number"
+          name="duration"
+          value={formData.duration}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Description:
+        <input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Genre:
+        <select value={selectedGenre} onChange={handleGenreChange}>
+          <option value="">-- Select Genre --</option>
+          {GENRES.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button type="submit">Update Movie</button>
       <button type="button" onClick={onCancel}>
         Cancel
       </button>
@@ -105,4 +200,4 @@ const EditBookForm = ({ book, onSuccess, onCancel }: EditBookFormProps) => {
   );
 };
 
-export default EditBookForm;
+export default EditMovieForm;

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
 import { deleteMovie, fetchMovies } from '../api/MoviesAPI';
+import NewMovieForm from '../components/NewMovieForm.tsx';
+import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
-import NewBookForm from '../components/NewBookForm';
-import EditBookForm from '../components/EditBookForm';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -127,7 +127,7 @@ const AdminMoviesPage = () => {
         totalPages={totalPages}
         pageSize={pageSize}
         onPageChange={setPageNum}
-        onPageSizeChange={(newSize) => {
+        onPageSizeChange={(newSize: SetStateAction<number>) => {
           setPageSize(newSize);
           setPageNum(1);
         }}
