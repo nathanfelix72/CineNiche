@@ -15,15 +15,6 @@ namespace CineNiche.Controllers
         {
             _moviesContext = temp;
         }
-        
-        private static readonly List<string> GENRES = new List<string>
-        {
-            "action", "adventure", "animeSeriesInternationalTvShows", "britishTvShowsDocuseriesInternationalTvShows", "children", "comedies",
-            "comediesDramasInternationalMovies", "comediesInternationalMovies", "comediesRomanticMovies", "crimeTvShowsDocuseries", "documentaries",
-            "documentariesInternationalMovies", "docuseries", "dramas", "dramasInternationalMovies", "dramasRomanticMovies", "familyMovies",
-            "fantasy", "horrorMovies", "internationalMoviesThrillers", "internationalTvShowsRomanticTvShowsTvDramas", "kidsTv", "languageTvShows",
-            "musicals", "natureTv", "realityTv", "spirituality", "tvAction", "tvComedies", "tvDramas", "talkShowsTvComedies", "thrillers"
-        };
 
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
@@ -61,22 +52,10 @@ namespace CineNiche.Controllers
 
             return Ok(movieTypes);
         }
-        
-        
 
         [HttpPost("AddMovie")]
-        public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
+        public IActionResult AddProject([FromBody] MoviesTitle newMovie)
         {
-            // Convert genre fields to boolean (1 or 0 to true or false)
-            foreach (var genre in GENRES)
-            {
-                var genreValue = newMovie.GetType().GetProperty(genre)?.GetValue(newMovie);
-                if (genreValue != null)
-                {
-                    newMovie.GetType().GetProperty(genre)?.SetValue(newMovie, (int)genreValue == 1);
-                }
-            }
-
             _moviesContext.MoviesTitles.Add(newMovie);
             _moviesContext.SaveChanges();
             return Ok(newMovie);
@@ -91,7 +70,6 @@ namespace CineNiche.Controllers
                 return NotFound(new { message = "Movie not found" });
             }
 
-            // Update basic fields
             existingMovie.Type = updatedMovie.Type;
             existingMovie.Title = updatedMovie.Title;
             existingMovie.Director = updatedMovie.Director;
@@ -101,16 +79,38 @@ namespace CineNiche.Controllers
             existingMovie.Rating = updatedMovie.Rating;
             existingMovie.Duration = updatedMovie.Duration;
             existingMovie.Description = updatedMovie.Description;
-
-            // Update genre fields (convert from 1 or 0 to boolean)
-            foreach (var genre in GENRES)
-            {
-                var genreValue = updatedMovie.GetType().GetProperty(genre)?.GetValue(updatedMovie);
-                if (genreValue != null)
-                {
-                    existingMovie.GetType().GetProperty(genre)?.SetValue(existingMovie, (int)genreValue == 1);
-                }
-            }
+            existingMovie.Action = updatedMovie.Action;
+            existingMovie.Adventure = updatedMovie.Adventure;
+            existingMovie.AnimeSeriesInternationalTvShows = updatedMovie.AnimeSeriesInternationalTvShows;
+            existingMovie.BritishTvShowsDocuseriesInternationalTvShows = updatedMovie.BritishTvShowsDocuseriesInternationalTvShows;
+            existingMovie.Children = updatedMovie.Children;
+            existingMovie.Comedies = updatedMovie.Comedies;
+            existingMovie.ComediesDramasInternationalMovies = updatedMovie.ComediesDramasInternationalMovies;
+            existingMovie.ComediesInternationalMovies = updatedMovie.ComediesInternationalMovies;
+            existingMovie.ComediesRomanticMovies = updatedMovie.ComediesRomanticMovies;
+            existingMovie.CrimeTvShowsDocuseries = updatedMovie.CrimeTvShowsDocuseries;
+            existingMovie.Documentaries = updatedMovie.Documentaries;
+            existingMovie.DocumentariesInternationalMovies = updatedMovie.DocumentariesInternationalMovies;
+            existingMovie.Docuseries = updatedMovie.Docuseries;
+            existingMovie.Dramas = updatedMovie.Dramas;
+            existingMovie.DramasInternationalMovies = updatedMovie.DramasInternationalMovies;
+            existingMovie.DramasRomanticMovies = updatedMovie.DramasRomanticMovies;
+            existingMovie.FamilyMovies = updatedMovie.FamilyMovies;
+            existingMovie.Fantasy = updatedMovie.Fantasy;
+            existingMovie.HorrorMovies = updatedMovie.HorrorMovies;
+            existingMovie.InternationalMoviesThrillers = updatedMovie.InternationalMoviesThrillers;
+            existingMovie.InternationalTvShowsRomanticTvShowsTvDramas = updatedMovie.InternationalTvShowsRomanticTvShowsTvDramas;
+            existingMovie.KidsTv = updatedMovie.KidsTv;
+            existingMovie.LanguageTvShows = updatedMovie.LanguageTvShows;
+            existingMovie.Musicals = updatedMovie.Musicals;
+            existingMovie.NatureTv = updatedMovie.NatureTv;
+            existingMovie.RealityTv = updatedMovie.RealityTv;
+            existingMovie.Spirituality = updatedMovie.Spirituality;
+            existingMovie.TvAction = updatedMovie.TvAction;
+            existingMovie.TvComedies = updatedMovie.TvComedies;
+            existingMovie.TvDramas = updatedMovie.TvDramas;
+            existingMovie.TalkShowsTvComedies = updatedMovie.TalkShowsTvComedies;
+            existingMovie.Thrillers = updatedMovie.Thrillers;
 
             _moviesContext.MoviesTitles.Update(existingMovie);
             _moviesContext.SaveChanges();
