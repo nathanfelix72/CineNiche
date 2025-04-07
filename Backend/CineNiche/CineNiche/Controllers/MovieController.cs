@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CineNiche.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
