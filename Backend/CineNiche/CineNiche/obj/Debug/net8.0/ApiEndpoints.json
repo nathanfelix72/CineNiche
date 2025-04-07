@@ -215,6 +215,22 @@
   },
   {
     "ContainingType": "CineNiche.Controllers.MovieController",
+    "Method": "GetMovieById",
+    "RelativePath": "Movie/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CineNiche.Controllers.MovieController",
     "Method": "AddProject",
     "RelativePath": "Movie/AddMovie",
     "HttpMethod": "POST",
@@ -250,6 +266,11 @@
       {
         "Name": "movieTypes",
         "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "searchQuery",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
