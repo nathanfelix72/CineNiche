@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
 import WelcomePage from './pages/WelcomePage';
 
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/adminmovies" element={<AdminMoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/welcomepage" element={<WelcomePage />} />
         </Routes>
       </Router>
