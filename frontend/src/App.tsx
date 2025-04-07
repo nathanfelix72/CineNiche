@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
+import WelcomePage from './pages/WelcomePage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/adminmovies" element={<AdminMoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/welcomepage" element={<WelcomePage />} />
         </Routes>
       </Router>
     </>
