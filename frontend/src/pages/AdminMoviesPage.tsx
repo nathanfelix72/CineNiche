@@ -39,7 +39,7 @@ const AdminMoviesPage = () => {
 
     try {
       await deleteMovie(showId);
-      setMovies(movies.filter((m) => m.showId !== showId));
+      setMovies(movies.filter((m) => Number(m.showId) !== showId));
     } catch {
       alert('Failed to delete movie. Please try again.');
     }
@@ -112,7 +112,7 @@ const AdminMoviesPage = () => {
                 </button>
                 <button
                   className="btn btn-danger btn-sm w-100"
-                  onClick={() => handleDelete(m.showId)}
+                  onClick={() => handleDelete(Number(m.showId))}
                 >
                   Delete
                 </button>

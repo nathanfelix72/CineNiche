@@ -46,49 +46,49 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   const [selectedGenre, setSelectedGenre] = useState<string>('action');
 
   const [formData, setFormData] = useState<Movie>({
-    showId: 0,
+    showId: '',
     type: '',
     title: '',
     director: '',
     cast: '',
     country: '',
     releaseYear: 0,
-    rating: 0,
-    duration: 0,
+    rating: '',
+    duration: '',
     description: '',
-    // Genre booleans
-    action: false,
-    adventure: false,
-    animeSeriesInternationalTvShows: false,
-    britishTvShowsDocuseriesInternationalTvShows: false,
-    children: false,
-    comedies: false,
-    comediesDramasInternationalMovies: false,
-    comediesInternationalMovies: false,
-    comediesRomanticMovies: false,
-    crimeTvShowsDocuseries: false,
-    documentaries: false,
-    documentariesInternationalMovies: false,
-    docuseries: false,
-    dramas: false,
-    dramasInternationalMovies: false,
-    dramasRomanticMovies: false,
-    familyMovies: false,
-    fantasy: false,
-    horrorMovies: false,
-    internationalMoviesThrillers: false,
-    internationalTvShowsRomanticTvShowsTvDramas: false,
-    kidsTv: false,
-    languageTvShows: false,
-    musicals: false,
-    natureTv: false,
-    realityTv: false,
-    spirituality: false,
-    tvAction: false,
-    tvComedies: false,
-    tvDramas: false,
-    talkShowsTvComedies: false,
-    thrillers: false,
+    // Genre integers (0 by default)
+    action: 0,
+    adventure: 0,
+    animeSeriesInternationalTvShows: 0,
+    britishTvShowsDocuseriesInternationalTvShows: 0,
+    children: 0,
+    comedies: 0,
+    comediesDramasInternationalMovies: 0,
+    comediesInternationalMovies: 0,
+    comediesRomanticMovies: 0,
+    crimeTvShowsDocuseries: 0,
+    documentaries: 0,
+    documentariesInternationalMovies: 0,
+    docuseries: 0,
+    dramas: 0,
+    dramasInternationalMovies: 0,
+    dramasRomanticMovies: 0,
+    familyMovies: 0,
+    fantasy: 0,
+    horrorMovies: 0,
+    internationalMoviesThrillers: 0,
+    internationalTvShowsRomanticTvShowsTvDramas: 0,
+    kidsTv: 0,
+    languageTvShows: 0,
+    musicals: 0,
+    natureTv: 0,
+    realityTv: 0,
+    spirituality: 0,
+    tvAction: 0,
+    tvComedies: 0,
+    tvDramas: 0,
+    talkShowsTvComedies: 0,
+    thrillers: 0,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,18 +102,24 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Reset all genre booleans to false
+    // Reset all genre values to 0
     const updatedGenres = genreOptions.reduce((acc, genre) => {
-      acc[genre] = genre === selectedGenre;
+      acc[genre] = genre === selectedGenre ? 1 : 0; // Set selected genre to 1, others to 0
       return acc;
-    }, {} as Record<string, boolean>);
+    }, {} as Record<string, number>);
 
     const movieToSubmit = {
       ...formData,
       ...updatedGenres,
     };
 
-    await addMovie(movieToSubmit);
+    console.log('Submitting new movie:', movieToSubmit);
+    const newMovieWithStringRating = {
+        ...movieToSubmit,
+        rating: movieToSubmit.rating.toString(), // Ensure the rating is sent as a string
+      };
+      
+      await addMovie(newMovieWithStringRating);
     onSuccess();
   };
 
