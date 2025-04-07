@@ -5,7 +5,46 @@ interface NewMovieFormProps {
   onSuccess: () => void;
   onCancel: () => void;
 }
+
+const genreOptions = [
+  'action',
+  'adventure',
+  'animeSeriesInternationalTvShows',
+  'britishTvShowsDocuseriesInternationalTvShows',
+  'children',
+  'comedies',
+  'comediesDramasInternationalMovies',
+  'comediesInternationalMovies',
+  'comediesRomanticMovies',
+  'crimeTvShowsDocuseries',
+  'documentaries',
+  'documentariesInternationalMovies',
+  'docuseries',
+  'dramas',
+  'dramasInternationalMovies',
+  'dramasRomanticMovies',
+  'familyMovies',
+  'fantasy',
+  'horrorMovies',
+  'internationalMoviesThrillers',
+  'internationalTvShowsRomanticTvShowsTvDramas',
+  'kidsTv',
+  'languageTvShows',
+  'musicals',
+  'natureTv',
+  'realityTv',
+  'spirituality',
+  'tvAction',
+  'tvComedies',
+  'tvDramas',
+  'talkShowsTvComedies',
+  'thrillers',
+] as const;
+type GenreKey = (typeof genreOptions)[number];
+
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
+  const [selectedGenre, setSelectedGenre] = useState('');
+
   const [formData, setFormData] = useState<MoviesTitle>({
     showId: 0,
     type: '',
@@ -55,7 +94,18 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addMovie(formData);
+
+    const updatedData: MoviesTitle = { ...formData };
+
+    genreOptions.forEach((genre) => {
+      updatedData[genre] = 0;
+    });
+
+    if (selectedGenre) {
+      updatedData[selectedGenre as GenreKey] = 1;
+    }
+
+    await addMovie(updatedData);
     onSuccess();
   };
   return (
@@ -144,292 +194,18 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
           />
         </label>
         <label>
-          Action:
-          <input
-            type="text"
-            name="action"
-            value={formData.action}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Adventure:
-          <input
-            type="text"
-            name="adventure"
-            value={formData.adventure}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          AnimeSeriesInternationalTvShows:
-          <input
-            type="text"
-            name="animeSeriesInternationalTvShows"
-            value={formData.animeSeriesInternationalTvShows}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          BritishTvShowsDocuseriesInternationalTvShows:
-          <input
-            type="text"
-            name="britishTvShowsDocuseriesInternationalTvShows"
-            value={formData.britishTvShowsDocuseriesInternationalTvShows}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Children:
-          <input
-            type="text"
-            name="children"
-            value={formData.children}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Comedies:
-          <input
-            type="text"
-            name="comedies"
-            value={formData.comedies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          ComediesDramasInternationalMovies:
-          <input
-            type="text"
-            name="comediesDramasInternationalMovies"
-            value={formData.comediesDramasInternationalMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          ComediesInternationalMovies:
-          <input
-            type="text"
-            name="comediesInternationalMovies"
-            value={formData.comediesInternationalMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          ComediesRomanticMovies:
-          <input
-            type="text"
-            name="comediesRomanticMovies"
-            value={formData.comediesRomanticMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          CrimeTvShowsDocuseries:
-          <input
-            type="text"
-            name="crimeTvShowsDocuseries"
-            value={formData.crimeTvShowsDocuseries}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Documentaries:
-          <input
-            type="text"
-            name="documentaries"
-            value={formData.documentaries}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          DocumentariesInternationalMovies:
-          <input
-            type="text"
-            name="documentariesInternationalMovies"
-            value={formData.documentariesInternationalMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Docuseries:
-          <input
-            type="text"
-            name="docuseries"
-            value={formData.docuseries}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Dramas:
-          <input
-            type="text"
-            name="dramas"
-            value={formData.dramas}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          DramasInternationalMovies:
-          <input
-            type="text"
-            name="dramasInternationalMovies"
-            value={formData.dramasInternationalMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          DramasRomanticMovies:
-          <input
-            type="text"
-            name="dramasRomanticMovies"
-            value={formData.dramasRomanticMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Family Movies:
-          <input
-            type="text"
-            name="familyMovies"
-            value={formData.familyMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Fantasy:
-          <input
-            type="text"
-            name="fantasy"
-            value={formData.fantasy}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Horror Movies:
-          <input
-            type="text"
-            name="horrorMovies"
-            value={formData.horrorMovies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          InternationalMoviesThrillers:
-          <input
-            type="text"
-            name="internationalMoviesThrillers"
-            value={formData.internationalMoviesThrillers}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          InternationalTvShowsRomanticTvShowsTvDramas:
-          <input
-            type="text"
-            name="internationalTvShowsRomanticTvShowsTvDramas"
-            value={formData.internationalTvShowsRomanticTvShowsTvDramas}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Kids TV:
-          <input
-            type="text"
-            name="kidsTv"
-            value={formData.kidsTv}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          LanguageTVShows:
-          <input
-            type="text"
-            name="languageTvShows"
-            value={formData.languageTvShows}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Musicals:
-          <input
-            type="text"
-            name="musicals"
-            value={formData.musicals}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Nature TV:
-          <input
-            type="text"
-            name="natureTv"
-            value={formData.natureTv}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          RealityTv:
-          <input
-            type="text"
-            name="realityTv"
-            value={formData.realityTv}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Spirituality:
-          <input
-            type="text"
-            name="spirituality"
-            value={formData.spirituality}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          TvAction:
-          <input
-            type="text"
-            name="tvAction"
-            value={formData.tvAction}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          TvComedies:
-          <input
-            type="text"
-            name="tvComedies"
-            value={formData.tvComedies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          TvDramas:
-          <input
-            type="text"
-            name="tvDramas"
-            value={formData.tvDramas}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          TalkShowsTvComedies:
-          <input
-            type="text"
-            name="talkShowsTvComedies"
-            value={formData.talkShowsTvComedies}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Thrillers:
-          <input
-            type="text"
-            name="thrillers"
-            value={formData.thrillers}
-            onChange={handleChange}
-          />
+          Genre:
+          <select
+            value={selectedGenre}
+            onChange={(e) => setSelectedGenre(e.target.value)}
+          >
+            <option value="">Select a genre</option>
+            {genreOptions.map((genre) => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
+            ))}
+          </select>
         </label>
         <button type="submit">Add Movie</button>
         <button type="button" onClick={onCancel}>
