@@ -33,58 +33,96 @@ const Pagination = ({
     }
   };
 
+  const getPaginationRange = () => {
+    const range: (number | string)[] = [];
+    const siblings = 1;
+    const totalNumbers = siblings * 2 + 5;
+    const showEllipsis = totalPages > totalNumbers;
+
+    if (!showEllipsis) {
+      for (let i = 1; i <= totalPages; i++) range.push(i);
+      return range;
+    }
+
+    const leftSibling = Math.max(currentPage - siblings, 2);
+    const rightSibling = Math.min(currentPage + siblings, totalPages - 1);
+
+    range.push(1);
+
+    if (leftSibling > 2) {
+      range.push('...');
+    }
+
+    for (let i = leftSibling; i <= rightSibling; i++) {
+      range.push(i);
+    }
+
+    if (rightSibling < totalPages - 1) {
+      range.push('...');
+    }
+
+    range.push(totalPages);
+
+    return range;
+  };
+
   return (
     <div className="flex flex-col items-center justify-center mt-4">
-      <div className="flex items-center">
+      <div className="flex items-center space-x-1">
         <button
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
+          className="px-2 py-1 border rounded disabled:opacity-50"
         >
           Previous
         </button>
 
-        {/* Page Numbers */}
-        {[...Array(totalPages)].map((_, i) => {
-          const pageNumber = i + 1;
-          if (
-            pageNumber === currentPage - 1 ||
-            pageNumber === currentPage + 1 ||
-            pageNumber === currentPage ||
-            pageNumber === 1 ||
-            pageNumber === totalPages
-          ) {
+        {getPaginationRange().map((item, index) => {
+          if (item === '...') {
             return (
-              <button
-                key={pageNumber}
-                onClick={() => onPageChange(pageNumber)}
-                disabled={currentPage === pageNumber}
-              >
-                {pageNumber}
-              </button>
+              <span key={`ellipsis-${index}`} className="px-2">
+                ...
+              </span>
             );
           }
-          return null;
+
+          return (
+            <button
+              key={item}
+              onClick={() => onPageChange(Number(item))}
+              disabled={currentPage === item}
+              className={`px-2 py-1 border rounded ${
+                currentPage === item
+                  ? 'font-bold underline bg-gray-200'
+                  : ''
+              }`}
+            >
+              {item}
+            </button>
+          );
         })}
 
         <button
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
+          className="px-2 py-1 border rounded disabled:opacity-50"
         >
           Next
         </button>
       </div>
 
-      {/* Page Input Field and Go Button on a new line */}
-      <div className="mt-2">
+      <div className="mt-2 flex items-center space-x-2">
         <input
           type="text"
           value={pageInput}
           onChange={handlePageInputChange}
           onBlur={handlePageJump}
-          className="ml-2 w-16 text-center"
+          className="w-16 text-center border rounded"
           maxLength={5}
         />
-        <button onClick={handlePageJump}>Go</button>
+        <button onClick={handlePageJump} className="px-2 py-1 border rounded">
+          Go
+        </button>
       </div>
 
       <br />
@@ -96,6 +134,7 @@ const Pagination = ({
             onPageSizeChange(Number(p.target.value));
             onPageChange(1);
           }}
+          className="ml-2 border rounded px-2 py-1"
         >
           <option value="5">5</option>
           <option value="10">10</option>

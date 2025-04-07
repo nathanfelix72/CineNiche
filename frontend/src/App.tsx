@@ -7,18 +7,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
 
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <>
       <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/adminmovies" element={<AdminMoviesPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        </Routes>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/adminmovies" element={<AdminMoviesPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            </Routes>
+          </Layout>
       </Router>
     </>
   );
