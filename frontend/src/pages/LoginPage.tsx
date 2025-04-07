@@ -76,7 +76,15 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
+    <div
+      className="container"
+      style={{
+        backgroundImage: "url('/images/niche_movie.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <div className="row">
         <div className="card border-0 shadow rounded-3">
           <div className="card-body p-4 p-sm-5">
@@ -165,3 +173,4 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
