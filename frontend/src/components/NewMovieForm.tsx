@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { MoviesTitle } from '../types/MoviesTitle';
 import { addMovie } from '../api/MoviesAPI';
+import './formstyles.css';
+import { genreDisplayNames } from '../utils/genreDisplayNames';
+
 interface NewMovieFormProps {
   onSuccess: () => void;
   onCancel: () => void;
@@ -43,7 +46,7 @@ const genreOptions = [
 type GenreKey = (typeof genreOptions)[number];
 
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   const [formData, setFormData] = useState<MoviesTitle>({
     showId: 0,
@@ -89,9 +92,24 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     talkShowsTvComedies: 0,
     thrillers: 0,
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    // Auto-grow the description field
+    if (name === 'description') {
+      const textarea = e.target as HTMLTextAreaElement;
+      textarea.style.height = 'auto'; // reset height
+      textarea.style.height = textarea.scrollHeight + 'px'; // grow to fit
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -101,16 +119,22 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
       updatedData[genre] = 0;
     });
 
-    if (selectedGenre) {
-      updatedData[selectedGenre as GenreKey] = 1;
-    }
+    selectedGenres.forEach((genre) => {
+      updatedData[genre as GenreKey] = 1;
+    });
 
     await addMovie(updatedData);
     onSuccess();
   };
+  const toggleGenre = (genre: string) => {
+    setSelectedGenres((prev) =>
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+    );
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add New Movie</h2>
+    <form onSubmit={handleSubmit} className="movie-form">
+      <h2 className="form-title">Add Movie</h2>
       <div className="form-grid">
         <label>
           Type:
@@ -186,29 +210,50 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
         </label>
         <label>
           Description:
-          <input
-            type="text"
+          <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            rows={3}
+            className="description-textarea"
           />
         </label>
-        <label>
-          Genre:
-          <select
-            value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
-          >
-            <option value="">Select a genre</option>
-            {genreOptions.map((genre) => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
+
+        <div className="genre-label">
+          <label>Genres:</label>
+
+          <div className="selected-genre-bubbles">
+            {selectedGenres.map((genre) => (
+              <button
+                key={genre}
+                type="button"
+                className={`genre-tag ${selectedGenres.includes(genre) ? 'selected' : ''}`}
+                onClick={() => toggleGenre(genre)}
+              >
+                {genreDisplayNames[genre] || genre}
+              </button>
             ))}
-          </select>
-        </label>
-        <button type="submit">Add Movie</button>
-        <button type="button" onClick={onCancel}>
+          </div>
+
+          <div className="genre-list-scrollable">
+            {genreOptions.map((genre) => (
+              <button
+                key={genre}
+                type="button"
+                className={`genre-tag ${selectedGenres.includes(genre) ? 'selected' : ''}`}
+                onClick={() => toggleGenre(genre)}
+              >
+                {genreDisplayNames[genre] || genre}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="form-buttons">
+        <button type="submit" className="submit-btn">
+          Add Movie
+        </button>
+        <button type="button" className="cancel-btn" onClick={onCancel}>
           Cancel
         </button>
       </div>
