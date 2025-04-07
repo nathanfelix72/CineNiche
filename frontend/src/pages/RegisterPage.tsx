@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './identity.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 function Register() {
   // state variables for email and passwords
@@ -47,7 +49,6 @@ function Register() {
           password: password,
         }),
       })
-        //.then((response) => response.json())
         .then((data) => {
           // handle success or error from the server
           console.log(data);
@@ -65,9 +66,9 @@ function Register() {
   return (
     <div className="container">
       <div className="row">
-        <div className="card border-0 shadow rounded-3 ">
+        <div className="card border-0 shadow rounded-3">
           <div className="card-body p-4 p-sm-5">
-            <h5 className="card-title text-center mb-5 fw-light fs-5">
+            <h5 className="card-title text-center mb-4 fs-2 fw-bold">
               Register
             </h5>
             <form onSubmit={handleSubmit}>
@@ -113,14 +114,33 @@ function Register() {
                   Register
                 </button>
               </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  onClick={handleLoginClick}
+              <br />
+              <div className="text-center mt-3">
+                <label
+                  style={{
+                    cursor: 'default',
+                    color: '#d4145a',
+                    fontFamily: 'serif'
+                  }}
                 >
-                  Go to Login
-                </button>
+                  Already have an account?{' '}
+                  <span
+                    onClick={handleLoginClick}
+                    style={{
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                      transition: 'transform 0.2s ease',
+                      display: 'inline-block',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                    onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  >
+                    Go to Login
+                  </span>
+                </label>
               </div>
+
+
             </form>
             <strong>{error && <p className="error">{error}</p>}</strong>
           </div>

@@ -6,6 +6,8 @@ import RegisterPage from './pages/RegisterPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
+import WelcomePage from './pages/WelcomePage';
+
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 
@@ -21,6 +23,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
+            <Route path="/welcomepage" element={<WelcomePage />} />
             </Routes>
           </Layout>
       </Router>
