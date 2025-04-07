@@ -128,82 +128,83 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
       <h2>Add New Movie</h2>
       <label>
         Movie Title:
-        <input type="text" 
-            name="title" 
-            value={formData.title} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
         />
       </label>
       <label>
         Type:
-        <input 
-            type="text" 
-            name="type" 
-            value={formData.type} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
         />
       </label>
       <label>
         Director:
-        <input 
-            type="text" 
-            name="director" 
-            value={formData.director} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="director"
+          value={formData.director}
+          onChange={handleChange}
         />
       </label>
       <label>
         Cast:
-        <input 
-            type="text" 
-            name="cast" 
-            value={formData.cast} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="cast"
+          value={formData.cast}
+          onChange={handleChange}
         />
       </label>
       <label>
         Country:
-        <input 
-            type="text" 
-            name="country" 
-            value={formData.country} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
         />
       </label>
       <label>
         Release Year:
-        <input 
-            type="number" 
-            name="releaseYear" 
-            value={formData.releaseYear} 
-            onChange={handleChange} 
+        <input
+          type="number"
+          name="releaseYear"
+          value={formData.releaseYear}
+          onChange={handleChange}
         />
       </label>
       <label>
         Rating:
-        <input 
-            type="number" 
-            name="rating" 
-            value={formData.rating} 
-            onChange={handleChange} 
+        <input
+          type="number"
+          name="rating"
+          value={formData.rating}
+          onChange={handleChange}
         />
       </label>
       <label>
         Duration:
-        <input 
-            type="number" 
-            name="duration" 
-            value={formData.duration} 
-            onChange={handleChange} 
+        <input
+          type="number"
+          name="duration"
+          value={formData.duration}
+          onChange={handleChange}
         />
       </label>
       <label>
         Description:
-        <input 
-            type="text" 
-            name="description" 
-            value={formData.description} 
-            onChange={handleChange} 
+        <input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
         />
       </label>
 

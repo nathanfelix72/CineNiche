@@ -9,52 +9,75 @@ interface EditMovieFormProps {
 }
 
 // 1. Define the genre keys
-type GenreKey = keyof Pick<Movie,
-  'action' |
-  'adventure' |
-  'animeSeriesInternationalTvShows' |
-  'britishTvShowsDocuseriesInternationalTvShows' |
-  'children' |
-  'comedies' |
-  'comediesDramasInternationalMovies' |
-  'comediesInternationalMovies' |
-  'comediesRomanticMovies' |
-  'crimeTvShowsDocuseries' |
-  'documentaries' |
-  'documentariesInternationalMovies' |
-  'docuseries' |
-  'dramas' |
-  'dramasInternationalMovies' |
-  'dramasRomanticMovies' |
-  'familyMovies' |
-  'fantasy' |
-  'horrorMovies' |
-  'internationalMoviesThrillers' |
-  'internationalTvShowsRomanticTvShowsTvDramas' |
-  'kidsTv' |
-  'languageTvShows' |
-  'musicals' |
-  'natureTv' |
-  'realityTv' |
-  'spirituality' |
-  'tvAction' |
-  'tvComedies' |
-  'tvDramas' |
-  'talkShowsTvComedies' |
-  'thrillers'
+type GenreKey = keyof Pick<
+  Movie,
+  | 'action'
+  | 'adventure'
+  | 'animeSeriesInternationalTvShows'
+  | 'britishTvShowsDocuseriesInternationalTvShows'
+  | 'children'
+  | 'comedies'
+  | 'comediesDramasInternationalMovies'
+  | 'comediesInternationalMovies'
+  | 'comediesRomanticMovies'
+  | 'crimeTvShowsDocuseries'
+  | 'documentaries'
+  | 'documentariesInternationalMovies'
+  | 'docuseries'
+  | 'dramas'
+  | 'dramasInternationalMovies'
+  | 'dramasRomanticMovies'
+  | 'familyMovies'
+  | 'fantasy'
+  | 'horrorMovies'
+  | 'internationalMoviesThrillers'
+  | 'internationalTvShowsRomanticTvShowsTvDramas'
+  | 'kidsTv'
+  | 'languageTvShows'
+  | 'musicals'
+  | 'natureTv'
+  | 'realityTv'
+  | 'spirituality'
+  | 'tvAction'
+  | 'tvComedies'
+  | 'tvDramas'
+  | 'talkShowsTvComedies'
+  | 'thrillers'
 >;
 
 const GENRES: GenreKey[] = [
-  'action', 'adventure', 'animeSeriesInternationalTvShows',
-  'britishTvShowsDocuseriesInternationalTvShows', 'children', 'comedies',
-  'comediesDramasInternationalMovies', 'comediesInternationalMovies',
-  'comediesRomanticMovies', 'crimeTvShowsDocuseries', 'documentaries',
-  'documentariesInternationalMovies', 'docuseries', 'dramas',
-  'dramasInternationalMovies', 'dramasRomanticMovies', 'familyMovies',
-  'fantasy', 'horrorMovies', 'internationalMoviesThrillers',
-  'internationalTvShowsRomanticTvShowsTvDramas', 'kidsTv', 'languageTvShows',
-  'musicals', 'natureTv', 'realityTv', 'spirituality', 'tvAction',
-  'tvComedies', 'tvDramas', 'talkShowsTvComedies', 'thrillers'
+  'action',
+  'adventure',
+  'animeSeriesInternationalTvShows',
+  'britishTvShowsDocuseriesInternationalTvShows',
+  'children',
+  'comedies',
+  'comediesDramasInternationalMovies',
+  'comediesInternationalMovies',
+  'comediesRomanticMovies',
+  'crimeTvShowsDocuseries',
+  'documentaries',
+  'documentariesInternationalMovies',
+  'docuseries',
+  'dramas',
+  'dramasInternationalMovies',
+  'dramasRomanticMovies',
+  'familyMovies',
+  'fantasy',
+  'horrorMovies',
+  'internationalMoviesThrillers',
+  'internationalTvShowsRomanticTvShowsTvDramas',
+  'kidsTv',
+  'languageTvShows',
+  'musicals',
+  'natureTv',
+  'realityTv',
+  'spirituality',
+  'tvAction',
+  'tvComedies',
+  'tvDramas',
+  'talkShowsTvComedies',
+  'thrillers',
 ];
 
 const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
@@ -63,7 +86,9 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   // Find currently selected genre
   const currentGenre = GENRES.find((genre) => formData[genre] === 1) || '';
 
-  const [selectedGenre, setSelectedGenre] = useState<GenreKey | ''>(currentGenre);
+  const [selectedGenre, setSelectedGenre] = useState<GenreKey | ''>(
+    currentGenre
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -90,7 +115,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
 
     const updatedMovie: Movie = {
       ...formData,
-      ...updatedGenres
+      ...updatedGenres,
     };
 
     await updateMovie(Number(updatedMovie.showId), updatedMovie);
@@ -187,7 +212,9 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           <option value="">-- Select Genre --</option>
           {GENRES.map((genre) => (
             <option key={genre} value={genre}>
-              {genre.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+              {genre
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, (str) => str.toUpperCase())}
             </option>
           ))}
         </select>
