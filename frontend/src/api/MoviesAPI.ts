@@ -10,15 +10,19 @@ const API_URL = 'https://localhost:5000/movie';
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
-  selectedCategories: string[]
+  selectedCategories: string[],
+  searchQuery: string = '' // Add searchQuery as a parameter
 ): Promise<FetchMoviesResponse> => {
   try {
     const categoryParams = selectedCategories
       .map((cat) => `movieTypes=${encodeURIComponent(cat)}`)
       .join('&');
 
+    const query = searchQuery
+      ? `&searchQuery=${encodeURIComponent(searchQuery)}`
+      : '';
     const response = await fetch(
-      `${API_URL}/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`,
+      `${API_URL}/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}${query}`,
       {
         credentials: 'include',
       }
@@ -39,6 +43,7 @@ export const addMovie = async (newMovie: MoviesTitle): Promise<MoviesTitle> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -63,6 +68,7 @@ export const updateMovie = async (
   try {
     const response = await fetch(`${API_URL}/UpdateMovie/${showId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -80,6 +86,7 @@ export const deleteMovie = async (showId: number): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${showId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -89,4 +96,16 @@ export const deleteMovie = async (showId: number): Promise<void> => {
     console.error('Error deleting movie:', error);
     throw error;
   }
+};
+
+export const fetchMovieById = async (id: number): Promise<MoviesTitle> => {
+  const response = await fetch(`https://localhost:5000/movie/${id}`, {
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch movie by ID');
+  }
+
+  return await response.json();
 };

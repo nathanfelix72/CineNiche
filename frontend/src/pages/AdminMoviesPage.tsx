@@ -4,9 +4,12 @@ import { deleteMovie, fetchMovies } from '../api/MoviesAPI';
 import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<MoviesTitle[]>([]);
+  const [searchResults, setSearchResults] = useState<MoviesTitle[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -14,7 +17,9 @@ const AdminMoviesPage = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [showForm, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<MoviesTitle | null>(null);
+  const navigate = useNavigate();
 
+  // Initial movie load (no filter)
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -42,6 +47,34 @@ const AdminMoviesPage = () => {
       setMovies(movies.filter((m) => Number(m.showId) !== showId));
     } catch {
       alert('Failed to delete movie. Please try again.');
+    }
+  };
+
+  // Handle search logic
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      // If the search query is empty, show all movies
+      setSearchResults([]);
+      setPageNum(1); // Reset pagination
+      try {
+        const data = await fetchMovies(pageSize, 1, [], '');
+        setMovies(data.movies);
+        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
+      } catch (err) {
+        console.error('Error fetching all movies:', err);
+        alert('Failed to load all movies.');
+      }
+    } else {
+      // Perform the search with the entered query
+      try {
+        const data = await fetchMovies(pageSize, pageNum, [], searchQuery);
+        setSearchResults(data.movies);
+        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
+        setPageNum(1); // Reset to page 1 after search
+      } catch (err) {
+        console.error('Search error:', err);
+        alert('Something went wrong while searching.');
+      }
     }
   };
 
@@ -86,6 +119,28 @@ const AdminMoviesPage = () => {
         />
       )}
 
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          placeholder="Search by movie title..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Only updates the search query
+          className="form-control"
+          style={{
+            maxWidth: '300px',
+            display: 'inline-block',
+            marginRight: '0.5rem',
+          }}
+        />
+
+        <button
+          className="btn btn-outline-primary"
+          onClick={handleSearch} // Only trigger search when clicked
+        >
+          Search
+        </button>
+      </div>
+
       <table className="table table-bordered table-striped">
         <thead className="table-dark">
           <tr>
@@ -97,7 +152,8 @@ const AdminMoviesPage = () => {
           </tr>
         </thead>
         <tbody>
-          {movies.map((m) => (
+          {/* Display either the search results or full list of movies */}
+          {(searchQuery ? searchResults : movies).map((m) => (
             <tr key={m.showId}>
               <td>{m.showId}</td>
               <td>{m.type}</td>
@@ -115,6 +171,12 @@ const AdminMoviesPage = () => {
                   onClick={() => handleDelete(Number(m.showId))}
                 >
                   Delete
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm w-100 mt-1"
+                  onClick={() => navigate(`/movie/${m.showId}`)}
+                >
+                  More Info
                 </button>
               </td>
             </tr>
