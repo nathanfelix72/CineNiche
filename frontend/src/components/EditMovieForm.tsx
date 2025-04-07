@@ -157,7 +157,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
       <label>
         Rating:
         <input
-          type="number"
+          type="text"
           name="rating"
           value={formData.rating}
           onChange={handleChange}
@@ -166,7 +166,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
       <label>
         Duration:
         <input
-          type="number"
+          type="text"
           name="duration"
           value={formData.duration}
           onChange={handleChange}
