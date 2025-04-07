@@ -1,31 +1,82 @@
-body {
-    background: #007bff;
-    background: linear-gradient(to right, #0062e6, #33aeff);
-  }
-  
-  .btn-login {
-    font-size: 0.9rem;
-    letter-spacing: 0.05rem;
-    padding: 0.75rem 1rem;
-  }
-  
-  .btn-google {
-    color: white !important;
-    background-color: #ea4335 !important;
-  }
-  
-  .btn-facebook {
-    color: white !important;
-    background-color: #3b5998 !important;
-  }
-  
-  .card-body {
-    min-width: 400px;
-  }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-  }
+/* Import vintage and retro fonts */
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Monoton&display=swap');
+
+.container {
+  background-image: url('/images/niche_movie.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family:  serif;
+  color: #fcecc9;
+  backdrop-filter: brightness(0.8) contrast(1.2);
+}
+
+/* Card styling */
+.card {
+  background: rgba(20, 20, 20, 0.85);
+  border: 3px double #fcecc9;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+/* Card title */
+.card-title {
+  font-family: 'Monoton', cursive;
+  color: #ffd700;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Input fields */
+.form-control {
+  font-family:  serif;
+  color: #ffd700;
+  border: 1px solid #fcecc9;
+  border-radius: 0;
+  font-size: 0.75rem;
+}
+
+.form-control:focus {
+  font-family: serif;
+  color: #fff;
+  border-color: #ff5555;
+}
+
+/* Buttons */
+.btn-login {
+  font-family: serif;
+  background: linear-gradient(to right, #d4145a, #d4145a);
+  font-family: serif;
+  border: none;
+  padding: 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-login:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+/* Error message */
+.error {
+  color: black;
+  font-family: serif;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.btn-google {
+  color: white !important;
+  background-color: #ea4335 !important;
+  border: none;
+  font-family: serif;
+}
+
+.btn-google:hover {
+  background-color: #d23c2f !important;
+}
