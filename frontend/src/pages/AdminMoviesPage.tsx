@@ -5,22 +5,22 @@ import Pagination from '../components/Pagination.tsx';
 import NewBookForm from '../components/NewBookForm';
 import EditBookForm from '../components/EditBookForm';
 
-const AdminBooksPage = () => {
-  const [books, setBooks] = useState<Book[]>([]);
+const AdminMoviesPage = () => {
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [showForm, setShowForm] = useState(false);
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
 
   useEffect(() => {
-    const loadBooks = async () => {
+    const loadMovies = async () => {
       try {
-        const data = await fetchBooks(pageSize, pageNum, []);
-        setBooks(data.books);
-        setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
+        const data = await fetchMovies(pageSize, pageNum, []);
+        setMovies(data.movies);
+        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -28,54 +28,54 @@ const AdminBooksPage = () => {
       }
     };
 
-    loadBooks();
+    loadMovies();
   }, [pageSize, pageNum]);
 
-  const handleDelete = async (bookId: number) => {
+  const handleDelete = async (movieId: number) => {
     const confirmDelete = window.confirm(
-      'Are you sure you want to delete this book?'
+      'Are you sure you want to delete this movie?'
     );
     if (!confirmDelete) return;
 
     try {
-      await deleteBook(bookId);
-      setBooks(books.filter((p) => p.bookId !== bookId));
+      await deleteMovie(movieId);
+      setMovies(movies.filter((m) => m.movieId !== movieId));
     } catch (error) {
-      alert('Failed to delete book. Please try again.');
+      alert('Failed to delete movie. Please try again.');
     }
   };
 
-  if (loading) return <p>Loading books...</p>;
+  if (loading) return <p>Loading movies...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <div>
-      <h1>Admin - Books</h1>
+      <h1>Admin - Movies</h1>
 
       {!showForm && (
         <button
           className="btn btn-success mb-3"
           onClick={() => setShowForm(true)}
         >
-          Add Book
+          Add Movie
         </button>
       )}
 
       {showForm && (
-        <NewBookForm
+        <NewMovieForm
           onSuccess={() => {
             setShowForm(false);
-            fetchBooks(pageSize, pageNum, []).then((data) =>
-              setBooks(data.books)
+            fetchMovies(pageSize, pageNum, []).then((data) =>
+              setMovies(data.movies)
             );
           }}
           onCancel={() => setShowForm(false)}
         />
       )}
 
-      {editingBook && (
-        <EditBookForm
-          book={editingBook}
+      {editingMovie && (
+        <EditMovieForm
+          movie={editingMovie}
           onSuccess={() => {
             setEditingBook(null);
             fetchBooks(pageSize, pageNum, []).then((data) =>
