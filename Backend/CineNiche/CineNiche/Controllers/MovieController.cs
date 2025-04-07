@@ -7,11 +7,11 @@ namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class WaterController : ControllerBase
+    public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
 
-        public WaterController(MoviesContext temp)
+        public MovieController(MoviesContext temp)
         {
             _moviesContext = temp;
         }
@@ -62,7 +62,7 @@ namespace CineNiche.Controllers
         }
 
         [HttpPut("UpdateMovie/{showId}")]
-        public IActionResult UpdateProject(int showId, [FromBody] MoviesTitle updatedMovie)
+        public IActionResult UpdateMovie(int showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _moviesContext.MoviesTitles.Find(showId);
             existingMovie.Type = updatedMovie.Type;
@@ -83,7 +83,7 @@ namespace CineNiche.Controllers
 
 
         [HttpDelete("DeleteMovie/{showId}")]
-        public IActionResult DeleteProject(int showId)
+        public IActionResult DeleteMovie(int showId)
         {
             var movie = _moviesContext.MoviesTitles.Find(showId);
 
