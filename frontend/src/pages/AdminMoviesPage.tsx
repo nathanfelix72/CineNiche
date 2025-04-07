@@ -31,15 +31,15 @@ const AdminMoviesPage = () => {
     loadMovies();
   }, [pageSize, pageNum]);
 
-  const handleDelete = async (movieId: number) => {
+  const handleDelete = async (showId: number) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this movie?'
     );
     if (!confirmDelete) return;
 
     try {
-      await deleteMovie(movieId);
-      setMovies(movies.filter((m) => m.movieId !== movieId));
+      await deleteMovie(showId);
+      setMovies(movies.filter((m) => m.movieId !== showId));
     } catch (error) {
       alert('Failed to delete movie. Please try again.');
     }
@@ -77,12 +77,12 @@ const AdminMoviesPage = () => {
         <EditMovieForm
           movie={editingMovie}
           onSuccess={() => {
-            setEditingBook(null);
-            fetchBooks(pageSize, pageNum, []).then((data) =>
-              setBooks(data.books)
+            setEditingMovie(null);
+            fetchMovies(pageSize, pageNum, []).then((data) =>
+              setMovies(data.movies)
             );
           }}
-          onCancel={() => setEditingBook(null)}
+          onCancel={() => setEditingMovie(null)}
         />
       )}
 
@@ -102,8 +102,8 @@ const AdminMoviesPage = () => {
           </tr>
         </thead>
         <tbody>
-          {books.map((b) => (
-            <tr key={b.bookId}>
+          {movies.map((b) => (
+            <tr key={b.showId}>
               <td>{b.bookId}</td>
               <td>{b.title}</td>
               <td>{b.author}</td>
@@ -116,13 +116,13 @@ const AdminMoviesPage = () => {
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"
-                  onClick={() => setEditingBook(b)}
+                  onClick={() => setEditingMovie(b)}
                 >
                   Edit
                 </button>
                 <button
                   className="btn btn-danger btn-sm w-100"
-                  onClick={() => handleDelete(b.bookId)}
+                  onClick={() => handleDelete(b.showId)}
                 >
                   Delete
                 </button>
@@ -146,4 +146,4 @@ const AdminMoviesPage = () => {
   );
 };
 
-export default AdminBooksPage;
+export default AdminMoviesPage;
