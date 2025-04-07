@@ -1,15 +1,18 @@
 /* Import vintage and retro fonts */
-@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Monoton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Press+Start+2P&display=swap');
 
-.container {
+body, html {
   background-image: url('/images/niche_movie.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  font-family:  serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: serif;
   color: #fcecc9;
-  backdrop-filter: brightness(0.8) contrast(1.2);
 }
+
 
 /* Card styling */
 .card {
@@ -17,66 +20,78 @@
   border: 3px double #fcecc9;
   border-radius: 12px;
   padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
 }
 
 /* Card title */
 .card-title {
   font-family: 'Monoton', cursive;
   color: #ffd700;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-align: center;
   text-transform: uppercase;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 /* Input fields */
 .form-control {
-  font-family:  serif;
+  font-family: serif;
   color: #ffd700;
+  background-color: transparent;
   border: 1px solid #fcecc9;
   border-radius: 0;
   font-size: 0.75rem;
+  padding: 0.5rem;
 }
 
 .form-control:focus {
-  font-family: serif;
-  color: #fff;
+  color: #ffffff;
   border-color: #ff5555;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Buttons */
 .btn-login {
   font-family: serif;
   background: linear-gradient(to right, #d4145a, #d4145a);
-  font-family: serif;
   border: none;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   font-size: 0.7rem;
   letter-spacing: 0.08rem;
   text-transform: uppercase;
+  color: white;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-login:hover {
   transform: scale(1.05);
-  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Google Button */
+.btn-google {
+  background-color: #ea4335;
+  font-family: serif;
+  padding: 0.75rem 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08rem;
+  cursor: pointer;
+}
+
+.btn-google:hover {
+  background-color: #d23c2f;
 }
 
 /* Error message */
 .error {
-  color: black;
+  color: #ff5555;
   font-family: serif;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   text-align: center;
   margin-top: 1rem;
-}
-
-.btn-google {
-  color: white !important;
-  background-color: #ea4335 !important;
-  border: none;
-  font-family: serif;
-}
-
-.btn-google:hover {
-  background-color: #d23c2f !important;
 }

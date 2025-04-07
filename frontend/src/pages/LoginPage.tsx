@@ -4,11 +4,10 @@ import './identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 function LoginPage() {
-  // state variables for email, password, remember me, and showPassword
+  // state variables for email and passwords
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberme, setRememberme] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false); // state for showing password
 
   // state variable for error messages
   const [error, setError] = useState<string>('');
@@ -24,11 +23,6 @@ function LoginPage() {
     } else if (name === 'password') {
       setPassword(value);
     }
-  };
-
-  // toggle show password
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleRegisterClick = () => {
@@ -76,20 +70,12 @@ function LoginPage() {
   };
 
   return (
-    <div
-      className="container"
-      style={{
-        backgroundImage: "url('/images/niche_movie.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div className="container">
       <div className="row">
-        <div className="card border-0 shadow rounded-3">
+        <div className="card border-0 shadow rounded-3 ">
           <div className="card-body p-4 p-sm-5">
-            <h5 className="card-title text-center mb-4 fs-2 fw-bold">
-                Sign In
+            <h5 className="card-title text-center mb-5 fs-2">
+              Sign In
             </h5>
             <form onSubmit={handleSubmit}>
               <div className="form-floating mb-3">
@@ -103,24 +89,32 @@ function LoginPage() {
                 />
                 <label htmlFor="email">Email address</label>
               </div>
-              <div className="form-floating mb-3 position-relative">
+              <div className="form-floating mb-3">
                 <input
                   className="form-control"
-                  type={showPassword ? 'text' : 'password'} // toggle password visibility
+                  type="password"
                   id="password"
                   name="password"
                   value={password}
                   onChange={handleChange}
                 />
                 <label htmlFor="password">Password</label>
-
-                {/* Eye icon toggle */}
-                <i
-                  className={`fa-${showPassword ? 'solid' : 'regular'} fa-eye${showPassword ? '' : '-slash'} position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer`}
-                  onClick={togglePasswordVisibility}
-                ></i>
               </div>
 
+              <div className="form-check mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="rememberme"
+                  name="rememberme"
+                  checked={rememberme}
+                  onChange={handleChange}
+                />
+                <label className="form-check-label" htmlFor="rememberme">
+                  Remember password
+                </label>
+              </div>
               <div className="d-grid mb-2">
                 <button
                   className="btn btn-primary btn-login text-uppercase fw-bold"
@@ -129,28 +123,12 @@ function LoginPage() {
                   Sign in
                 </button>
               </div>
-              <div className="form-check mb-3 d-flex align-items-center">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="rememberme"
-                    name="rememberme"
-                    checked={rememberme}
-                    onChange={handleChange}
-                />
-                <label className="form-check-label ms-2" htmlFor="rememberme">
-                    Remember me
-                </label>
-                </div>
-                <h5>OR</h5>
-                <br />
               <div className="d-grid mb-2">
                 <button
                   className="btn btn-primary btn-login text-uppercase fw-bold"
                   onClick={handleRegisterClick}
                 >
-                  Create New Account
+                  Register
                 </button>
               </div>
               <hr className="my-4" />
@@ -173,4 +151,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-

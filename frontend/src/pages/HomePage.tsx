@@ -10,6 +10,8 @@ function HomePage() {
           <Logout>
             Logout <AuthorizedUser value="email" />
           </Logout>
+          <br/>
+          <br/>
           <Header />
         </span>
         <h1>You should only see this page if you are logged in</h1>
