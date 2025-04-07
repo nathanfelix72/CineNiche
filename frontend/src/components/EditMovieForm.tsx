@@ -61,7 +61,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({ ...movie });
 
   // Find currently selected genre
-  const currentGenre = GENRES.find((genre) => formData[genre]) || '';
+  const currentGenre = GENRES.find((genre) => formData[genre] === 1) || '';
 
   const [selectedGenre, setSelectedGenre] = useState<GenreKey | ''>(currentGenre);
 
@@ -77,15 +77,15 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Set all genre booleans to false
-    const updatedGenres: Partial<Record<GenreKey, boolean>> = GENRES.reduce((acc, genre) => {
-      acc[genre] = false;
+    // Set all genre values to 0 (false)
+    const updatedGenres: Partial<Record<GenreKey, number>> = GENRES.reduce((acc, genre) => {
+      acc[genre] = 0;
       return acc;
-    }, {} as Partial<Record<GenreKey, boolean>>);
+    }, {} as Partial<Record<GenreKey, number>>);
 
-    // Set selected genre to true
+    // Set selected genre to 1 (true)
     if (selectedGenre) {
-      updatedGenres[selectedGenre] = true;
+      updatedGenres[selectedGenre] = 1;
     }
 
     const updatedMovie: Movie = {
@@ -93,7 +93,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
       ...updatedGenres
     };
 
-    await updateMovie(updatedMovie.showId, updatedMovie);
+    await updateMovie(Number(updatedMovie.showId), updatedMovie);
     onSuccess();
   };
 

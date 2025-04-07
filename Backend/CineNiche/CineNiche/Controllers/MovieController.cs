@@ -17,6 +17,15 @@ namespace CineNiche.Controllers
         {
             _moviesContext = temp;
         }
+        
+        private static readonly List<string> GENRES = new List<string>
+        {
+            "action", "adventure", "animeSeriesInternationalTvShows", "britishTvShowsDocuseriesInternationalTvShows", "children", "comedies",
+            "comediesDramasInternationalMovies", "comediesInternationalMovies", "comediesRomanticMovies", "crimeTvShowsDocuseries", "documentaries",
+            "documentariesInternationalMovies", "docuseries", "dramas", "dramasInternationalMovies", "dramasRomanticMovies", "familyMovies",
+            "fantasy", "horrorMovies", "internationalMoviesThrillers", "internationalTvShowsRomanticTvShowsTvDramas", "kidsTv", "languageTvShows",
+            "musicals", "natureTv", "realityTv", "spirituality", "tvAction", "tvComedies", "tvDramas", "talkShowsTvComedies", "thrillers"
+        };
 
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
@@ -54,10 +63,22 @@ namespace CineNiche.Controllers
 
             return Ok(movieTypes);
         }
+        
+        
 
         [HttpPost("AddMovie")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
+            // Convert genre fields to boolean (1 or 0 to true or false)
+            foreach (var genre in GENRES)
+            {
+                var genreValue = newMovie.GetType().GetProperty(genre)?.GetValue(newMovie);
+                if (genreValue != null)
+                {
+                    newMovie.GetType().GetProperty(genre)?.SetValue(newMovie, (int)genreValue == 1);
+                }
+            }
+
             _moviesContext.MoviesTitles.Add(newMovie);
             _moviesContext.SaveChanges();
             return Ok(newMovie);
@@ -67,6 +88,12 @@ namespace CineNiche.Controllers
         public IActionResult UpdateMovie(int showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _moviesContext.MoviesTitles.Find(showId);
+            if (existingMovie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
+
+            // Update basic fields
             existingMovie.Type = updatedMovie.Type;
             existingMovie.Title = updatedMovie.Title;
             existingMovie.Director = updatedMovie.Director;
@@ -77,11 +104,22 @@ namespace CineNiche.Controllers
             existingMovie.Duration = updatedMovie.Duration;
             existingMovie.Description = updatedMovie.Description;
 
+            // Update genre fields (convert from 1 or 0 to boolean)
+            foreach (var genre in GENRES)
+            {
+                var genreValue = updatedMovie.GetType().GetProperty(genre)?.GetValue(updatedMovie);
+                if (genreValue != null)
+                {
+                    existingMovie.GetType().GetProperty(genre)?.SetValue(existingMovie, (int)genreValue == 1);
+                }
+            }
+
             _moviesContext.MoviesTitles.Update(existingMovie);
             _moviesContext.SaveChanges();
 
             return Ok(existingMovie);
         }
+
 
 
         [HttpDelete("DeleteMovie/{showId}")]
