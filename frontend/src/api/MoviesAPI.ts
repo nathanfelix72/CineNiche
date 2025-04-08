@@ -9,6 +9,8 @@ interface FetchMoviesResponse {
 // const API_URL = 'https://localhost:5000/movie';
 const API_URL = 'https://cineniche-4-9-backend.azurewebsites.net/Movie';
 const USER_API_URL = 'https://localhost:5000/user';
+const ROLE_URL = 'https://localhost:5000/Role';
+
 
 export const fetchMovies = async (
   pageSize: number,
@@ -225,6 +227,100 @@ export const rateMovie = async (
     }
   } catch (error) {
     console.error('Error rating movie:', error);
+    throw error;
+  }
+};
+
+// Role Management API
+export const addRole = async (roleName: string): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/AddRole?roleName=` + encodeURIComponent(roleName),
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to add role');
+    }
+
+    return await response.text(); // Response from the API (like success or error message)
+  } catch (error) {
+    console.error('Error adding role:', error);
+    throw error;
+  }
+};
+
+export const assignRoleToUser = async (
+  userEmail: string,
+  roleName: string
+): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/AssignRoleToUser?userEmail=${encodeURIComponent(userEmail)}&roleName=${encodeURIComponent(roleName)}`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to assign role');
+    }
+
+    return await response.text(); // Response from the API (like success or error message)
+  } catch (error) {
+    console.error('Error assigning role to user:', error);
+    throw error;
+  }
+};
+
+// Fetch all roles
+export const fetchRoles = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${ROLE_URL}/GetAllRoles`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch roles');
+    }
+
+    const roles = await response.json();
+    return roles.map((role: { name: string }) => role.name); // Assuming roles have a 'name' field
+  } catch (error) {
+    console.error('Error fetching roles: ', error);
+    throw error;
+  }
+};
+
+// Fetch users in a specific role
+export const fetchUsersInRole = async (
+  roleName: string
+): Promise<MoviesUser[]> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/GetUsersInRole?roleName=${encodeURIComponent(roleName)}`,
+      {
+        credentials: 'include',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch users in role');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching users in role: ', error);
     throw error;
   }
 };

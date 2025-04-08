@@ -8,7 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberme, setRememberme] = useState<boolean>(false);
-
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   // state variable for error messages
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
@@ -70,83 +70,113 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="card border-0 shadow rounded-3 ">
-          <div className="card-body p-4 p-sm-5">
-            <h5 className="card-title text-center mb-5 fs-2">
-              Sign In
-            </h5>
-            <form onSubmit={handleSubmit}>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={email}
-                  onChange={handleChange}
-                />
-                <label htmlFor="email">Email address</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                />
-                <label htmlFor="password">Password</label>
-              </div>
-
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="rememberme"
-                  name="rememberme"
-                  checked={rememberme}
-                  onChange={handleChange}
-                />
-                <label className="form-check-label" htmlFor="rememberme">
-                  Remember password
-                </label>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  type="submit"
-                >
-                  Sign in
-                </button>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  onClick={handleRegisterClick}
-                >
-                  Register
-                </button>
-              </div>
-              <hr className="my-4" />
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-google btn-login text-uppercase fw-bold"
-                  type="button"
-                >
-                  <i className="fa-brands fa-google me-2"></i> Sign in with
-                  Google
-                </button>
-              </div>
-            </form>
-            {error && <p className="error">{error}</p>}
+    <div style={{ 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: 'url(/images/niche_movie.png)', // Set the image URL here
+      backgroundSize: 'cover', // Ensures the image covers the entire background
+      backgroundPosition: 'center', // Centers the image
+      backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+      overflowY: 'auto',
+      zIndex: 9999,
+      display: 'flex', // Centers the card horizontally and vertically
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="card border-0 shadow rounded-3" style={{ maxWidth: '400px', width: '100%' }}>  {/* Adjust the width here */}
+            <div className="card-body p-4 p-sm-5">
+              <h5 className="card-title text-center mb-5 fs-2">
+                Sign In
+              </h5>
+              <form onSubmit={handleSubmit}>
+                <div className="form-floating mb-3">
+                  <input
+                    className="form-control"
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="email">Email address</label>
+                </div>
+                <div className="form-floating mb-3 position-relative">
+                  <input
+                    className="form-control"
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="password">Password</label>
+                  <i
+                    className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      right: '1rem',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                      zIndex: 2,
+                    }}
+                  ></i>
+                </div>
+    
+                <div className="d-flex align-items-center mb-3">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="rememberme"
+                    name="rememberme"
+                    checked={rememberme}
+                    onChange={handleChange}
+                    style={{ marginRight: '0.4rem' }} // optional fine-tuning
+                  />
+                  <label className="form-check-label mb-0" htmlFor="rememberme">
+                    Remember me
+                  </label>
+                </div>
+    
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    type="submit"
+                  >
+                    Sign in
+                  </button>
+                </div>
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    onClick={handleRegisterClick}
+                  >
+                    Register
+                  </button>
+                </div>
+                <hr className="my-4" />
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-google btn-login text-uppercase fw-bold text-white"
+                    type="button"
+                  >
+                    <i className="fa-brands fa-google me-2"></i> Sign in with Google
+                  </button>
+                </div>
+              </form>
+              {error && <p className="error">{error}</p>}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
   );
 }
 

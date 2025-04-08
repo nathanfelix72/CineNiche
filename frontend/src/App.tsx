@@ -10,6 +10,7 @@ import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
+import RoleManagementPage from './pages/RoleManagmentPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
             <Route path="/welcomepage" element={<WelcomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/roles" element={<RoleManagementPage />} />
           </Routes>
         </Layout>
       </Router>

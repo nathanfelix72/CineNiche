@@ -1,17 +1,17 @@
 /* Import vintage and retro fonts */
 @import url('https://fonts.googleapis.com/css2?family=Monoton&family=Press+Start+2P&display=swap');
 
-body, html {
-  background-image: url('/images/niche_movie.png');
+body {
+  /* background-image: url('/images/niche_movie.png');
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: serif;
   color: #fcecc9;
-}
+} 
 
 
 /* Card styling */
@@ -91,7 +91,8 @@ body, html {
 .error {
   color: #ff5555;
   font-family: serif;
-  font-size: 0.65rem;
+  font-size: 1rem;
   text-align: center;
   margin-top: 1rem;
+  font-weight: bold;
 }
