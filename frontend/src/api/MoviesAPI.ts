@@ -1,4 +1,5 @@
 import { MoviesTitle } from '../types/MoviesTitle';
+import { MoviesUser } from '../types/MoviesUser';
 
 interface FetchMoviesResponse {
   movies: MoviesTitle[];
@@ -6,6 +7,7 @@ interface FetchMoviesResponse {
 }
 
 const API_URL = 'https://localhost:5000/movie';
+const USER_API_URL = 'https://localhost:5000/user';
 
 export const fetchMovies = async (
   pageSize: number,
@@ -32,7 +34,20 @@ export const fetchMovies = async (
       throw new Error('Failed to fetch movies');
     }
 
-    return await response.json();
+    const rawData = await response.json();
+
+    // Flatten the movie/avgStarRating structure
+    const flattenedMovies: MoviesTitle[] = rawData.movies.map(
+      (item: { movie: MoviesTitle; avgStarRating: number }) => ({
+        ...item.movie,
+        avgStarRating: item.avgStarRating,
+      })
+    );
+
+    return {
+      movies: flattenedMovies,
+      totalNumMovies: rawData.totalNumMovies,
+    };
   } catch (error) {
     console.error('Error fetching movies: ', error);
     throw error;
@@ -99,7 +114,7 @@ export const deleteMovie = async (showId: number): Promise<void> => {
 };
 
 export const fetchMovieById = async (id: number): Promise<MoviesTitle> => {
-  const response = await fetch(`https://localhost:5000/movie/${id}`, {
+  const response = await fetch(`${API_URL}/${id}`, {
     credentials: 'include',
   });
 
@@ -107,5 +122,60 @@ export const fetchMovieById = async (id: number): Promise<MoviesTitle> => {
     throw new Error('Failed to fetch movie by ID');
   }
 
-  return await response.json();
+  const raw = await response.json();
+  return {
+    ...raw.movie,
+    avgStarRating: raw.avgStarRating,
+  };
+};
+
+export const fetchUser = async (userId: number): Promise<MoviesUser> => {
+  try {
+    const response = await fetch(`${USER_API_URL}/${userId}`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user: ', error);
+    throw error;
+  }
+};
+
+export const updateUser = async (id: number, user: MoviesUser) => {
+  const response = await fetch(`${USER_API_URL}/UpdateUser/${id}`, {
+    // Remove the 'UpdateUser' part from the URL
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update user');
+  }
+
+  return response.json();
+};
+
+export const fetchUserRatings = async (userId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/GetUserRatings/${userId}`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user ratings');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user ratings: ', error);
+    throw error;
+  }
 };

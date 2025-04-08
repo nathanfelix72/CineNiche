@@ -18,6 +18,12 @@ namespace CineNiche.Controllers
             _moviesContext = temp;
         }
 
+        public class MoviesTitleWithRating
+        {
+            public MoviesTitle Movie { get; set; }
+            public double? AvgStarRating { get; set; }
+        }
+
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(
             int pageSize = 10,
@@ -42,9 +48,18 @@ namespace CineNiche.Controllers
             var totalNumMovies = query.Count();
 
             var result = query
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            .Skip((pageNum - 1) * pageSize)
+            .Take(pageSize)
+            .Select(m => new MoviesTitleWithRating
+            {
+                Movie = m,
+                AvgStarRating = _moviesContext.MoviesRatings
+                    .Where(r => r.ShowId == m.ShowId)
+                    .Select(r => (double?)r.Rating)
+                    .Average()
+            })
+            .ToList();
+
 
             return Ok(new { Movies = result, TotalNumMovies = totalNumMovies });
         }
@@ -149,7 +164,77 @@ namespace CineNiche.Controllers
             {
                 return NotFound();
             }
-            return Ok(movie);
+
+            var avgRating = _moviesContext.MoviesRatings
+                .Where(r => r.ShowId == id)
+                .Select(r => (double?)r.Rating)
+                .Average();
+
+            var result = new MoviesTitleWithRating
+            {
+                Movie = movie,
+                AvgStarRating = avgRating
+            };
+
+            return Ok(result);
         }
+
+        public class RatingDto
+        {
+            public int ShowId { get; set; }
+            public int Rating { get; set; } // between 1 and 5
+            public int? UserId { get; set; } // optional, for user tracking
+        }
+
+        [HttpPost("{id}/rate")]
+        public IActionResult RateMovie(int id, [FromBody] RatingDto rating)
+        {
+            if (rating.Rating < 1 || rating.Rating > 5)
+            {
+                return BadRequest("Rating must be between 1 and 5.");
+            }
+
+            var movie = _moviesContext.MoviesTitles.FirstOrDefault(m => m.ShowId == id);
+            if (movie == null)
+            {
+                return NotFound("Movie not found.");
+            }
+
+            var newRating = new MoviesRating
+            {
+                ShowId = id,
+                Rating = rating.Rating,
+                UserId = rating.UserId // optional
+            };
+
+            _moviesContext.MoviesRatings.Add(newRating);
+            _moviesContext.SaveChanges();
+
+            return Ok("Rating submitted.");
+        }
+
+        [HttpGet("GetUserRatings/{userId}")]
+        public IActionResult GetUserRatings(int userId)
+        {
+            var userRatings = _moviesContext.MoviesRatings
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Movie) // Ensure the Movie navigation property is included
+                .Select(r => new
+                {
+                    r.Movie, // Return the whole Movie object
+                    r.Rating
+                })
+                .ToList();
+
+            if (userRatings == null || !userRatings.Any())
+            {
+                return NotFound(new { message = "No ratings found for this user." });
+            }
+
+            return Ok(userRatings);
+        }
+
+
+
     }
 }

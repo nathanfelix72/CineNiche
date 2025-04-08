@@ -120,7 +120,7 @@ function Register() {
                   style={{
                     cursor: 'default',
                     color: '#d4145a',
-                    fontFamily: 'serif'
+                    fontFamily: 'serif',
                   }}
                 >
                   Already have an account?{' '}
@@ -132,15 +132,17 @@ function Register() {
                       transition: 'transform 0.2s ease',
                       display: 'inline-block',
                     }}
-                    onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-                    onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.transform = 'scale(1.1)')
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.transform = 'scale(1)')
+                    }
                   >
                     Go to Login
                   </span>
                 </label>
               </div>
-
-
             </form>
             <strong>{error && <p className="error">{error}</p>}</strong>
           </div>
