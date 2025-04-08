@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import WelcomePage from './pages/WelcomePage';
-
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 
