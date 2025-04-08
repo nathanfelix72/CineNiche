@@ -8,6 +8,19 @@ import {
   fetchCurrentUser,
 } from '../api/MoviesAPI'; // Add fetchCurrentUser here
 
+interface RatedMovie {
+  movie: {
+    title: string;
+  };
+  rating: number;
+}
+
+interface AggregatedMovie {
+  title: string;
+  ratingSum: number;
+  ratingCount: number;
+}
+
 const ProfilePage = () => {
   const [user, setUser] = useState<MoviesUser | null>(null);
   const [userRatedMovies, setUserRatedMovies] = useState<
@@ -105,18 +118,31 @@ const ProfilePage = () => {
       <h3 className="text-xl font-bold mt-6">Rated Movies:</h3>
       <ul>
         {userRatedMovies.length > 0 ? (
-          userRatedMovies.map((item, index) =>
-            // Ensure item.movie is not undefined and has a title
-            item.movie && item.movie.title ? (
+          // Group ratings by movie title and calculate the average
+          userRatedMovies
+            .reduce((acc: AggregatedMovie[], item: RatedMovie) => {
+              // Find existing movie entry
+              const movie = acc.find((m) => m.title === item.movie.title);
+              if (movie) {
+                // If movie exists, add rating to the sum and increment the count
+                movie.ratingSum += item.rating;
+                movie.ratingCount += 1;
+              } else {
+                // Otherwise, create a new entry for the movie
+                acc.push({
+                  title: item.movie.title,
+                  ratingSum: item.rating,
+                  ratingCount: 1,
+                });
+              }
+              return acc;
+            }, [])
+            .map((movie, index) => (
               <li key={index} className="mb-2">
-                <strong>{item.movie.title}</strong>: {item.rating} stars
+                <strong>{movie.title}</strong>:{' '}
+                {(movie.ratingSum / movie.ratingCount).toFixed(1)} stars
               </li>
-            ) : (
-              <li key={index} className="mb-2">
-                Movie data is unavailable
-              </li>
-            )
-          )
+            ))
         ) : (
           <li>No rated movies found.</li>
         )}

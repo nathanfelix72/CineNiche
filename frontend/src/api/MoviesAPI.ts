@@ -199,3 +199,32 @@ export const fetchCurrentUser = async (): Promise<{
     throw error;
   }
 };
+
+export const rateMovie = async (
+  showId: number,
+  rating: number
+): Promise<void> => {
+  try {
+    // Fetch current user to get the userId
+    const currentUser = await fetchCurrentUser();
+
+    // Send the userId along with the rating in the request body
+    const response = await fetch(`${API_URL}/${showId}/rate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // Ensure user is authenticated
+      body: JSON.stringify({
+        rating,
+        userId: currentUser.userId, // UserId from the current authenticated user
+        showId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit rating');
+    }
+  } catch (error) {
+    console.error('Error rating movie:', error);
+    throw error;
+  }
+};
