@@ -21,8 +21,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()  
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddTransient<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+// builder.Services.AddIdentityApiEndpoints<IdentityUser>()  
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

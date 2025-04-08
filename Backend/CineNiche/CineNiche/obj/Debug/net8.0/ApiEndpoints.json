@@ -512,6 +512,69 @@
     ]
   },
   {
+    "ContainingType": "CineNiche.Controllers.RoleController",
+    "Method": "AddRole",
+    "RelativePath": "Role/AddRole",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roleName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CineNiche.Controllers.RoleController",
+    "Method": "AssignRoleToUser",
+    "RelativePath": "Role/AssignRoleToUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userEmail",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "roleName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CineNiche.Controllers.RoleController",
+    "Method": "GetAllRoles",
+    "RelativePath": "Role/GetAllRoles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CineNiche.Controllers.RoleController",
+    "Method": "GetUsersInRole",
+    "RelativePath": "Role/GetUsersInRole",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roleName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "UserController",
     "Method": "PostUser",
     "RelativePath": "User",
