@@ -52,6 +52,15 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+// Add HttpClient for Python recommender microservice
+builder.Services.AddHttpClient<MovieRecommenderService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8000");
+});
+
+builder.Services.AddScoped<MovieRecommenderService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
