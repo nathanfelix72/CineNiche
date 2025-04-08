@@ -7,22 +7,29 @@ import './MovieDetailsPage.css';
 
 const StarRatingInput = ({
   showId,
+  userId,
   onRatingSubmitted,
 }: {
   showId: number;
+  userId: number | null;
   onRatingSubmitted: () => void;
 }) => {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const handleRate = async (rating: number) => {
+    if (userId === null) {
+      alert('You must be logged in to rate a movie.');
+      return;
+    }
+
     setSelectedRating(rating);
     try {
       await fetch(`https://localhost:5000/movie/${showId}/rate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ showId, rating }),
+        body: JSON.stringify({ showId, rating, userId }), // Include userId
       });
 
       setSubmitted(true);
@@ -61,6 +68,7 @@ const MovieDetailsPage = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState<MoviesTitle | null>(null);
   const [relatedMovies, setRelatedMovies] = useState<string[]>([]);
+  const [userId, setUserId] = useState<number | null>(null); // State for user ID
 
   // Load the selected movie by ID
   useEffect(() => {
@@ -74,12 +82,33 @@ const MovieDetailsPage = () => {
     loadMovie();
   }, [id]);
 
+  // Fetch the current user ID from API or context (adjust based on your auth setup)
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('https://localhost:5000/user/current', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (data && data.userId) {
+          setUserId(data.userId);
+        }
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   // Fetch related movies by title from hybrid recommender
   useEffect(() => {
     const loadRelated = async () => {
       if (movie?.title) {
         try {
-          const response = await fetch(`/api/recommendations/title?title=${encodeURIComponent(movie.title)}&count=10`);
+          const response = await fetch(
+            `/api/recommendations/title?title=${encodeURIComponent(movie.title)}&count=10`
+          );
           const data = await response.json();
           setRelatedMovies(data.recommended || []);
         } catch (error) {
@@ -127,6 +156,7 @@ const MovieDetailsPage = () => {
 
       <StarRatingInput
         showId={movie.showId}
+        userId={userId} // Pass the userId to StarRatingInput
         onRatingSubmitted={async () => {
           const updated = await fetchMovieById(movie.showId);
           setMovie(updated);
