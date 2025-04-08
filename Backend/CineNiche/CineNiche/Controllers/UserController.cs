@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class UserController : ControllerBase
 {
     private readonly MoviesContext _context;
@@ -91,7 +91,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("current")]
-    [Authorize]
+    //[Authorize]
     public IActionResult GetCurrentUser()
     {
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
