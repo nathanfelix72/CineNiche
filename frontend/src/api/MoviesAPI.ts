@@ -10,7 +10,6 @@ const API_URL = 'https://localhost:5000/movie';
 const USER_API_URL = 'https://localhost:5000/user';
 const ROLE_URL = 'https://localhost:5000/Role';
 
-
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,

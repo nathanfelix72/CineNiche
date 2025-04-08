@@ -6,7 +6,7 @@ from surprise import SVD, Dataset, Reader
 import sqlite3
 
 # === Load and prepare data ===
-conn = sqlite3.connect("/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/Movies.sqlite")  
+conn = sqlite3.connect("../Backend/CineNiche/CineNiche/Movies.sqlite") 
 df_ratings = pd.read_sql_query("SELECT * FROM movies_ratings", conn)
 df_titles = pd.read_sql_query("SELECT * FROM movies_titles", conn)
 df_users  = pd.read_sql_query("SELECT * FROM movies_users", conn)  

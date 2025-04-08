@@ -22,7 +22,7 @@
   },
   {
     "ContainingType": "CineNiche.Controllers.RecommendationsController",
-    "Method": "GetRecommendationsByUser",
+    "Method": "GetUserRecommendations",
     "RelativePath": "api/recommendations/user",
     "HttpMethod": "GET",
     "IsController": true,
