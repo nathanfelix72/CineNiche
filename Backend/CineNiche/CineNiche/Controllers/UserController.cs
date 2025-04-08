@@ -31,6 +31,24 @@ public class UserController : ControllerBase
         return user;
     }
 
+    //  Recommender method (Amy)
+    [HttpGet("by-email")]
+    public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return BadRequest(new { message = "Email is required." });
+        }
+
+        var user = await _context.MoviesUsers.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
+
+        return Ok(new { userId = user.UserId });
+    }
+    
     [HttpPut("UpdateUser/{userId}")]
     public IActionResult UpdateUser(int userId, [FromBody] MoviesUser updatedUser)
     {
@@ -94,7 +112,6 @@ public class UserController : ControllerBase
     public IActionResult GetCurrentUser()
     {
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
         if (email == null)
         {
             return Unauthorized(new { message = "User email not found in claims." });
@@ -106,6 +123,7 @@ public class UserController : ControllerBase
             return NotFound(new { message = "User not found in database." });
         }
 
-        return Ok(new { userId = user.UserId, email = user.Email });
+        // Now return the user name along with userId and email:
+        return Ok(new { userId = user.UserId, email = user.Email, name = user.Name });
     }
 }
