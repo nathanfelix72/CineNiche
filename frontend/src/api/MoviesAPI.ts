@@ -8,6 +8,7 @@ interface FetchMoviesResponse {
 
 const API_URL = 'https://localhost:5000/movie';
 const USER_API_URL = 'https://localhost:5000/user';
+const ROLE_URL = 'https://localhost:5000/Role';
 
 
 export const fetchMovies = async (
@@ -196,6 +197,129 @@ export const fetchCurrentUser = async (): Promise<{
     return await response.json();
   } catch (error) {
     console.error('Error fetching current user:', error);
+    throw error;
+  }
+};
+
+export const rateMovie = async (
+  showId: number,
+  rating: number
+): Promise<void> => {
+  try {
+    // Fetch current user to get the userId
+    const currentUser = await fetchCurrentUser();
+
+    // Send the userId along with the rating in the request body
+    const response = await fetch(`${API_URL}/${showId}/rate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // Ensure user is authenticated
+      body: JSON.stringify({
+        rating,
+        userId: currentUser.userId, // UserId from the current authenticated user
+        showId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit rating');
+    }
+  } catch (error) {
+    console.error('Error rating movie:', error);
+    throw error;
+  }
+};
+
+// Role Management API
+export const addRole = async (roleName: string): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/AddRole?roleName=` + encodeURIComponent(roleName),
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to add role');
+    }
+
+    return await response.text(); // Response from the API (like success or error message)
+  } catch (error) {
+    console.error('Error adding role:', error);
+    throw error;
+  }
+};
+
+export const assignRoleToUser = async (
+  userEmail: string,
+  roleName: string
+): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/AssignRoleToUser?userEmail=${encodeURIComponent(userEmail)}&roleName=${encodeURIComponent(roleName)}`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to assign role');
+    }
+
+    return await response.text(); // Response from the API (like success or error message)
+  } catch (error) {
+    console.error('Error assigning role to user:', error);
+    throw error;
+  }
+};
+
+// Fetch all roles
+export const fetchRoles = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${ROLE_URL}/GetAllRoles`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch roles');
+    }
+
+    const roles = await response.json();
+    return roles.map((role: { name: string }) => role.name); // Assuming roles have a 'name' field
+  } catch (error) {
+    console.error('Error fetching roles: ', error);
+    throw error;
+  }
+};
+
+// Fetch users in a specific role
+export const fetchUsersInRole = async (
+  roleName: string
+): Promise<MoviesUser[]> => {
+  try {
+    const response = await fetch(
+      `${ROLE_URL}/GetUsersInRole?roleName=${encodeURIComponent(roleName)}`,
+      {
+        credentials: 'include',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch users in role');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching users in role: ', error);
     throw error;
   }
 };
