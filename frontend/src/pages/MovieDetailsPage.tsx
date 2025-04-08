@@ -5,6 +5,8 @@ import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
 import './MovieDetailsPage.css';
 
+
+
 const StarRatingInput = ({
   showId,
   userId,
