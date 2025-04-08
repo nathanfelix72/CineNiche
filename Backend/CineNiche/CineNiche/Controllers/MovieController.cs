@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CineNiche.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CineNiche.Controllers
 {
@@ -213,28 +214,38 @@ namespace CineNiche.Controllers
             return Ok("Rating submitted.");
         }
 
-        [HttpGet("GetUserRatings/{userId}")]
-        public IActionResult GetUserRatings(int userId)
+        [HttpGet("GetUserRatings")]
+        public IActionResult GetUserRatings()
         {
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (email == null)
+            {
+                return Unauthorized("User email not found.");
+            }
+
+            var domainUser = _moviesContext.MoviesUsers.FirstOrDefault(u => u.Email == email);
+            if (domainUser == null)
+            {
+                return NotFound("User not found in movie database.");
+            }
+
             var userRatings = _moviesContext.MoviesRatings
-                .Where(r => r.UserId == userId)
-                .Include(r => r.Movie) // Ensure the Movie navigation property is included
+                .Where(r => r.UserId == domainUser.UserId)
+                .Include(r => r.Movie)
                 .Select(r => new
                 {
-                    r.Movie, // Return the whole Movie object
+                    r.Movie,
                     r.Rating
                 })
                 .ToList();
 
-            if (userRatings == null || !userRatings.Any())
+            if (!userRatings.Any())
             {
                 return NotFound(new { message = "No ratings found for this user." });
             }
 
             return Ok(userRatings);
         }
-
-
-
     }
 }

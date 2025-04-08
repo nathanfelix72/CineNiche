@@ -3,6 +3,8 @@ using CineNiche.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("[controller]")]
 [ApiController]
@@ -87,5 +89,23 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("current")]
+    [Authorize]
+    public IActionResult GetCurrentUser()
+    {
+        var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
+        if (email == null)
+        {
+            return Unauthorized(new { message = "User email not found in claims." });
+        }
+
+        var user = _context.MoviesUsers.FirstOrDefault(u => u.Email == email);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found in database." });
+        }
+
+        return Ok(new { userId = user.UserId, email = user.Email });
+    }
 }
