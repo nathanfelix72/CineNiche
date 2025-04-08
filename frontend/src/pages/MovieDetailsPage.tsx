@@ -3,9 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MoviesTitle } from '../types/MoviesTitle';
 import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
-import './MovieDetailsPage.css';
-
-
+import './movieDetailsPage.css';
 
 const StarRatingInput = ({
   showId,
