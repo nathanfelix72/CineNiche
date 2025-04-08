@@ -48,3 +48,24 @@
   font-weight: 200;
   font-style: normal;
 }
+
+/* Carousel styles */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  min-width: 200px;
+  background: #eee;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.carousel-section {
+  margin-bottom: 2rem;
+}

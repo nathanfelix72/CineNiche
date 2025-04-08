@@ -10,6 +10,7 @@ const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<MoviesTitle[]>([]);
   const [searchResults, setSearchResults] = useState<MoviesTitle[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -53,9 +54,10 @@ const AdminMoviesPage = () => {
   // Handle search logic
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      // If the search query is empty, show all movies
+      // Clear search
       setSearchResults([]);
-      setPageNum(1); // Reset pagination
+      setHasSearched(false);
+      setPageNum(1);
       try {
         const data = await fetchMovies(pageSize, 1, [], '');
         setMovies(data.movies);
@@ -65,12 +67,13 @@ const AdminMoviesPage = () => {
         alert('Failed to load all movies.');
       }
     } else {
-      // Perform the search with the entered query
+      // Do the actual search
       try {
-        const data = await fetchMovies(pageSize, pageNum, [], searchQuery);
+        const data = await fetchMovies(pageSize, 1, [], searchQuery);
         setSearchResults(data.movies);
+        setHasSearched(true);
+        setPageNum(1);
         setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
-        setPageNum(1); // Reset to page 1 after search
       } catch (err) {
         console.error('Search error:', err);
         alert('Something went wrong while searching.');
@@ -119,12 +122,25 @@ const AdminMoviesPage = () => {
         />
       )}
 
-      <div style={{ marginBottom: '1rem' }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // prevent page refresh
+          handleSearch();
+        }}
+        style={{ marginBottom: '1rem' }}
+      >
         <input
           type="text"
           placeholder="Search by movie title..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)} // Only updates the search query
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearchQuery(value);
+            if (value.trim() === '') {
+              setHasSearched(false);
+              setSearchResults([]);
+            }
+          }}
           className="form-control"
           style={{
             maxWidth: '300px',
@@ -133,13 +149,10 @@ const AdminMoviesPage = () => {
           }}
         />
 
-        <button
-          className="btn btn-outline-primary"
-          onClick={handleSearch} // Only trigger search when clicked
-        >
+        <button type="submit" className="btn btn-outline-primary">
           Search
         </button>
-      </div>
+      </form>
 
       <table className="table table-bordered table-striped">
         <thead className="table-dark">
@@ -148,17 +161,19 @@ const AdminMoviesPage = () => {
             <th>Type</th>
             <th>Title</th>
             <th>Rating</th>
-            <th></th>
+            <th>Avg Star Rating</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {/* Display either the search results or full list of movies */}
-          {(searchQuery ? searchResults : movies).map((m) => (
+          {(hasSearched ? searchResults : movies).map((m) => (
             <tr key={m.showId}>
               <td>{m.showId}</td>
               <td>{m.type}</td>
               <td>{m.title}</td>
               <td>{m.rating}</td>
+              <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"

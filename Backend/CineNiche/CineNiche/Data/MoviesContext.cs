@@ -29,13 +29,17 @@ public partial class MoviesContext : DbContext
     {
         modelBuilder.Entity<MoviesRating>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_ratings");
+            entity.HasKey(e => e.Id);
+            entity.ToTable("movies_ratings");
 
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.ShowId).HasColumnName("show_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            // Configure the relationship with MoviesTitle
+            entity.HasOne(r => r.Movie) // A rating is related to one movie
+                  .WithMany() // A movie can have many ratings
+                  .HasForeignKey(r => r.ShowId); // ShowId is the foreign key
         });
 
         modelBuilder.Entity<MoviesTitle>(entity =>
@@ -79,9 +83,9 @@ public partial class MoviesContext : DbContext
 
         modelBuilder.Entity<MoviesUser>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_users");
+            entity.ToTable("movies_users");
+
+            entity.HasKey(e => e.UserId);
 
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.AmazonPrime).HasColumnName("Amazon Prime");

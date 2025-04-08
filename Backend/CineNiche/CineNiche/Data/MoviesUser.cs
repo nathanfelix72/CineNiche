@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CineNiche.Data;
 
 public partial class MoviesUser
 {
-    public int? UserId { get; set; }
+    [Key]
+    [Required]
+    public int UserId { get; set; }
 
     public string? Name { get; set; }
 
