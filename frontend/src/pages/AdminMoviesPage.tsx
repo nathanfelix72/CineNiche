@@ -148,7 +148,8 @@ const AdminMoviesPage = () => {
             <th>Type</th>
             <th>Title</th>
             <th>Rating</th>
-            <th></th>
+            <th>Avg Star Rating</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -159,6 +160,7 @@ const AdminMoviesPage = () => {
               <td>{m.type}</td>
               <td>{m.title}</td>
               <td>{m.rating}</td>
+              <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"

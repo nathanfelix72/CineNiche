@@ -41,4 +41,6 @@ export interface MoviesTitle {
   tvDramas: number;
   talkShowsTvComedies: number;
   thrillers: number;
+
+  avgStarRating?: number;
 }

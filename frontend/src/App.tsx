@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import WelcomePage from './pages/WelcomePage';
-
+import ProfilePage from './pages/ProfilePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 
@@ -24,8 +24,9 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
             <Route path="/welcomepage" element={<WelcomePage />} />
-            </Routes>
-          </Layout>
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+        </Layout>
       </Router>
     </>
   );
