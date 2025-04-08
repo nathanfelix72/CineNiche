@@ -24,10 +24,7 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
             <Route path="/welcomepage" element={<WelcomePage />} />
-            <Route
-              path="/profile/:userId"
-              element={<ProfilePage userId={1} />}
-            />
+            <Route path="/profile" element={<ProfilePage />} />
           </Routes>
         </Layout>
       </Router>

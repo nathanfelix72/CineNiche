@@ -326,17 +326,11 @@
   {
     "ContainingType": "CineNiche.Controllers.MovieController",
     "Method": "GetUserRatings",
-    "RelativePath": "Movie/GetUserRatings/{userId}",
+    "RelativePath": "Movie/GetUserRatings",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -546,6 +540,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetCurrentUser",
+    "RelativePath": "User/current",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -148,7 +148,6 @@ export const fetchUser = async (userId: number): Promise<MoviesUser> => {
 
 export const updateUser = async (id: number, user: MoviesUser) => {
   const response = await fetch(`${USER_API_URL}/UpdateUser/${id}`, {
-    // Remove the 'UpdateUser' part from the URL
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -163,9 +162,9 @@ export const updateUser = async (id: number, user: MoviesUser) => {
   return response.json();
 };
 
-export const fetchUserRatings = async (userId: number) => {
+export const fetchUserRatings = async () => {
   try {
-    const response = await fetch(`${API_URL}/GetUserRatings/${userId}`, {
+    const response = await fetch(`${API_URL}/GetUserRatings`, {
       credentials: 'include',
     });
 
@@ -176,6 +175,26 @@ export const fetchUserRatings = async (userId: number) => {
     return await response.json();
   } catch (error) {
     console.error('Error fetching user ratings: ', error);
+    throw error;
+  }
+};
+
+export const fetchCurrentUser = async (): Promise<{
+  userId: number;
+  email: string;
+}> => {
+  try {
+    const response = await fetch(`${USER_API_URL}/current`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch current user');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching current user:', error);
     throw error;
   }
 };

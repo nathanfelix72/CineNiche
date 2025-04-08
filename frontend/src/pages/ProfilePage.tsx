@@ -1,36 +1,45 @@
 import { useEffect, useState } from 'react';
 import { MoviesUser } from '../types/MoviesUser';
-import { MoviesTitle } from '../types/MoviesTitle'; // Import MoviesTitle interface
-import { fetchUser, fetchUserRatings, updateUser } from '../api/MoviesAPI'; // Import the API functions
+import { MoviesTitle } from '../types/MoviesTitle';
+import {
+  fetchUser,
+  fetchUserRatings,
+  updateUser,
+  fetchCurrentUser,
+} from '../api/MoviesAPI'; // Add fetchCurrentUser here
 
-interface ProfilePageProps {
-  userId: number;
-}
-
-const ProfilePage = ({ userId }: ProfilePageProps) => {
+const ProfilePage = () => {
   const [user, setUser] = useState<MoviesUser | null>(null);
   const [userRatedMovies, setUserRatedMovies] = useState<
-    { movie: MoviesTitle; rating: number }[] // Store both movie and rating
+    { movie: MoviesTitle; rating: number }[]
   >([]);
-  // State for rated movies
   const [editing, setEditing] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null); // Store userId here
 
   useEffect(() => {
-    // Fetch user data
+    // Fetch current user using the new API call
+    fetchCurrentUser()
+      .then((data) => {
+        setUserId(data.userId); // Set userId from the fetched data
+      })
+      .catch((err) => console.error('Failed to get current user ID', err));
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    // Fetch user details once we have the userId
     fetchUser(userId)
       .then((data) => {
-        setUser(data);
+        setUser(data); // Set user from the fetched data
       })
       .catch((err) => console.error('Failed to fetch user', err));
 
-    // Fetch rated movies for the user
-    fetchUserRatings(userId)
-      .then((data) => {
-        console.log(data); // Log the data for debugging
-        setUserRatedMovies(data);
-      })
+    // Fetch user ratings using the current userId
+    fetchUserRatings()
+      .then((data) => setUserRatedMovies(data))
       .catch((err) => console.error('Failed to fetch user rated movies', err));
-  }, [userId]);
+  }, [userId]); // Fetch user data whenever userId changes
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,9 +47,8 @@ const ProfilePage = ({ userId }: ProfilePageProps) => {
   };
 
   const handleSave = () => {
-    if (user) {
-      // Save updated user data
-      updateUser(userId, user)
+    if (user && user.userId) {
+      updateUser(user.userId, user) // Pass user.userId to the update function
         .then(() => setEditing(false))
         .catch((err) => console.error('Update failed', err));
     }
