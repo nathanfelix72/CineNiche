@@ -15,7 +15,6 @@ import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
-import RoleManagementPage from './pages/RoleManagmentPage';
 import CookieConsent from 'react-cookie-consent';
 import { useEffect, useState } from 'react';
 
@@ -76,7 +75,6 @@ function App() {
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
             <Route path="/welcomepage" element={<WelcomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/roles" element={<RoleManagementPage />} />
           </Routes>
         </Layout>
       </Router>

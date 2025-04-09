@@ -7,6 +7,7 @@ import {
   updateUser,
   fetchCurrentUser,
 } from '../api/MoviesAPI'; // Add fetchCurrentUser here
+import AuthorizeView from '../components/AuthorizeView';
 
 interface RatedMovie {
   movie: {
@@ -70,11 +71,20 @@ const ProfilePage = () => {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-black text-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4">User Profile</h2>
+    <AuthorizeView>
+      <div className="max-w-2xl mx-auto p-4 bg-black text-white shadow-md rounded-md">
+        <h2 className="text-2xl font-bold mb-4">User Profile</h2>
 
-      {['name', 'phone', 'email', 'age', 'gender', 'city', 'state', 'zip'].map(
-        (field) => (
+        {[
+          'name',
+          'phone',
+          'email',
+          'age',
+          'gender',
+          'city',
+          'state',
+          'zip',
+        ].map((field) => (
           <div className="mb-3" key={field}>
             <label className="block text-sm font-medium">
               {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -87,67 +97,67 @@ const ProfilePage = () => {
               className="w-full border border-gray-300 rounded p-2"
             />
           </div>
-        )
-      )}
+        ))}
 
-      {editing ? (
-        <div className="mt-4 flex gap-2">
-          <button
-            onClick={handleSave}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Save
-          </button>
-          <button
-            onClick={() => setEditing(false)}
-            className="bg-gray-300 text-black px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => setEditing(true)}
-          className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Edit Profile
-        </button>
-      )}
-
-      {/* Display Rated Movies */}
-      <h3 className="text-xl font-bold mt-6">Rated Movies:</h3>
-      <ul>
-        {userRatedMovies.length > 0 ? (
-          // Group ratings by movie title and calculate the average
-          userRatedMovies
-            .reduce((acc: AggregatedMovie[], item: RatedMovie) => {
-              // Find existing movie entry
-              const movie = acc.find((m) => m.title === item.movie.title);
-              if (movie) {
-                // If movie exists, add rating to the sum and increment the count
-                movie.ratingSum += item.rating;
-                movie.ratingCount += 1;
-              } else {
-                // Otherwise, create a new entry for the movie
-                acc.push({
-                  title: item.movie.title,
-                  ratingSum: item.rating,
-                  ratingCount: 1,
-                });
-              }
-              return acc;
-            }, [])
-            .map((movie, index) => (
-              <li key={index} className="mb-2">
-                <strong>{movie.title}</strong>:{' '}
-                {(movie.ratingSum / movie.ratingCount).toFixed(1)} stars
-              </li>
-            ))
+        {editing ? (
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={handleSave}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setEditing(false)}
+              className="bg-gray-300 text-black px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+          </div>
         ) : (
-          <li>No rated movies found.</li>
+          <button
+            onClick={() => setEditing(true)}
+            className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Edit Profile
+          </button>
         )}
-      </ul>
-    </div>
+
+        {/* Display Rated Movies */}
+        <h3 className="text-xl font-bold mt-6">Rated Movies:</h3>
+        <ul>
+          {userRatedMovies.length > 0 ? (
+            // Group ratings by movie title and calculate the average
+            userRatedMovies
+              .reduce((acc: AggregatedMovie[], item: RatedMovie) => {
+                // Find existing movie entry
+                const movie = acc.find((m) => m.title === item.movie.title);
+                if (movie) {
+                  // If movie exists, add rating to the sum and increment the count
+                  movie.ratingSum += item.rating;
+                  movie.ratingCount += 1;
+                } else {
+                  // Otherwise, create a new entry for the movie
+                  acc.push({
+                    title: item.movie.title,
+                    ratingSum: item.rating,
+                    ratingCount: 1,
+                  });
+                }
+                return acc;
+              }, [])
+              .map((movie, index) => (
+                <li key={index} className="mb-2">
+                  <strong>{movie.title}</strong>:{' '}
+                  {(movie.ratingSum / movie.ratingCount).toFixed(1)} stars
+                </li>
+              ))
+          ) : (
+            <li>No rated movies found.</li>
+          )}
+        </ul>
+      </div>
+    </AuthorizeView>
   );
 };
 
