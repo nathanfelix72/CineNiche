@@ -1,0 +1,18 @@
+/* MovieDetailsPage.module.css or a general CSS file */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  background: #222;
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 150px;
+  text-align: center;
+  color: white;
+  border: 1px solid #444;
+}

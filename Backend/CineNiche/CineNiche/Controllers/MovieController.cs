@@ -9,6 +9,7 @@ namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
@@ -32,6 +33,17 @@ namespace CineNiche.Controllers
             [FromQuery] string? searchQuery = null
         )
         {
+            string? favMovie = Request.Cookies["FavoriteMovie"];
+            Console.WriteLine("-----COOKIE-----\n" + favMovie);
+
+            HttpContext.Response.Cookies.Append("FavoriteMovie", "Angry Birds", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddMinutes(10)
+            });
+
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
             // If there is a search query, filter movies based on title using LIKE for case-insensitive search
@@ -74,7 +86,7 @@ namespace CineNiche.Controllers
 
             return Ok(movieTypes);
         }
-
+        
         [HttpPost("AddMovie")]
         public IActionResult AddProject([FromBody] MoviesTitle newMovie)
         {

@@ -3,6 +3,10 @@ import { useParams } from 'react-router-dom';
 import { MoviesTitle } from '../types/MoviesTitle';
 import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
+import { fetchRelatedMovies } from '../api/MoviesAPI';
+import './MovieDetailsPage.module.css';
+import RelatedMovies from '../components/RelatedMovies';
+import AuthorizeView from '../components/AuthorizeView';
 import './MovieDetailsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle } from 'react-icons/fa';
@@ -28,12 +32,15 @@ const StarRatingInput = ({
 
     setSelectedRating(rating);
     try {
-      await fetch(`https://localhost:5000/movie/${showId}/rate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ showId, rating, userId }), // Include userId
-      });
+      await fetch(
+        `https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Movie/${showId}/rate`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ showId, rating, userId }), // Include userId
+        }
+      );
 
       setSubmitted(true);
       onRatingSubmitted();
@@ -70,7 +77,9 @@ const MovieDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [movie, setMovie] = useState<MoviesTitle | null>(null);
-  const [relatedMovies, setRelatedMovies] = useState<string[]>([]);
+  const [relatedMovies, setRelatedMovies] = useState<
+    { id: number; title: string }[]
+  >([]);
   const [userId, setUserId] = useState<number | null>(null); // State for user ID
   // Dynamically fetch image based on movie title
   const getMovieImage = (title: string) => {
@@ -119,9 +128,12 @@ const MovieDetailsPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('https://localhost:5000/user/current', {
-          credentials: 'include',
-        });
+        const response = await fetch(
+          'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/User/current',
+          {
+            credentials: 'include',
+          }
+        );
         const data = await response.json();
         if (data && data.userId) {
           setUserId(data.userId);
@@ -139,11 +151,20 @@ const MovieDetailsPage = () => {
     const loadRelated = async () => {
       if (movie?.title) {
         try {
-          const response = await fetch(
-            `/api/recommendations/title?title=${encodeURIComponent(movie.title)}&count=10`
-          );
-          const data = await response.json();
-          setRelatedMovies(data.recommended || []);
+          const data = await fetchRelatedMovies(movie.title);
+          console.log('Raw response from fetchRelatedMovies:', data);
+
+          // Option 1: if data is an object with .recommended
+          if (Array.isArray(data.recommended)) {
+            setRelatedMovies(data.recommended);
+          }
+          // Option 2: if data *is* the array
+          else if (Array.isArray(data)) {
+            setRelatedMovies(data);
+          } else {
+            console.warn('Unexpected data format:', data);
+            setRelatedMovies([]); // prevent crash
+          }
         } catch (error) {
           console.error('Error fetching related movies:', error);
         }
@@ -156,6 +177,37 @@ const MovieDetailsPage = () => {
   if (!movie) return <p>Loading...</p>;
 
   return (
+    <AuthorizeView>
+      <div className="movie-details">
+        <h2>{movie.title}</h2>
+        <p>
+          <strong>Type:</strong> {movie.type}
+        </p>
+        <p>
+          <strong>Director:</strong> {movie.director}
+        </p>
+        <p>
+          <strong>Cast:</strong> {movie.cast}
+        </p>
+        <p>
+          <strong>Country:</strong> {movie.country}
+        </p>
+        <p>
+          <strong>Release Year:</strong> {movie.releaseYear}
+        </p>
+        <p>
+          <strong>Rating:</strong> {movie.rating}
+        </p>
+        {movie.avgStarRating !== undefined && movie.avgStarRating !== null ? (
+          <p>
+            <strong>Average Star Rating:</strong>{' '}
+            {movie.avgStarRating.toFixed(1)} / 5 ⭐
+          </p>
+        ) : (
+          <p>
+            <strong>Average Star Rating:</strong> Not yet rated
+          </p>
+        )}
     <div style={{ 
       position: 'fixed',
       top: 0,
@@ -278,6 +330,14 @@ const MovieDetailsPage = () => {
             <p><strong>Average Star Rating:</strong> Not yet rated</p>
           )}
 
+        <StarRatingInput
+          showId={movie.showId}
+          userId={userId} // Pass the userId to StarRatingInput
+          onRatingSubmitted={async () => {
+            const updated = await fetchMovieById(movie.showId);
+            setMovie(updated);
+          }}
+        />
           <StarRatingInput
             showId={movie.showId}
             userId={userId} // Pass the userId to StarRatingInput
@@ -287,6 +347,19 @@ const MovieDetailsPage = () => {
             }}
           />
 
+        <p>
+          <strong>Duration:</strong> {movie.duration}
+        </p>
+        <p>
+          <strong>Description:</strong> {movie.description}
+        </p>
+        <p>
+          <strong>Genres:</strong>{' '}
+          {Object.entries(movie)
+            .filter(([key, value]) => genreKeys.includes(key) && value === 1)
+            .map(([key]) => genreDisplayNames[key])
+            .join(', ') || 'None'}
+        </p>
           <p><strong>Duration:</strong> {movie.duration}</p>
           <p><strong>Description:</strong> {movie.description}</p>
           <p><strong>Genres:</strong> {Object.entries(movie)
@@ -295,6 +368,10 @@ const MovieDetailsPage = () => {
             .join(', ') || 'None'}
           </p>
 
+        {/* Related Movies Carousel */}
+        <RelatedMovies relatedMovies={relatedMovies} />
+      </div>
+    </AuthorizeView>
           {/* 🎯 Related Movies Carousel */}
           {relatedMovies.length > 0 && (
             <div className="related-movies">

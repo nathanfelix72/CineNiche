@@ -6,9 +6,15 @@ interface FetchMoviesResponse {
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000/movie';
-const USER_API_URL = 'https://localhost:5000/user';
-const ROLE_URL = 'https://localhost:5000/Role';
+//const API_URL = 'https://localhost:5000/movie';
+//const USER_API_URL = 'https://localhost:5000/user';
+//const ROLE_URL = 'https://localhost:5000/Role';
+const API_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Movie';
+const USER_API_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/User';
+const ROLE_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Role';
 
 export const fetchMovies = async (
   pageSize: number,
@@ -322,3 +328,15 @@ export const fetchUsersInRole = async (
     throw error;
   }
 };
+
+export const fetchRelatedMovies = async (title: string) => {
+  const res = await fetch(`http://localhost:8000/recommend?title=${encodeURIComponent(title)}&count=6`);
+  if (!res.ok) throw new Error("Failed to fetch related movies");
+
+  const data = await res.json();
+  console.log("fetchRelatedMovies response:", data);
+
+  // Either return data directly or data.recommended
+  return data.recommended || data; 
+};
+

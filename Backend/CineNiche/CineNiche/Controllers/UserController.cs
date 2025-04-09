@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly MoviesContext _context;
@@ -94,6 +95,9 @@ public class UserController : ControllerBase
     public IActionResult GetCurrentUser()
     {
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+        Console.WriteLine("Roles: " + string.Join(", ", roles));  // Log roles for debugging
 
         if (email == null)
         {
@@ -106,6 +110,7 @@ public class UserController : ControllerBase
             return NotFound(new { message = "User not found in database." });
         }
 
-        return Ok(new { userId = user.UserId, email = user.Email });
+        return Ok(new { userId = user.UserId, email = user.Email, roles });
     }
+
 }

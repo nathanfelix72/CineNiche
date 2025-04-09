@@ -30,23 +30,27 @@ function AuthorizeView(props: { children: React.ReactNode }) {
 
         const data = await response.json();
 
-        if (data.email) {
-          setUser({ email: data.email });
+        if (data.userName) {
+          // Check for userName instead
+          setUser({ email: data.userName }); // You might still want to store it as 'email' in the context
           setAuthorized(true);
         } else {
           throw new Error('Invalid user session');
         }
-      } catch (error) {
+      } catch {
         setAuthorized(false);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchWithRetry('https://localhost:5000/pingauth', {
-      method: 'GET',
-      credentials: 'include',
-    });
+    fetchWithRetry(
+      'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/pingauth',
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
   }, []);
 
   if (loading) {
