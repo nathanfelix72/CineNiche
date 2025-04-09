@@ -3,15 +3,16 @@ import random
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from surprise import SVD, Dataset, Reader
-
-# === Load and prepare data ===
 import sqlite3
 
-conn = sqlite3.connect("/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/Movies.sqlite")  
+# === Load and prepare data ===
+conn = sqlite3.connect("../Backend/CineNiche/CineNiche/Movies.sqlite")  
 df_ratings = pd.read_sql_query("SELECT * FROM movies_ratings", conn)
 df_titles = pd.read_sql_query("SELECT * FROM movies_titles", conn)
 df_users  = pd.read_sql_query("SELECT * FROM movies_users", conn)  
 conn.close()
+
+title_to_id = df_titles.drop_duplicates(subset='title').set_index('title')['show_id'].to_dict()
 
 # Rename & fill nulls
 df_titles.rename(columns={'rating': 'mpaa_rating'}, inplace=True)
@@ -48,7 +49,17 @@ trainset = data.build_full_trainset()
 svd_model = SVD()
 svd_model.fit(trainset)
 
-# === Recommender helper functions ===
+# === Helper functions ===
+
+def format_recommendations(movie_list):
+    formatted = []
+    for movie in movie_list:
+        title = movie['title']
+        show_id = movie.get('id') or title_to_id.get(title, 0)
+        if show_id == 0 or not title:
+            print(f"[Warning] Could not find valid ID for title: '{title}'")
+        formatted.append({'id': show_id, 'title': title})
+    return formatted
 
 def get_user_top_genres(user_id, min_rating=4.0):
     user_rated = df_movies[df_movies['user_id'] == user_id]
@@ -64,11 +75,11 @@ def get_genre_recommendations(user_id, genre, n=5):
         (~df_movies['title'].isin(user_seen))
     ]
     predictions = [
-        (row['title'], svd_model.predict(user_id, row['title']).est)
+        (row['show_id'], row['title'], svd_model.predict(user_id, row['title']).est)
         for _, row in genre_pool.iterrows()
     ]
-    predictions = sorted(predictions, key=lambda x: x[1], reverse=True)
-    return [title for title, _ in predictions[:n]]
+    predictions = sorted(predictions, key=lambda x: x[2], reverse=True)
+    return [{'id': show_id, 'title': title} for show_id, title, _ in predictions[:n]]
 
 def get_shake_it_up(user_id, n=5):
     fav_genres = get_user_top_genres(user_id)
@@ -78,26 +89,34 @@ def get_shake_it_up(user_id, n=5):
     user_seen = df_movies[df_movies['user_id'] == user_id]['title'].unique()
     genre_pool = genre_pool[~genre_pool['title'].isin(user_seen)]
     predictions = [
-        (row['title'], svd_model.predict(user_id, row['title']).est)
+        (row['show_id'], row['title'], svd_model.predict(user_id, row['title']).est)
         for _, row in genre_pool.iterrows()
     ]
-    predictions = sorted(predictions, key=lambda x: x[1], reverse=True)
-    return list(dict.fromkeys([title for title, _ in predictions[:n]]))
+    predictions = sorted(predictions, key=lambda x: x[2], reverse=True)
+    seen_titles = set()
+    results = []
+    for show_id, title, _ in predictions:
+        if title not in seen_titles:
+            seen_titles.add(title)
+            results.append({'id': show_id, 'title': title})
+        if len(results) >= n:
+            break
+    return results
 
 def get_collaborative_recommendations(user_id, n=5):
     user_seen = df_movies[df_movies['user_id'] == user_id]['title'].unique()
-    unseen_movies = df_movies[~df_movies['title'].isin(user_seen)]['title'].unique()
+    unseen = df_movies[~df_movies['title'].isin(user_seen)][['show_id', 'title']].drop_duplicates()
     predictions = [
-        (title, svd_model.predict(user_id, title).est)
-        for title in unseen_movies
+        (row['show_id'], row['title'], svd_model.predict(user_id, row['title']).est)
+        for _, row in unseen.iterrows()
     ]
-    predictions = sorted(predictions, key=lambda x: x[1], reverse=True)
-    return [title for title, _ in predictions[:n]]
+    predictions = sorted(predictions, key=lambda x: x[2], reverse=True)
+    return [{'id': show_id, 'title': title} for show_id, title, _ in predictions[:n]]
 
 def clean_genre_label(genre):
     return genre.replace("Movies", "").replace("TV Shows", "").strip()
 
-# === Main API-Callable Function ===
+# === Main Recommendation Function ===
 def get_user_homepage_recommendations(user_id):
     fav_genres = get_user_top_genres(user_id)
     top_picks = get_collaborative_recommendations(user_id, n=10)
@@ -105,16 +124,16 @@ def get_user_homepage_recommendations(user_id):
     genre_2_recs = get_genre_recommendations(user_id, fav_genres[1], n=10)
     shake_it_up_recs = get_shake_it_up(user_id, n=10)
 
-    # Remove overlap
-    shake_it_up_unique = [movie for movie in shake_it_up_recs if movie not in genre_1_recs and movie not in genre_2_recs]
-    all_other_recs = top_picks + genre_1_recs + genre_2_recs
-    unique_recs = list(set(all_other_recs))
-    random.seed(42)
-    random.shuffle(shake_it_up_unique)
+    def filter_duplicates(primary, others):
+        seen = set((m['title'] for m in others))
+        return [m for m in primary if m['title'] not in seen]
+
+    def clean_results(results):
+        return [m for m in results if m['title'] and m['id'] > 0]
 
     return {
-        'Top Picks': unique_recs[:10],
-        f'{clean_genre_label(fav_genres[0])} For You': unique_recs[10:20],
-        f'{clean_genre_label(fav_genres[1])} For You': unique_recs[20:30],
-        'Switch It Up!': shake_it_up_unique[:10]
+        'Top Picks': format_recommendations(top_picks),
+        f'{clean_genre_label(fav_genres[0])} For You': format_recommendations(genre_1_recs),
+        
+        'Switch It Up!': format_recommendations(filter_duplicates(shake_it_up_recs, genre_1_recs + genre_2_recs + top_picks))
     }

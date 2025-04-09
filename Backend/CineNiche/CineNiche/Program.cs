@@ -21,23 +21,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
+// Add Identity services
 builder.Services.AddTransient<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// builder.Services.AddIdentityApiEndpoints<IdentityUser>()  
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Register the CustomUserClaimsPrincipalFactory to include roles in claims
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
 
+// Configure IdentityOptions
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email; // Ensure email is stored in claims
 });
 
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
-
+// Configure password policies for Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = false;
@@ -48,6 +49,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
+// Configure cookies for Identity
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -57,12 +59,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
+// CORS configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("http://localhost:3000", "https://black-flower-0d9471f1e.6.azurestaticapps.net")
                   .AllowCredentials()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
@@ -74,7 +77,6 @@ builder.Services.AddHttpClient<MovieRecommenderService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:8000");
 });
-
 builder.Services.AddScoped<MovieRecommenderService>();
 
 var app = builder.Build();
@@ -86,21 +88,47 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowFrontend");
-
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+// This should be where your Identity API routes are mapped
 app.MapIdentityApi<IdentityUser>();
+
+app.MapPost("/login", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
+{
+    var request = await context.Request.ReadFromJsonAsync<LoginRequest>();
+
+    if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+    {
+        return Results.BadRequest(new { message = "Invalid email or password." });
+    }
+
+    var user = await signInManager.UserManager.FindByEmailAsync(request.Email);
+    if (user == null)
+    {
+        return Results.BadRequest(new { message = "Invalid email or password." });
+    }
+
+    var result = await signInManager.PasswordSignInAsync(user, request.Password, false, false);
+
+    if (result.Succeeded)
+    {
+        return Results.Ok(new { message = "Login successful" });
+    }
+
+    return Results.BadRequest(new { message = "Invalid email or password." });
+});
 
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
-    
+
     // Ensure authentication cookie is removed
     context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
     {
@@ -108,10 +136,9 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
         Secure = true,
         SameSite = SameSiteMode.None
     });
-    
+
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
-
 
 app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 {

@@ -24,10 +24,10 @@ namespace CineNiche.Controllers
 
         // GET /api/recommendations/user?userId=8
         [HttpGet("user")]
-        public async Task<IActionResult> GetRecommendationsByUser(int userId)
+        public async Task<IActionResult> GetUserRecommendations(int userId)
         {
-            var homepageRecs = await _recommenderService.GetUserRecommendations(userId);
-            return Ok(homepageRecs);
+            var recs = await _recommenderService.GetUserRecommendations(userId);
+            return Ok(recs);
         }
     }
 }
