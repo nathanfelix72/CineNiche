@@ -1,24 +1,28 @@
-/* HomePage.css */
+.homePage {
+  padding: 2rem;
+}
+
+.carouselSection {
+  margin-bottom: 2rem;
+}
+
 .carousel {
-    display: flex;
-    overflow-x: auto;
-    gap: 1rem;
-    padding-bottom: 1rem;
-  }
-  
-  .carousel-item {
-    flex: 0 0 auto;
-    min-width: 200px;
-    background: #f3f3f3;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .carousel-section {
-    margin-bottom: 2rem;
-  }
-  
-  .home-page {
-    padding: 2rem;
-  }
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.carouselItem {
+  flex: 0 0 auto;
+  min-width: 200px;
+  background: #f3f3f3;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.carouselItem a {
+  text-decoration: none;
+  color: inherit;
+}

@@ -86,9 +86,13 @@ function LoginPage() {
       justifyContent: 'center',
       alignItems: 'center'
     }}>
+       <div className="position-absolute top-0 start-0 w-100 h-100" style={{
+            backgroundColor: 'rgba(158, 86, 86, 0.69)',
+            zIndex: 0,
+        }}></div>
       <div className="container">
         <div className="row justify-content-center">
-          <div className="card border-0 shadow rounded-3" style={{ maxWidth: '400px', width: '100%' }}>  {/* Adjust the width here */}
+          <div className="card border-0 shadow rounded-3" style={{ maxWidth: '400px', width: '100%', backgroundImage: 'radial-gradient(circle at 5% 90%, #d13e4a 0%, #f5e9d9 70%)',}}>  {/* Adjust the width here */}
             <div className="card-body p-4 p-sm-5">
               <h5 className="card-title text-center mb-5 fs-2">
                 Sign In
@@ -146,7 +150,7 @@ function LoginPage() {
     
                 <div className="d-grid mb-2">
                   <button
-                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    className="btn btn-google  btn-login text-uppercase fw-bold text-white"
                     type="submit"
                   >
                     Sign in
@@ -154,7 +158,7 @@ function LoginPage() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    className="btn btn-google  btn-login text-uppercase fw-bold text-white"
                     onClick={handleRegisterClick}
                   >
                     Register
