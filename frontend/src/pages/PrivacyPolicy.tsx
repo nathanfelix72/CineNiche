@@ -258,14 +258,16 @@ function PrivacyPolicy() {
         >
           <div className="container-fluid justify-content-between">
             <div className="d-flex align-items-center">
-                <h1 className="navbar-brand fs-2 fw-bold mb-0" style={{ 
-                    fontFamily: 'Monoton, cursive',
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer', // Change cursor to pointer on hover
-                  }}
-                    onClick={() => navigate('/')} // Handle click to navigate
-                    >
+              <h1
+                className="navbar-brand fs-2 fw-bold mb-0"
+                style={{
+                  fontFamily: 'Monoton, cursive',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer', // Change cursor to pointer on hover
+                }}
+                onClick={() => navigate('/')} // Handle click to navigate
+              >
                 CINENICHE
               </h1>
             </div>
