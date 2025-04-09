@@ -7,7 +7,7 @@ import { fetchRelatedMovies } from '../api/MoviesAPI';
 import './MovieDetailsPage.module.css';
 import RelatedMovies from '../components/RelatedMovies';
 import AuthorizeView from '../components/AuthorizeView';
-import './MovieDetailsPage.css';
+import './movieDetailsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {
