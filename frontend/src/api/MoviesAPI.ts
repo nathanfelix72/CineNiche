@@ -330,13 +330,14 @@ export const fetchUsersInRole = async (
 };
 
 export const fetchRelatedMovies = async (title: string) => {
-  const res = await fetch(`http://localhost:8000/recommend?title=${encodeURIComponent(title)}&count=6`);
-  if (!res.ok) throw new Error("Failed to fetch related movies");
+  const res = await fetch(
+    `http://localhost:8000/recommend?title=${encodeURIComponent(title)}&count=6`
+  );
+  if (!res.ok) throw new Error('Failed to fetch related movies');
 
   const data = await res.json();
-  console.log("fetchRelatedMovies response:", data);
+  console.log('fetchRelatedMovies response:', data);
 
   // Either return data directly or data.recommended
-  return data.recommended || data; 
+  return data.recommended || data;
 };
-
