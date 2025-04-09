@@ -73,8 +73,8 @@ const HomePage = () => {
           <div key={section} className={styles.carouselSection}>
             <h2>{section}</h2>
             <div className={styles.carousel}>
-              {movies.map((movie, index) => (
-                <div key={index} className={styles.carouselItem}>
+              {movies.map((movie) => (
+                <div key={movie.id} className={styles.carouselItem}>
                   <Link to={`/movie/${movie.id}`}>{movie.title}</Link>
                 </div>
               ))}

@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { MoviesTitle } from '../types/MoviesTitle';
 import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
-import './MovieDetailsPage.css';
-
-
+import { fetchRelatedMovies } from '../api/MoviesAPI'; 
+import './MovieDetailsPage.module.css';
+import RelatedMovies from '../components/RelatedMovies';
 
 const StarRatingInput = ({
   showId,
@@ -66,10 +66,13 @@ const StarRatingInput = ({
   );
 };
 
+
 const MovieDetailsPage = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState<MoviesTitle | null>(null);
-  const [relatedMovies, setRelatedMovies] = useState<string[]>([]);
+  const [relatedMovies, setRelatedMovies] = useState<
+    { id: number; title: string }[]
+  >([]);
   const [userId, setUserId] = useState<number | null>(null); // State for user ID
 
   // Load the selected movie by ID
@@ -108,19 +111,29 @@ const MovieDetailsPage = () => {
     const loadRelated = async () => {
       if (movie?.title) {
         try {
-          const response = await fetch(
-            `/api/recommendations/title?title=${encodeURIComponent(movie.title)}&count=10`
-          );
-          const data = await response.json();
-          setRelatedMovies(data.recommended || []);
+          const data = await fetchRelatedMovies(movie.title);
+          console.log("Raw response from fetchRelatedMovies:", data);
+  
+          // Option 1: if data is an object with .recommended
+          if (Array.isArray(data.recommended)) {
+            setRelatedMovies(data.recommended);
+          }
+          // Option 2: if data *is* the array
+          else if (Array.isArray(data)) {
+            setRelatedMovies(data);
+          } else {
+            console.warn("Unexpected data format:", data);
+            setRelatedMovies([]); // prevent crash
+          }
         } catch (error) {
           console.error('Error fetching related movies:', error);
         }
       }
     };
-
+  
     loadRelated();
   }, [movie?.title]);
+
 
   if (!movie) return <p>Loading...</p>;
 
@@ -179,19 +192,9 @@ const MovieDetailsPage = () => {
           .join(', ') || 'None'}
       </p>
 
-      {/* 🎯 Related Movies Carousel */}
-      {relatedMovies.length > 0 && (
-        <div className="related-movies">
-          <h3>Related Movies</h3>
-          <div className="carousel">
-            {relatedMovies.map((title, index) => (
-              <div key={index} className="carousel-item">
-                <a href={`/movie/${encodeURIComponent(title)}`}>{title}</a>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Related Movies Carousel */}
+      <RelatedMovies relatedMovies={relatedMovies} /> 
+
     </div>
   );
 };

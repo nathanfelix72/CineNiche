@@ -1,6 +1,6 @@
 # app.py
 # This file sets up a FastAPI web server to expose your two movie recommenders as RESTful endpoints.
-
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Query
 
 # Import the actual recommender functions from your other Python files
@@ -9,6 +9,16 @@ from userMovieRecommender import get_user_homepage_recommendations  # user-based
 
 # Create the FastAPI app
 app = FastAPI()
+
+#  CORS middleware to allow requests from localhost:3000
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://localhost:3000", "http://localhost:3000"],  # Allow the frontend at localhost:3000
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all  methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 # --------------------------
 # Endpoint 1: Recommend by movie title (content-based)

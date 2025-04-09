@@ -4,7 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import sqlite3
 
 # Connect to SQLite and load tables
-conn = sqlite3.connect("/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/Movies.sqlite") 
+conn = sqlite3.connect("../Backend/CineNiche/CineNiche/Movies.sqlite") 
 df_ratings = pd.read_sql_query("SELECT * FROM movies_ratings", conn)
 df_titles = pd.read_sql_query("SELECT * FROM movies_titles", conn)
 conn.close()
@@ -94,8 +94,21 @@ def get_hybrid_recommendations(title, n=5, min_rating=3.5, use_genre_bonus=True)
             final_score = score + bonus
             scored_recs.append((title_c, final_score))
 
+    # Sort once after collecting all recommendations
     scored_recs = sorted(scored_recs, key=lambda x: x[1], reverse=True)
-    return [title for title, _ in scored_recs[:n]]
+
+    results = []
+    seen_titles = set()
+    for title, _ in scored_recs:
+        if title not in seen_titles:
+            seen_titles.add(title)
+            show_id = df_titles[df_titles['title'] == title]['show_id'].values
+            if len(show_id) > 0:
+                results.append({'id': int(show_id[0]), 'title': title})
+        if len(results) >= n:
+            break
+
+    return results
 
 # API wrapper function
 def get_recommendations_for_title(title: str, count: int = 10):

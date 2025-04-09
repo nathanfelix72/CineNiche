@@ -6,7 +6,7 @@ from surprise import SVD, Dataset, Reader
 import sqlite3
 
 # === Load and prepare data ===
-conn = sqlite3.connect("/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/Movies.sqlite")  
+conn = sqlite3.connect("../Backend/CineNiche/CineNiche/Movies.sqlite")  
 df_ratings = pd.read_sql_query("SELECT * FROM movies_ratings", conn)
 df_titles = pd.read_sql_query("SELECT * FROM movies_titles", conn)
 df_users  = pd.read_sql_query("SELECT * FROM movies_users", conn)  
@@ -134,6 +134,6 @@ def get_user_homepage_recommendations(user_id):
     return {
         'Top Picks': format_recommendations(top_picks),
         f'{clean_genre_label(fav_genres[0])} For You': format_recommendations(genre_1_recs),
-        f'{clean_genre_label(fav_genres[1])} For You': format_recommendations(genre_2_recs),
+        
         'Switch It Up!': format_recommendations(filter_duplicates(shake_it_up_recs, genre_1_recs + genre_2_recs + top_picks))
     }
