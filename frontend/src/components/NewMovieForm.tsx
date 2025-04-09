@@ -55,7 +55,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     director: '',
     cast: '',
     country: '',
-    releaseYear: 0,
+    releaseYear: 1888,
     rating: '',
     duration: '',
     description: '',

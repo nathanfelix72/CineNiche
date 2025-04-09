@@ -57,7 +57,7 @@ body {
 /* Buttons */
 .btn-login {
   font-family: serif;
-  background: linear-gradient(to right, #d4145a, #d4145a);
+  background: linear-gradient(to right, #d13e4a, #d13e4a);
   border: none;
   padding: 0.75rem 1rem;
   font-size: 0.7rem;
@@ -75,7 +75,7 @@ body {
 
 /* Google Button */
 .btn-google {
-  background-color: #ea4335;
+  background-color: #d13e4a;
   font-family: serif;
   padding: 0.75rem 1rem;
   font-size: 0.7rem;
@@ -84,12 +84,12 @@ body {
 }
 
 .btn-google:hover {
-  background-color: #d23c2f;
+  background-color: #d13e4a;
 }
 
 /* Error message */
 .error {
-  color: #ff5555;
+  color: #d13e4a;
   font-family: serif;
   font-size: 1rem;
   text-align: center;

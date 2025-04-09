@@ -1,5 +1,5 @@
 import { SetStateAction, useEffect, useState } from 'react';
-import { MoviesTitle } from '../types/MoviesTitle.ts';
+import { MoviesTitle } from '../types/MoviesTitle';
 import { deleteMovie, fetchMovies } from '../api/MoviesAPI';
 import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
@@ -83,14 +83,54 @@ const AdminMoviesPage = () => {
 
   if (loading) return <p>Loading movies...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
-
+  
   return (
-    <div>
-      <h1>Admin - Movies</h1>
+    <div style={{ 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: 'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
+      overflowY: 'auto',
+      zIndex: 9999,
+      paddingTop: '50px',  // Adds space at the top
+      paddingBottom: '50px',  // Adds space at the bottom
+    }}>
+
+      {/* Buttons for navigation */}
+      <div style={{ marginBottom: '1rem'}}>
+        <button
+          className="submit-btn mb-3"
+          onClick={() => navigate('/welcomepage')}
+          style={{ marginRight: '2rem'}}
+
+        >
+          Logout
+        </button>
+        <button
+          className="submit-btn mb-3"
+          onClick={() => navigate('/homepage')}
+        >
+          Homepage
+        </button>
+
+      </div>
+    <div className="movie-form"
+    style={{
+      maxWidth: '1200px', // Increase the max width of the container for a wider form
+      margin: '0 auto', // Center horizontally
+      padding: '20px',
+      textAlign: 'center', // Center text
+    }}
+    >
+      <h1 style={{fontFamily: 'Monoton, cursive', wordSpacing: '0.3em', color: '#d13e4a'}}>
+        ADMIN MOVIES PAGE
+      </h1>
 
       {!showForm && (
         <button
-          className="btn btn-success mb-3"
+          className="submit-btn mb-3"
           onClick={() => setShowForm(true)}
         >
           Add Movie
@@ -149,13 +189,13 @@ const AdminMoviesPage = () => {
           }}
         />
 
-        <button type="submit" className="btn btn-outline-primary">
+        <button type="submit" className="submit-btn">
           Search
         </button>
       </form>
 
-      <table className="table table-bordered table-striped">
-        <thead className="table-dark">
+      <table className="table table-hover table-light">
+        <thead>
           <tr>
             <th>ID</th>
             <th>Type</th>
@@ -176,19 +216,21 @@ const AdminMoviesPage = () => {
               <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
               <td>
                 <button
-                  className="btn btn-primary btn-sm w-100 mb-1"
+                  className="submit-btn btn-sm w-20 mb-1"
                   onClick={() => setEditingMovie(m)}
                 >
                   Edit
                 </button>
+                <br/>
                 <button
-                  className="btn btn-danger btn-sm w-100"
+                  className="cancel-btn btn-sm w-20 mb-1"
                   onClick={() => handleDelete(Number(m.showId))}
                 >
                   Delete
                 </button>
+                <br/>
                 <button
-                  className="btn btn-secondary btn-sm w-100 mt-1"
+                  className="genre-tag btn-sm w-20 mb-1"
                   onClick={() => navigate(`/movie/${m.showId}`)}
                 >
                   More Info
@@ -209,6 +251,7 @@ const AdminMoviesPage = () => {
           setPageNum(1);
         }}
       />
+    </div>
     </div>
   );
 };
