@@ -142,3 +142,10 @@ C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\CineNiche.pdb
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\CineNiche.genruntimeconfig.cache
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\ref\CineNiche.dll
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\web.config
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\appsettings.Development.json
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\appsettings.json
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\CineNiche.deps.json
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\CineNiche.runtimeconfig.json
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\CineNiche.staticwebassets.endpoints.json
+C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
