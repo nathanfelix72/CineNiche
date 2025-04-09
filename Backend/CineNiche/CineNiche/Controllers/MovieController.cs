@@ -33,6 +33,17 @@ namespace CineNiche.Controllers
             [FromQuery] string? searchQuery = null
         )
         {
+            string? favMovie = Request.Cookies["FavoriteMovie"];
+            Console.WriteLine("-----COOKIE-----\n" + favMovie);
+
+            HttpContext.Response.Cookies.Append("FavoriteMovie", "Angry Birds", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddMinutes(10)
+            });
+
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
             // If there is a search query, filter movies based on title using LIKE for case-insensitive search

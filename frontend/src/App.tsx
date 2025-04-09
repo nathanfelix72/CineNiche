@@ -11,10 +11,14 @@ import ProfilePage from './pages/ProfilePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 import RoleManagementPage from './pages/RoleManagmentPage';
+import CookieConsent from 'react-cookie-consent';
 
 function App() {
   return (
     <>
+      <CookieConsent>
+        This website uses cookies to enhance the user experience.
+      </CookieConsent>
       <Router>
         <Layout>
           <Routes>
