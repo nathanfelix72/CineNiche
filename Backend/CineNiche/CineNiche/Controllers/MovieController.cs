@@ -9,6 +9,7 @@ namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
