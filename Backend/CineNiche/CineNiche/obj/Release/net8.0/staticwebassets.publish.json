@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "8k+B9lKO0sPqkpP/j4GTD5yZ5w3+Z3pU9DPjUTE+DsY=",
+  "Hash": "z+TYSM4u06LjL1RW4ThgqM7OklQshyVoXpfnwKz38iI=",
   "Source": "CineNiche",
   "BasePath": "_content/CineNiche",
   "Mode": "Default",
   "ManifestType": "Publish",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

@@ -16,9 +16,12 @@ const HomePage = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await fetch('https://localhost:5000/User/current', {
-          credentials: 'include',
-        });
+        const res = await fetch(
+          'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/user/current',
+          {
+            credentials: 'include',
+          }
+        );
         const data = await res.json();
         setUserEmail(data.email);
         setUserId(data.userId);
@@ -59,7 +62,7 @@ const HomePage = () => {
   }, [userId]);
 
   console.log('Rendering recs:', recs);
-  
+
   return (
     <AuthorizeView>
       <div className={styles.homePage}>

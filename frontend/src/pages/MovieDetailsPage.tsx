@@ -25,12 +25,15 @@ const StarRatingInput = ({
 
     setSelectedRating(rating);
     try {
-      await fetch(`https://localhost:5000/movie/${showId}/rate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ showId, rating, userId }), // Include userId
-      });
+      await fetch(
+        `https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Movie/${showId}/rate`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ showId, rating, userId }), // Include userId
+        }
+      );
 
       setSubmitted(true);
       onRatingSubmitted();
@@ -86,9 +89,12 @@ const MovieDetailsPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('https://localhost:5000/user/current', {
-          credentials: 'include',
-        });
+        const response = await fetch(
+          'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/User/current',
+          {
+            credentials: 'include',
+          }
+        );
         const data = await response.json();
         if (data && data.userId) {
           setUserId(data.userId);

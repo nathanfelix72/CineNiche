@@ -1,10 +1,5 @@
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\web.config
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\appsettings.json
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\appsettings.Development.json
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\appsettings.json
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\CineNiche.deps.json
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\publish\CineNiche.runtimeconfig.json
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\CineNiche.staticwebassets.endpoints.json
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\Identity.sqlite
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\bin\Debug\net8.0\Movies.sqlite
@@ -141,7 +136,6 @@ C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.CineNiche.props
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.CineNiche.props
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\CineNiche.csproj.Up2Date
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\CineNiche.dll
 C:\Users\natha\source\repos\CineNiche\Backend\CineNiche\CineNiche\obj\Debug\net8.0\refint\CineNiche.dll
