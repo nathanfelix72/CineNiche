@@ -222,7 +222,7 @@ function PrivacyPolicy() {
                     textTransform: 'uppercase',
                     cursor: 'pointer', // Change cursor to pointer on hover
                   }}
-                    onClick={() => navigate('/welcomepage')} // Handle click to navigate
+                    onClick={() => navigate('/')} // Handle click to navigate
                     >
                 CINENICHE
                 </h1>

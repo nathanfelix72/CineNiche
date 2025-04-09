@@ -182,7 +182,7 @@ function WelcomePage() {
                     cursor: 'pointer', // Change cursor to pointer on hover
                     color: '#d13e4a'
                 }}
-                    onClick={() => navigate('/welcomepage')} // Handle click to navigate
+                    onClick={() => navigate('/')} // Handle click to navigate
                     >
                 CINENICHE
                 </h1>
@@ -551,7 +551,6 @@ function WelcomePage() {
             </div>
           </div>
         </div>
-
         {/* Footer with Classic Cinema Credits Style */}
         <footer className="py-5" style={{ 
             backgroundColor: '#f5e9d9',
