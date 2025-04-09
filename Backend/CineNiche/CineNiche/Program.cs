@@ -100,6 +100,31 @@ app.MapControllers();
 // This should be where your Identity API routes are mapped
 app.MapIdentityApi<IdentityUser>();
 
+app.MapPost("/login", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
+{
+    var request = await context.Request.ReadFromJsonAsync<LoginRequest>();
+
+    if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+    {
+        return Results.BadRequest(new { message = "Invalid email or password." });
+    }
+
+    var user = await signInManager.UserManager.FindByEmailAsync(request.Email);
+    if (user == null)
+    {
+        return Results.BadRequest(new { message = "Invalid email or password." });
+    }
+
+    var result = await signInManager.PasswordSignInAsync(user, request.Password, false, false);
+
+    if (result.Succeeded)
+    {
+        return Results.Ok(new { message = "Login successful" });
+    }
+
+    return Results.BadRequest(new { message = "Invalid email or password." });
+});
+
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
