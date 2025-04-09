@@ -63,7 +63,11 @@ function App() {
             <Route
               path="/adminmovies"
               element={
-                isConsentGiven ? <AdminMoviesPage /> : <Navigate to="/" />
+                isConsentGiven ? (
+                  <AdminMoviesPage />
+                ) : (
+                  <Navigate to="/homepage" />
+                )
               }
             />
 
