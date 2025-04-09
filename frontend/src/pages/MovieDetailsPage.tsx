@@ -9,6 +9,7 @@ import RelatedMovies from '../components/RelatedMovies';
 import AuthorizeView from '../components/AuthorizeView';
 import './MovieDetailsPage.css';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   FaHome,
   FaSearch,
@@ -455,13 +456,20 @@ const MovieDetailsPage = () => {
                 <div className="related-movies">
                   <h3>Related Movies</h3>
                   <div className="carousel">
-                    {relatedMovies.map((title, index) => (
-                      <div key={index} className="carousel-item">
-                        <a href={`/movie/${encodeURIComponent(title)}`}>
-                          {title}
-                        </a>
-                      </div>
-                    ))}
+                    {relatedMovies.map(
+                      (
+                        movie // Renamed variable to 'movie'
+                      ) => (
+                        // Use movie.id as the key
+                        <div key={movie.id} className="carousel-item">
+                          {/* Use Link component and movie.id for the route */}
+                          <Link to={`/movie/${movie.id}`}>
+                            {/* Display the movie.title */}
+                            {movie.title}
+                          </Link>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               )}
