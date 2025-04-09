@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import styles from './HomePage.module.css';
@@ -11,6 +11,7 @@ const HomePage = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize the navigate hook
 
   // Step 1: Fetch current user info (email, userId, and name)
   useEffect(() => {
@@ -63,6 +64,11 @@ const HomePage = () => {
 
   console.log('Rendering recs:', recs);
 
+  // Navigate to the Admin Movies page
+  const handleNavigateToAdminMovies = () => {
+    navigate('/adminmovies'); // Navigate to the admin movies page
+  };
+
   return (
     <AuthorizeView>
       <div className={styles.homePage}>
@@ -71,6 +77,11 @@ const HomePage = () => {
         </Logout>
         <br />
         <h1>Welcome {userName ? userName : userEmail}!</h1>
+
+        {/* Add the button to navigate to the admin movies page */}
+        <button onClick={handleNavigateToAdminMovies}>
+          Go to Admin Movies Page
+        </button>
 
         {Object.entries(recs).map(([section, movies]) => (
           <div key={section} className={styles.carouselSection}>
