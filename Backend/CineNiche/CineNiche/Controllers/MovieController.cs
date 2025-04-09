@@ -9,7 +9,7 @@ namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
@@ -88,6 +88,7 @@ namespace CineNiche.Controllers
         }
         
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddProject([FromBody] MoviesTitle newMovie)
         {
             _moviesContext.MoviesTitles.Add(newMovie);
@@ -96,6 +97,7 @@ namespace CineNiche.Controllers
         }
 
         [HttpPut("UpdateMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult UpdateMovie(int showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _moviesContext.MoviesTitles.Find(showId);
@@ -153,6 +155,7 @@ namespace CineNiche.Controllers
         }
 
         [HttpDelete("DeleteMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(int showId)
         {
             var movie = _moviesContext.MoviesTitles.Find(showId);
