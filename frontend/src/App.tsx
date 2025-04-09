@@ -17,8 +17,6 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 import CookieConsent from 'react-cookie-consent';
 import { useEffect, useState } from 'react';
-
-import RoleManagementPage from './pages/RoleManagmentPage';
 import SearchPage from './pages/SearchPage';
 function App() {
   // Track consent status
@@ -79,7 +77,6 @@ function App() {
             <Route path="/movie/:id" element={<MovieDetailsPage />} />
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/roles" element={<RoleManagementPage />} />
             <Route path="/search" element={<SearchPage />} />
           </Routes>
         </Layout>

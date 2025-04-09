@@ -371,7 +371,6 @@ const MovieDetailsPage = () => {
         {/* Related Movies Carousel */}
         <RelatedMovies relatedMovies={relatedMovies} />
       </div>
-    </AuthorizeView>
           {/* 🎯 Related Movies Carousel */}
           {relatedMovies.length > 0 && (
             <div className="related-movies">
@@ -447,6 +446,7 @@ const MovieDetailsPage = () => {
             </div>
             </footer>
     </div>
+    </AuthorizeView>
   );
 };
 
