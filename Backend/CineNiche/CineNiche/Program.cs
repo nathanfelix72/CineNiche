@@ -3,20 +3,23 @@ using CineNiche.Data;
 using CineNiche.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<MoviesContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+ options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+
+builder.Services.AddAuthorization();
 
 // Add Identity services
 builder.Services.AddTransient<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
@@ -54,22 +57,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.LoginPath = "/login";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
-
-// Add authentication (cookie-based)
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/login";
-        options.LogoutPath = "/logout";
-        options.Cookie.Name = ".AspNetCore.Identity.Application";
-    });
-
-// Add Authorization services (roles handling)
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminPolicy", policy =>
-        policy.RequireRole("Administrator"));
 });
 
 // CORS configuration
@@ -113,7 +100,6 @@ app.MapControllers();
 // This should be where your Identity API routes are mapped
 app.MapIdentityApi<IdentityUser>();
 
-// Login endpoint
 app.MapPost("/login", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     var request = await context.Request.ReadFromJsonAsync<LoginRequest>();
@@ -139,7 +125,6 @@ app.MapPost("/login", async (HttpContext context, SignInManager<IdentityUser> si
     return Results.BadRequest(new { message = "Invalid email or password." });
 });
 
-// Logout endpoint
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
@@ -155,7 +140,6 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-// Ping Authentication endpoint
 app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 {
     if (!user.Identity?.IsAuthenticated ?? false)
