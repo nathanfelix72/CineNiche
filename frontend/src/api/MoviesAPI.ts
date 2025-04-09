@@ -6,10 +6,15 @@ interface FetchMoviesResponse {
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000/movie';
-const USER_API_URL = 'https://localhost:5000/user';
-const ROLE_URL = 'https://localhost:5000/Role';
-
+//const API_URL = 'https://localhost:5000/movie';
+//const USER_API_URL = 'https://localhost:5000/user';
+//const ROLE_URL = 'https://localhost:5000/Role';
+const API_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Movie';
+const USER_API_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/User';
+const ROLE_URL =
+  'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Role';
 
 export const fetchMovies = async (
   pageSize: number,

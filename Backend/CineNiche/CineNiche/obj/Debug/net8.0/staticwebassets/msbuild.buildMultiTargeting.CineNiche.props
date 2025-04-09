@@ -1,3 +1,7 @@
 ﻿<Project>
+<<<<<<< HEAD
   <Import Project="../build/CineNiche.props" />
+=======
+  <Import Project="..\build\CineNiche.props" />
+>>>>>>> main
 </Project>

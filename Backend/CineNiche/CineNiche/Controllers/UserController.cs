@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly MoviesContext _context;
@@ -31,24 +32,6 @@ public class UserController : ControllerBase
         return user;
     }
 
-    //  Recommender method (Amy)
-    [HttpGet("by-email")]
-    public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
-    {
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            return BadRequest(new { message = "Email is required." });
-        }
-
-        var user = await _context.MoviesUsers.FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null)
-        {
-            return NotFound(new { message = "User not found." });
-        }
-
-        return Ok(new { userId = user.UserId });
-    }
-    
     [HttpPut("UpdateUser/{userId}")]
     public IActionResult UpdateUser(int userId, [FromBody] MoviesUser updatedUser)
     {
@@ -112,6 +95,10 @@ public class UserController : ControllerBase
     public IActionResult GetCurrentUser()
     {
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+        Console.WriteLine("Roles: " + string.Join(", ", roles));  // Log roles for debugging
+
         if (email == null)
         {
             return Unauthorized(new { message = "User email not found in claims." });
@@ -123,7 +110,7 @@ public class UserController : ControllerBase
             return NotFound(new { message = "User not found in database." });
         }
 
-        // Now return the user name along with userId and email:
-        return Ok(new { userId = user.UserId, email = user.Email, name = user.Name });
+        return Ok(new { userId = user.UserId, email = user.Email, roles });
     }
+
 }

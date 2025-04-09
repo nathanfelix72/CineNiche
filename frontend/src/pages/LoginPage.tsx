@@ -40,15 +40,15 @@ function LoginPage() {
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true'
-      : 'https://localhost:5000/login?useSessionCookies=true';
+      ? 'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/login?useCookies=true'
+      : 'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/login?useSessionCookies=true';
 
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
-        credentials: 'include', // ✅ Ensures cookies are sent & received
+        credentials: 'include', // Ensures cookies are sent & received
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password }), // email and password from form
       });
 
       // Ensure we only parse JSON if there is content
@@ -70,29 +70,34 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ 
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundImage: 'url(/images/niche_movie.png)', // Set the image URL here
-      backgroundSize: 'cover', // Ensures the image covers the entire background
-      backgroundPosition: 'center', // Centers the image
-      backgroundRepeat: 'no-repeat', // Prevents the image from repeating
-      overflowY: 'auto',
-      zIndex: 9999,
-      display: 'flex', // Centers the card horizontally and vertically
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'url(/images/niche_movie.png)', // Set the image URL here
+        backgroundSize: 'cover', // Ensures the image covers the entire background
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+        overflowY: 'auto',
+        zIndex: 9999,
+        display: 'flex', // Centers the card horizontally and vertically
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <div className="container">
         <div className="row justify-content-center">
-          <div className="card border-0 shadow rounded-3" style={{ maxWidth: '400px', width: '100%' }}>  {/* Adjust the width here */}
+          <div
+            className="card border-0 shadow rounded-3"
+            style={{ maxWidth: '400px', width: '100%' }}
+          >
+            {' '}
+            {/* Adjust the width here */}
             <div className="card-body p-4 p-sm-5">
-              <h5 className="card-title text-center mb-5 fs-2">
-                Sign In
-              </h5>
+              <h5 className="card-title text-center mb-5 fs-2">Sign In</h5>
               <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
                   <input
@@ -128,7 +133,7 @@ function LoginPage() {
                     }}
                   ></i>
                 </div>
-    
+
                 <div className="d-flex align-items-center mb-3">
                   <input
                     className="form-check-input"
@@ -143,7 +148,7 @@ function LoginPage() {
                     Remember me
                   </label>
                 </div>
-    
+
                 <div className="d-grid mb-2">
                   <button
                     className="btn btn-primary btn-login text-uppercase fw-bold"
@@ -166,7 +171,8 @@ function LoginPage() {
                     className="btn btn-google btn-login text-uppercase fw-bold text-white"
                     type="button"
                   >
-                    <i className="fa-brands fa-google me-2"></i> Sign in with Google
+                    <i className="fa-brands fa-google me-2"></i> Sign in with
+                    Google
                   </button>
                 </div>
               </form>
@@ -176,7 +182,6 @@ function LoginPage() {
         </div>
       </div>
     </div>
-    
   );
 }
 
