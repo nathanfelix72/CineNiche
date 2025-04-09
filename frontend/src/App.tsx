@@ -59,8 +59,6 @@ function App() {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-
             {/* Protected Route: Admin Movies Page */}
             <Route
               path="/adminmovies"
