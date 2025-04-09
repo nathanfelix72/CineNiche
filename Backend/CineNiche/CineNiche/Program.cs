@@ -65,7 +65,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("http://localhost:3000", "https://black-flower-0d9471f1e.6.azurestaticapps.net")
                   .AllowCredentials()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
