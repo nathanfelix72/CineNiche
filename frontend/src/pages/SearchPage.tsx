@@ -46,9 +46,9 @@ const SearchPage = () => {
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
-  // for genre filtering 
+  // for genre filtering
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-  
+
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
   searchQueryRef.current = searchQuery; // Keep ref updated
@@ -422,39 +422,60 @@ const SearchPage = () => {
               marginRight: '10px',
             }}
           >
-            {displayableMovies.map((movie) => (
-              <div
-                key={movie.showId}
-                className="movie-poster"
-                style={{ textAlign: 'center' }}
-              >
-                <Link
-                  to={`/movie/${movie.showId}`}
-                  style={{
-                    display: 'block',
-                    textDecoration: 'none',
-                    color: 'black',
-                  }}
-                >
-                  <img
-                    src={getMovieImage(movie.title!)}
-                    className="img-fluid"
-                    alt={movie.title}
-                    style={{
-                        width: '200px',              // Set fixed width
-                        height: '300px',             // Set fixed height
-                        objectFit: 'cover',          // Crop image to fill box without distortion
-                        border: '2px solid #fff',
-                        borderRadius: '4px',
+            <div
+              className="movie-posters-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '1rem',
+                marginTop: '20px',
+                marginLeft: '10px',
+                marginRight: '10px',
+              }}
+            >
+              {displayableMovies
+                .filter((movie) => {
+                  if (!selectedGenre) return true;
+                  return Object.entries(movie).some(
+                    ([key, value]) =>
+                      key.toLowerCase().includes(selectedGenre.toLowerCase()) &&
+                      value === 1
+                  );
+                })
+                .map((movie) => (
+                  <div
+                    key={movie.showId}
+                    className="movie-poster"
+                    style={{ textAlign: 'center' }}
+                  >
+                    <Link
+                      to={`/movie/${movie.showId}`}
+                      style={{
                         display: 'block',
-                        margin: '0 auto 10px auto',
+                        textDecoration: 'none',
+                        color: 'black',
                       }}
-                    loading="lazy"
-                  />
-                  <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
-                </Link>
-              </div>
-            ))}
+                    >
+                      <img
+                        src={getMovieImage(movie.title!)}
+                        className="img-fluid"
+                        alt={movie.title}
+                        style={{
+                          width: '200px',
+                          height: '300px',
+                          objectFit: 'cover',
+                          border: '2px solid #fff',
+                          borderRadius: '4px',
+                          display: 'block',
+                          margin: '0 auto 10px auto',
+                        }}
+                        loading="lazy"
+                      />
+                      <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
+                    </Link>
+                  </div>
+                ))}
+            </div>
           </div>
         )}
 
