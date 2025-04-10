@@ -472,6 +472,7 @@ const MovieDetailsPage = () => {
                   )}
 
                   <StarRatingInput
+                    key={movie.showId}
                     showId={movie.showId}
                     userId={userId} // Pass the userId to StarRatingInput
                     onRatingSubmitted={async () => {
