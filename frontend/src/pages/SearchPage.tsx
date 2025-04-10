@@ -8,6 +8,7 @@ import {
 import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
 import Pagination from '../components/Pagination'; // Adjust path if needed
+import GenreFilter from '../components/GenreFilter';
 import { Link } from 'react-router-dom';
 import {
   FaHome,
@@ -46,9 +47,8 @@ const SearchPage = () => {
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
-  // for genre filtering 
-  
-  
+  //for genre filter
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
@@ -377,6 +377,45 @@ const SearchPage = () => {
             fontSize: '1rem',
           }}
         />
+        {/* genre filter */}
+        <GenreFilter
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genres={[
+            'action',
+            'adventure',
+            'animeSeriesInternationalTvShows',
+            'britishTvShowsDocuseriesInternationalTvShows',
+            'children',
+            'comedies',
+            'comediesDramasInternationalMovies',
+            'comediesInternationalMovies',
+            'comediesRomanticMovies',
+            'crimeTvShowsDocuseries',
+            'documentaries',
+            'documentariesInternationalMovies',
+            'docuseries',
+            'dramas',
+            'dramasInternationalMovies',
+            'dramasRomanticMovies',
+            'familyMovies',
+            'fantasy',
+            'horrorMovies',
+            'internationalMoviesThrillers',
+            'internationalTvShowsRomanticTvShowsTvDramas',
+            'kidsTv',
+            'languageTvShows',
+            'musicals',
+            'natureTv',
+            'realityTv',
+            'spirituality',
+            'tvAction',
+            'tvComedies',
+            'tvDramas',
+            'talkShowsTvComedies',
+            'thrillers',
+          ]}
+        />
 
         {/* Conditional Messages */}
         {hasSearched &&
@@ -418,44 +457,58 @@ const SearchPage = () => {
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)', // 4 items per row
               gap: '1rem',
-              marginTop: '20px',
-              marginLeft: '10px',
-              marginRight: '10px',
+              // marginTop: '20px',
+              // marginLeft: '10px',
+              // marginRight: '10px',
+              marginTop: '10px',
+              marginLeft: '5px',
+              marginRight: '5px',
             }}
           >
-            {displayableMovies.map((movie) => (
-              <div
-                key={movie.showId}
-                className="movie-poster"
-                style={{ textAlign: 'center' }}
-              >
-                <Link
-                  to={`/movie/${movie.showId}`}
-                  style={{
-                    display: 'block',
-                    textDecoration: 'none',
-                    color: 'black',
-                  }}
+            {displayableMovies
+              .filter((movie) => {
+                if (selectedGenres.length === 0) return true;
+                return selectedGenres.some((genre) =>
+                  Object.entries(movie).some(
+                    ([key, value]) =>
+                      key.toLowerCase().includes(genre.toLowerCase()) &&
+                      value === 1
+                  )
+                );
+              })
+              .map((movie) => (
+                <div
+                  key={movie.showId}
+                  className="movie-poster"
+                  style={{ textAlign: 'center' }}
                 >
-                  <img
-                    src={getMovieImage(movie.title!)}
-                    className="img-fluid"
-                    alt={movie.title}
+                  <Link
+                    to={`/movie/${movie.showId}`}
                     style={{
-                        width: '200px',              // Set fixed width
-                        height: '300px',             // Set fixed height
-                        objectFit: 'cover',          // Crop image to fill box without distortion
+                      display: 'block',
+                      textDecoration: 'none',
+                      color: 'black',
+                    }}
+                  >
+                    <img
+                      src={getMovieImage(movie.title!)}
+                      className="img-fluid"
+                      alt={movie.title}
+                      style={{
+                        width: '200px', // Set fixed width
+                        height: '300px', // Set fixed height
+                        objectFit: 'cover', // Crop image to fill box without distortion
                         border: '2px solid #fff',
                         borderRadius: '4px',
                         display: 'block',
-                        margin: '0 auto 10px auto',
+                        // margin: '0 auto 10px auto',
                       }}
-                    loading="lazy"
-                  />
-                  <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
-                </Link>
-              </div>
-            ))}
+                      loading="lazy"
+                    />
+                    <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
+                  </Link>
+                </div>
+              ))}
           </div>
         )}
 
