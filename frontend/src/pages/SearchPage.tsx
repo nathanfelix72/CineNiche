@@ -46,9 +46,9 @@ const SearchPage = () => {
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
-  // for genre filtering
+  // for genre filtering 
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-
+  
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
   searchQueryRef.current = searchQuery; // Keep ref updated
@@ -377,35 +377,6 @@ const SearchPage = () => {
           }}
         />
 
-        {/* Genre Filter */}
-        <div
-          className="genre-filter mb-3"
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}
-        >
-          {[
-            'Action',
-            'Comedy',
-            'Drama',
-            'Fantasy',
-            'Horror',
-            'Romance',
-            'Thriller',
-            'Documentary',
-            'Family',
-            'Adventure',
-          ].map((genre) => (
-            <button
-              key={genre}
-              className={`btn ${selectedGenre === genre ? 'btn-dark' : 'btn-outline-dark'}`}
-              onClick={() =>
-                setSelectedGenre(genre === selectedGenre ? null : genre)
-              }
-            >
-              {genre}
-            </button>
-          ))}
-        </div>
-
         {/* Conditional Messages */}
         {hasSearched &&
           sourceMovies.length === 0 &&
@@ -439,39 +410,53 @@ const SearchPage = () => {
           !isVerifyingImages && <p>No movies found.</p>}
 
         {/* Movie Grid - Render directly from displayableMovies */}
-        {displayableMovies.map((movie) => (
+        {displayableMovies.length > 0 && (
           <div
-            key={movie.showId}
-            className="movie-poster"
-            style={{ textAlign: 'center' }}
+            className="movie-posters-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)', // 4 items per row
+              gap: '1rem',
+              marginTop: '20px',
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
           >
-            <Link
-              to={`/movie/${movie.showId}`}
-              style={{
-                display: 'block',
-                textDecoration: 'none',
-                color: 'black',
-              }}
-            >
-              <img
-                src={getMovieImage(movie.title!)}
-                className="img-fluid"
-                alt={movie.title}
-                style={{
-                  width: '200px',
-                  height: '300px',
-                  objectFit: 'cover',
-                  border: '2px solid #fff',
-                  borderRadius: '4px',
-                  display: 'block',
-                  margin: '0 auto 10px auto',
-                }}
-                loading="lazy"
-              />
-              <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
-            </Link>
+            {displayableMovies.map((movie) => (
+              <div
+                key={movie.showId}
+                className="movie-poster"
+                style={{ textAlign: 'center' }}
+              >
+                <Link
+                  to={`/movie/${movie.showId}`}
+                  style={{
+                    display: 'block',
+                    textDecoration: 'none',
+                    color: 'black',
+                  }}
+                >
+                  <img
+                    src={getMovieImage(movie.title!)}
+                    className="img-fluid"
+                    alt={movie.title}
+                    style={{
+                        width: '200px',              // Set fixed width
+                        height: '300px',             // Set fixed height
+                        objectFit: 'cover',          // Crop image to fill box without distortion
+                        border: '2px solid #fff',
+                        borderRadius: '4px',
+                        display: 'block',
+                        margin: '0 auto 10px auto',
+                      }}
+                    loading="lazy"
+                  />
+                  <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
+                </Link>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
 
         {/* Pagination */}
         {totalPages > 1 && (
