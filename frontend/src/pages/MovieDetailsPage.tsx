@@ -88,7 +88,7 @@ const MovieDetailsPage = () => {
     { id: number; title: string }[]
   >([]);
   const [userId, setUserId] = useState<number | null>(null); // State for user ID
-  
+
   // Dynamically fetch image based on movie title
   const sanitizeTitle = (title: string): string => {
     return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
@@ -502,13 +502,16 @@ const MovieDetailsPage = () => {
                 {relatedMovies.length > 0 && (
                   <div className="related-movies">
                     <h3>Related Movies</h3>
-                    <div className="related-movies container">
-                      <h3 className="text-center mb-4">Related Movies</h3>
-                      <div className="row g-4">
+                    <div className="container">
+                      <div
+                        className="d-flex overflow-auto py-3 px-2"
+                        style={{ gap: '1rem', scrollSnapType: 'x mandatory' }}
+                      >
                         {relatedMovies.map((related) => (
                           <div
                             key={related.id}
-                            className="col-6 col-md-4 col-lg-3"
+                            className="flex-shrink-0"
+                            style={{ width: '200px', scrollSnapAlign: 'start' }}
                           >
                             <Link
                               to={`/movie/${related.id}`}
@@ -524,7 +527,7 @@ const MovieDetailsPage = () => {
                                       '/fallback-poster.jpg';
                                   }}
                                   style={{
-                                    height: '300px',
+                                    height: '280px',
                                     objectFit: 'cover',
                                   }}
                                 />

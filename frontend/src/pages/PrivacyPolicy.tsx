@@ -353,7 +353,7 @@ function PrivacyPolicy() {
                     key={index}
                     className="mb-3"
                     style={{
-                      backgroundColor: 'rgba(228, 98, 139, 0.46)',
+                      backgroundImage:'radial-gradient(circle at 30% 50%, #d13e4a 0%, #f5e9d9 70%)',
                       border: '1px solid rgba(215, 65, 103, 0.3)',
                       borderRadius: '4px',
                       overflow: 'hidden',
@@ -366,7 +366,7 @@ function PrivacyPolicy() {
                     >
                       {item.question}
                     </Accordion.Header>
-                    <Accordion.Body className="text-light">
+                    <Accordion.Body className="text-black">
                       {item.answer}
                     </Accordion.Body>
                   </Accordion.Item>

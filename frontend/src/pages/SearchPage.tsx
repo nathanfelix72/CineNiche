@@ -46,6 +46,10 @@ const SearchPage = () => {
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
+  // for genre filtering 
+  
+  
+
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
   searchQueryRef.current = searchQuery; // Keep ref updated
