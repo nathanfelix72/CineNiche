@@ -245,7 +245,7 @@ function WelcomePage() {
                 className="btn text-white"
                 style={{
                   backgroundColor: '#d13e4a',
-                  borderColor: '#d13e4a',
+                  borderColor: '#f5e9d9',
                   width: '100%',
                 }}
                 onClick={() => navigate('/login')}
@@ -334,7 +334,7 @@ function WelcomePage() {
                       style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         border: 'none',
-                        fontSize: '1.5rem',
+                        fontSize: '1rem',
                         fontWeight: 'bold',
                         color: 'black',
                         fontFamily: 'serif',
@@ -685,7 +685,7 @@ function WelcomePage() {
                     key={index}
                     className="mb-3"
                     style={{
-                      backgroundColor: ' rgba(228, 98, 139, 0.46)',
+                      backgroundColor: ' #d13e4a',
                       border: '1px solid rgba(215, 65, 103, 0.3)',
                       borderRadius: '4px',
                       overflow: 'hidden',
@@ -728,7 +728,7 @@ function WelcomePage() {
                         style={{
                           backgroundColor: 'rgba(255, 255, 255, 0.9)',
                           border: 'none',
-                          fontSize: '1.5rem',
+                          fontSize: '1rem',
                           fontWeight: 'bold',
                           color: 'black',
                           fontFamily: 'serif',

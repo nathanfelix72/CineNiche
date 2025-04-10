@@ -146,7 +146,7 @@ const SearchPage = () => {
     const imagePath = encodeURIComponent(sanitizeTitle(title));
     return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
   };
-  
+
   // --- Image Verification Effect ---
   useEffect(() => {
     if (isLoadingData || sourceMovies.length === 0) {
@@ -438,14 +438,14 @@ const SearchPage = () => {
                     className="img-fluid"
                     alt={movie.title}
                     style={{
-                      width: 'auto',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      border: '2px solid #fff',
-                      borderRadius: '4px',
-                      display: 'block',
-                      margin: '0 auto 10px auto',
-                    }}
+                        width: '200px',              // Set fixed width
+                        height: '300px',             // Set fixed height
+                        objectFit: 'cover',          // Crop image to fill box without distortion
+                        border: '2px solid #fff',
+                        borderRadius: '4px',
+                        display: 'block',
+                        margin: '0 auto 10px auto',
+                      }}
                     loading="lazy"
                   />
                   <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
