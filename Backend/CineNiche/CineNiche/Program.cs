@@ -75,7 +75,7 @@ builder.Services.AddCors(options =>
 // Add HttpClient for Python recommender microservice
 builder.Services.AddHttpClient<MovieRecommenderService>(client =>
 {
-    client.BaseAddress = new Uri("https://cinenicheapi.ngrok-free.app/docs");
+    client.BaseAddress = new Uri("https://cinenicheapi.ngrok.io");
 });
 builder.Services.AddScoped<MovieRecommenderService>();
 

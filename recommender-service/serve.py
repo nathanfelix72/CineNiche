@@ -3,7 +3,7 @@ from fastapi import FastAPI, Query
 from hybridMovieRecommender import get_hybrid_recommendations
 from userMovieRecommender import get_user_homepage_recommendations
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import JSONResponse
 
 
 app = FastAPI()
@@ -32,3 +32,14 @@ def recommend(title: str = Query(...), count: int = 5):
 @app.get("/user-recs")
 def user_recs(user_id: int = Query(...)):
     return get_user_homepage_recommendations(user_id)
+
+@app.options("/{rest_of_path:path}")
+def preflight_handler():
+    return JSONResponse(content={"message": "CORS preflight success"})
+
+@app.get("/test-cors")
+def test():
+    from fastapi.responses import JSONResponse
+    response = JSONResponse(content={"message": "Test passed"})
+    print("🚨 Response headers:", response.headers)
+    return response
