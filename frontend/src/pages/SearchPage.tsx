@@ -45,7 +45,7 @@ const SearchPage = () => {
   // State for pagination
   const [pageSize, setPageSize] = useState<number>(20); // Set to 20 for 20 movies per page
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
-  const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
+  // const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
   //for genre filter
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -132,13 +132,13 @@ const SearchPage = () => {
         }
 
         // Calculate total pages based on the API response and current pageSize
-        setTotalPages(Math.ceil(data.totalNumMovies / pSize));
+        // setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
         console.error('Error fetching movie data:', err);
         setError((err as Error).message || 'Failed to load movie data.');
         setMovies([]); // Clear data on error
         setSearchResults([]);
-        setTotalPages(0);
+        // setTotalPages(0);
       } finally {
         setIsLoadingData(false); // Mark data loading as complete
       }
