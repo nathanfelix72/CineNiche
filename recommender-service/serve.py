@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-# ✅ Must come right after app creation and before any routes
+# Must come right after app creation and before any routes
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
