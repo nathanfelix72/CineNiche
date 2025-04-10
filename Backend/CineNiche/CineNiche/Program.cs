@@ -3,6 +3,8 @@ using CineNiche.Data;
 using CineNiche.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +74,33 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    // Define a policy named "fixed" using the Fixed Window algorithm
+    // This is good for simple limits like login/register attempts
+    options.AddFixedWindowLimiter(policyName: "authPolicy", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5; // Allow max 5 requests...
+        limiterOptions.Window = TimeSpan.FromMinutes(1); // ...within a 1-minute window.
+        // Optional: Queue requests if limit is hit? (0 means reject immediately)
+        limiterOptions.QueueLimit = 0;
+        // limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+
+    // Define another policy if needed, e.g., for general API calls
+    // options.AddFixedWindowLimiter(policyName: "apiPolicy", limiterOptions => { ... });
+
+    // Set the default status code for rejected requests
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // --- How clients are identified ---
+    // By default (without complex configuration), the limiter often uses
+    // IP address for unauthenticated requests. For authenticated requests,
+    // it might use claims if configured. Defining partitions (e.g., per user ID)
+    // is possible but more complex. Starting with IP-based limits for login/register
+    // is often sufficient.
+});
+
 // Add HttpClient for Python recommender microservice
 builder.Services.AddHttpClient<MovieRecommenderService>(client =>
 {
@@ -94,7 +123,23 @@ else
 
 app.UseHttpsRedirection();
 
+app.Use(async (context, next) =>
+{
+    // Prevents sniffing
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+    // Prevents people making fake websites of ours and stealing info
+    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+
+    // Reduces information leakage
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+
+    await next();
+});
+
 app.UseCors("AllowFrontend");
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -127,7 +172,7 @@ app.MapPost("/login", async (HttpContext context, SignInManager<IdentityUser> si
     }
 
     return Results.BadRequest(new { message = "Invalid email or password." });
-});
+}).RequireRateLimiting("authPolicy");
 
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
@@ -142,7 +187,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     });
 
     return Results.Ok(new { message = "Logout successful" });
-}).RequireAuthorization();
+}).RequireAuthorization().RequireRateLimiting("authPolicy");
 
 app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 {

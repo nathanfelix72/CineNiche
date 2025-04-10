@@ -38,17 +38,13 @@ const HomePage = () => {
   const handleClick = (link: string) => {
     if (link === 'Privacy') {
       handlePrivacyClick();
-    } else if (link === 'Admin Page') {
+    } else if (link === 'Admin Login') {
       handleAdminClick();
     }
   };
 
   const sanitizeTitle = (title: string): string => {
-    return title
-      .normalize('NFD')                // Decompose accented characters
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
-      .replace(/[^\p{L}\p{N}\s]/gu, '') // Remove other non-alphanumeric
-      .trim();
+    return title.replace(/[^\p{L}\p{N}\p{M}\s]/gu, '').trim();
   };
 
   // --- Image URL Generation ---

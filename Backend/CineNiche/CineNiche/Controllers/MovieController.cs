@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using CineNiche.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Ganss.Xss;
 
 namespace CineNiche.Controllers
 {
@@ -91,6 +92,18 @@ namespace CineNiche.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult AddProject([FromBody] MoviesTitle newMovie)
         {
+            var sanitizer = new HtmlSanitizer();
+
+            newMovie.Type = sanitizer.Sanitize(newMovie.Type);
+            newMovie.Title = sanitizer.Sanitize(newMovie.Title);
+            newMovie.Director = sanitizer.Sanitize(newMovie.Director);
+            newMovie.Cast = sanitizer.Sanitize(newMovie.Cast);
+            newMovie.Country = sanitizer.Sanitize(newMovie.Country);
+            newMovie.ReleaseYear = newMovie.ReleaseYear;
+            newMovie.Rating = sanitizer.Sanitize(newMovie.Rating);
+            newMovie.Duration = sanitizer.Sanitize(newMovie.Duration);
+            newMovie.Description = sanitizer.Sanitize(newMovie.Description);
+
             _moviesContext.MoviesTitles.Add(newMovie);
             _moviesContext.SaveChanges();
             return Ok(newMovie);
@@ -106,15 +119,17 @@ namespace CineNiche.Controllers
                 return NotFound(new { message = "Movie not found" });
             }
 
-            existingMovie.Type = updatedMovie.Type;
-            existingMovie.Title = updatedMovie.Title;
-            existingMovie.Director = updatedMovie.Director;
-            existingMovie.Cast = updatedMovie.Cast;
-            existingMovie.Country = updatedMovie.Country;
+            var sanitizer = new HtmlSanitizer();
+
+            existingMovie.Type = sanitizer.Sanitize(updatedMovie.Type);
+            existingMovie.Title = sanitizer.Sanitize(updatedMovie.Title);
+            existingMovie.Director = sanitizer.Sanitize(updatedMovie.Director);
+            existingMovie.Cast = sanitizer.Sanitize(updatedMovie.Cast);
+            existingMovie.Country = sanitizer.Sanitize(updatedMovie.Country);
             existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
-            existingMovie.Rating = updatedMovie.Rating;
-            existingMovie.Duration = updatedMovie.Duration;
-            existingMovie.Description = updatedMovie.Description;
+            existingMovie.Rating = sanitizer.Sanitize(updatedMovie.Rating);
+            existingMovie.Duration = sanitizer.Sanitize(updatedMovie.Duration);
+            existingMovie.Description = sanitizer.Sanitize(updatedMovie.Description);
             existingMovie.Action = updatedMovie.Action;
             existingMovie.Adventure = updatedMovie.Adventure;
             existingMovie.AnimeSeriesInternationalTvShows = updatedMovie.AnimeSeriesInternationalTvShows;
