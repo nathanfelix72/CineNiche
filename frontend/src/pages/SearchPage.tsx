@@ -49,40 +49,21 @@ const SearchPage = () => {
 
   //for genre filter
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const genreKeyToLabel: Record<string, string> = {
+  const genreKeyToLabel = {
     action: 'Action',
     adventure: 'Adventure',
-    animeSeriesInternationalTvShows: 'Anime Series / Intl. TV',
-    britishTvShowsDocuseriesInternationalTvShows:
-      'British / Docuseries / Intl. TV',
-    children: 'Children',
     comedies: 'Comedies',
-    comediesDramasInternationalMovies: 'Comedies / Dramas / Intl. Movies',
-    comediesInternationalMovies: 'Comedies / Intl. Movies',
-    comediesRomanticMovies: 'Romantic Comedies',
-    crimeTvShowsDocuseries: 'Crime Docuseries',
-    documentaries: 'Documentaries',
-    documentariesInternationalMovies: 'Intl. Documentaries',
-    docuseries: 'Docuseries',
     dramas: 'Dramas',
-    dramasInternationalMovies: 'Intl. Dramas',
-    dramasRomanticMovies: 'Romantic Dramas',
-    familyMovies: 'Family Movies',
     fantasy: 'Fantasy',
     horrorMovies: 'Horror',
-    internationalMoviesThrillers: 'Intl. Thrillers',
-    internationalTvShowsRomanticTvShowsTvDramas: 'Intl. Romantic TV / Dramas',
+    documentaries: 'Documentaries',
+    thrillers: 'Thrillers',
+    familyMovies: 'Family Movies',
     kidsTv: 'Kids TV',
-    languageTvShows: 'Language TV Shows',
     musicals: 'Musicals',
-    natureTv: 'Nature TV',
     realityTv: 'Reality TV',
-    spirituality: 'Spirituality',
-    tvAction: 'TV Action',
     tvComedies: 'TV Comedies',
     tvDramas: 'TV Dramas',
-    talkShowsTvComedies: 'Talk Shows / TV Comedies',
-    thrillers: 'Thrillers',
   };
 
   const genreKeys = Object.keys(genreKeyToLabel);
