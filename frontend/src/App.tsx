@@ -1,9 +1,9 @@
+import { useEffect } from 'react'; // Ensure React is imported
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// ... other page imports
+// Use BrowserRouter directly or rename the import if preferred
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import CookieConsent from 'react-cookie-consent'; // Import Cookies helper
-import { useEffect } from 'react';
+import CookieConsent from 'react-cookie-consent';
 import SearchPage from './pages/SearchPage';
 import WelcomePage from './pages/WelcomePage';
 import AdminMoviesPage from './pages/AdminMoviesPage';
@@ -16,35 +16,56 @@ import ProfilePage from './pages/ProfilePage';
 import PageViewTracker from './components/PageViewTracker';
 import { ConsentProvider, useConsent } from './components/ConsentContext';
 
+// --- Import the modified AuthorizeView ---
+import AuthorizeView from './components/AuthorizeView'; // Adjust path if needed
+
 function App() {
   return (
     <ConsentProvider>
       <>
+        {/* CookieConsent needs to be high up, but can be outside Router */}
         <CookieConsentConsumer />
-        <Router>
+        <BrowserRouter>
+          {/* Tracking might depend on consent only, place inside Router if it needs router context */}
           <ConditionalTracking />
-          <Layout>
-            <Routes>
-              {/* Your Routes */}
-              <Route path="/" element={<WelcomePage />} />
-              <Route path="/adminmovies" element={<AdminMoviesPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/movie/:id" element={<MovieDetailsPage />} />
-              <Route path="/homepage" element={<HomePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/search" element={<SearchPage />} />
-            </Routes>
-          </Layout>
-        </Router>
+
+          {/* --- Wrap Layout with AuthorizeView --- */}
+          {/* AuthorizeView will run the auth check and provide context */}
+          <AuthorizeView>
+            <Layout>
+              {' '}
+              {/* Layout and its children now have access to UserContext */}
+              <Routes>
+                {/* Public Routes: Accessible always. AuthorizeView won't redirect from /login */}
+                <Route path="/" element={<WelcomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+                {/* Protected Routes: AuthorizeView will redirect to /login if not authenticated */}
+                <Route path="/adminmovies" element={<AdminMoviesPage />} />
+                <Route path="/movie/:id" element={<MovieDetailsPage />} />
+                <Route path="/homepage" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/search" element={<SearchPage />} />
+
+                {/* Add other routes as needed */}
+                {/* <Route path="*" element={<NotFoundPage />} /> */}
+              </Routes>
+            </Layout>
+          </AuthorizeView>
+        </BrowserRouter>
       </>
     </ConsentProvider>
   );
 }
 
+// --- CookieConsentConsumer Component ---
 const CookieConsentConsumer = () => {
   const { acceptConsent, declineConsent } = useConsent();
+  // Make sure href is correct if PrivacyPolicy is a route
+  const privacyPolicyPath = '/privacy-policy';
+
   return (
     <CookieConsent
       location="bottom"
@@ -56,7 +77,6 @@ const CookieConsentConsumer = () => {
         color: 'white',
         fontSize: '13px',
       }}
-      // Decline Button
       enableDeclineButton
       declineButtonText="Decline Non-Essential"
       declineButtonStyle={{
@@ -71,7 +91,8 @@ const CookieConsentConsumer = () => {
       This website uses essential cookies for authentication and basic
       functionality. We also use non-essential cookies to enhance user
       experience and analyze traffic. See our{' '}
-      <a href="/privacy-policy" style={{ color: '#aef' }}>
+      {/* Use Link component from react-router-dom if possible for client-side routing */}
+      <a href={privacyPolicyPath} style={{ color: '#aef' }}>
         Privacy Policy
       </a>{' '}
       for more details. Do you accept non-essential cookies?
@@ -79,11 +100,15 @@ const CookieConsentConsumer = () => {
   );
 };
 
+// --- ConditionalTracking Component ---
 const ConditionalTracking = () => {
   const { hasConsent } = useConsent();
   useEffect(() => {
+    // This will log whenever consent status changes or component mounts
     console.log('[ConditionalTracking] Consent status:', hasConsent);
-  }, [hasConsent]);
+  }, [hasConsent]); // Dependency array ensures it runs when hasConsent changes
+
+  // Render PageViewTracker only if consent is given
   return hasConsent ? <PageViewTracker /> : null;
 };
 
