@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import styles from './HomePage.module.css';
+import { getMovieImage } from '../utils/imageHelpers';
 
 //  read recommender API URL from .env
 const RECOMMENDER_API = import.meta.env.VITE_RECOMMENDER_API;
@@ -44,7 +45,9 @@ const HomePage = () => {
 
     const fetchRecs = async () => {
       try {
-        const res = await fetch(`${RECOMMENDER_API}/user-recs?user_id=${userId}`);
+        const res = await fetch(
+          `${RECOMMENDER_API}/user-recs?user_id=${userId}`
+        );
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -85,7 +88,21 @@ const HomePage = () => {
             <div className={styles.carousel}>
               {movies.map((movie) => (
                 <div key={movie.id} className={styles.carouselItem}>
-                  <Link to={`/movie/${movie.id}`}>{movie.title}</Link>
+                  <Link to={`/movie/${movie.id}`}>
+                    <img
+                      src={getMovieImage(movie.title)}
+                      alt={movie.title}
+                      style={{
+                        width: '120px',
+                        height: '180px',
+                        objectFit: 'cover',
+                        borderRadius: '6px',
+                        display: 'block',
+                        marginBottom: '0.5rem',
+                      }}
+                    />
+                    <div style={{ textAlign: 'center' }}>{movie.title}</div>
+                  </Link>
                 </div>
               ))}
             </div>
