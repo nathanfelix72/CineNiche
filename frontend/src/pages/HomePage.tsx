@@ -216,36 +216,63 @@ const HomePage = () => {
       </nav>
 
       <div className={styles.homePage}>
-        <h1>Welcome {userName ? userName : userEmail}!</h1>
+  <h1>Welcome {userName ? userName : userEmail}!</h1>
 
-        {Object.entries(recs).map(([section, movies]) => (
-          <div key={section} className={styles.carouselSection}>
-            <h2>{section}</h2>
-            <div className={styles.carousel}>
-              {movies.map((movie) => (
-                <div key={movie.id}>
-                  <Link to={`/movie/${movie.id}`}>
-                  <img
-                    src={getMovieImage(movie.title!)}
-                    className="img-fluid"
-                    alt={movie.title}
-                    style={{
-                        width: 'auto',              // Set fixed width
-                        height: '300px',             // Set fixed height
-                        objectFit: 'cover',          // Crop image to fill box without distortion
-                        border: '2px solid #fff',
-                        borderRadius: '4px',
-                        display: 'block',
-                      }}
-                    loading="lazy"
-                  />
-                    <div className='text-black' style={{ textAlign: 'center' , textDecoration: 'none'}}>{movie.title}</div>
-                  </Link>
-                </div>
-              ))}
-            </div>
+  {Object.entries(recs).map(([section, movies]) => (
+    <div key={section} className={styles.carouselSection}>
+      <h2>{section}</h2>
+      <div
+        className={styles.carousel}
+        style={{
+          display: 'flex',
+          overflowX: 'auto',
+          gap: '1rem',
+          paddingBottom: '1rem',
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'thin',
+        }}
+      >
+        {movies.map((movie) => (
+          <div
+            key={movie.id}
+            style={{
+              flex: '0 0 auto',
+              scrollSnapAlign: 'start',
+              width: '200px',
+            }}
+          >
+            <Link to={`/movie/${movie.id}`}>
+              <img
+                src={getMovieImage(movie.title!)}
+                className="img-fluid"
+                alt={movie.title}
+                style={{
+                  width: '200px',
+                  height: '300px',
+                  objectFit: 'cover',
+                  border: '2px solid #fff',
+                  borderRadius: '4px',
+                  display: 'block',
+                  margin: '0 auto 10px auto',
+                }}
+                loading="lazy"
+              />
+              <div
+                className="text-black"
+                style={{
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  fontWeight: '500',
+                }}
+              >
+                {movie.title}
+              </div>
+            </Link>
           </div>
         ))}
+      </div>
+    </div>
+  ))}
            {/* Footer with Classic Cinema Credits Style */}
     <footer
           className="py-5"
