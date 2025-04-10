@@ -19,11 +19,9 @@ function PrivacyPolicy() {
   const handleClick = (link: string) => {
     if (link === 'Privacy') {
       handlePrivacyClick();
-    }
-    else if (link === "Admin Login") {
+    } else if (link === 'Admin Login') {
       handleAdminClick();
     }
-
   };
 
   const faqItems = [
@@ -414,38 +412,48 @@ function PrivacyPolicy() {
                   </p>
                 </div>
 
-                    <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
-                    {[
-                        ["FAQ", "Help Center", "Account", "Media Center"],
-                        ["Investor Relations", "Jobs", "Ways to Watch", "Corporate Information"],
-                        ["Buy Gift Cards", "Cookie Preferences", "Legal Notices", "Terms of Use"],
-                        ["Privacy", "Admin Login", "Ad Choices", "Contact Us"]
-                    ].map((group, idx) => (
-                        <div className="col" key={idx}>
-                        <ul className="list-unstyled small">
-                            {group.map((link, i) => (
-                            <li key={i} className="mb-2">
-                                <a
-                                href="#"
-                                className="text-decoration-none"
-                                style={{ 
-                                    color: '#a9a9a9',
-                                    fontFamily: '"Courier Prime", monospace'
-                                }}
-                                onClick={() => handleClick(link)}
-                                >
-                                {link}
-                                </a>
-                            </li>
-                            ))}
-                        </ul>
-                        </div>
-                    ))}
+                <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
+                  {[
+                    ['FAQ', 'Help Center', 'Account', 'Media Center'],
+                    [
+                      'Investor Relations',
+                      'Jobs',
+                      'Ways to Watch',
+                      'Corporate Information',
+                    ],
+                    [
+                      'Buy Gift Cards',
+                      'Cookie Preferences',
+                      'Legal Notices',
+                      'Terms of Use',
+                    ],
+                    ['Privacy', 'Admin Login', 'Ad Choices', 'Contact Us'],
+                  ].map((group, idx) => (
+                    <div className="col" key={idx}>
+                      <ul className="list-unstyled small">
+                        {group.map((link, i) => (
+                          <li key={i} className="mb-2">
+                            <a
+                              href="#"
+                              className="text-decoration-none"
+                              style={{
+                                color: '#a9a9a9',
+                                fontFamily: '"Courier Prime", monospace',
+                              }}
+                              onClick={() => handleClick(link)}
+                            >
+                              {link}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                  ))}
                 </div>
-                </div>
+              </div>
             </div>
-            </footer>
+          </div>
+        </footer>
       </div>
     </div>
   );

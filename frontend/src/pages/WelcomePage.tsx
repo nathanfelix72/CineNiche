@@ -1,43 +1,50 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, Film, Camera, Download, Tv, Users, PlayCircle } from 'lucide-react';
+import {
+  ChevronRight,
+  Film,
+  Camera,
+  Download,
+  Tv,
+  Users,
+  PlayCircle,
+} from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { InputGroup, Form, Button, Accordion } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function WelcomePage() {
-    const [email, setEmail] = useState('');
-    const navigate = useNavigate();
-    
-    const handlePrivacyClick = () => {
-        // Navigate to the Privacy Policy page
-        navigate('/privacy-policy');
-    };
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
-    const handleAdminClick = () => {
-        // Navigate to the Privacy Policy page
-        navigate('/adminmovies');
-    };
+  const handlePrivacyClick = () => {
+    // Navigate to the Privacy Policy page
+    navigate('/privacy-policy');
+  };
 
-    const handleClick = (link: string) => {
-        if (link === "Privacy") {
-            handlePrivacyClick();
-        }
-        else if (link === "Admin Login") {
-            handleAdminClick();
-        }
-    };
+  const handleAdminClick = () => {
+    // Navigate to the Privacy Policy page
+    navigate('/adminmovies');
+  };
 
-    const trendingContent = [
-        { id: 1, title: "Indiana Jones and the Temple of Doom", rank: 1 },
-        { id: 2, title: "A Cinderella Story", rank: 2 },
-        { id: 3, title: "Grease", rank: 3 },
-        { id: 4, title: "Sabrina", rank: 4 },
-        { id: 5, title: "Hunt for the Wilderpeople", rank: 5 },
-        { id: 6, title: "Kung Fu Panda", rank: 6 },
-        { id: 7, title: "Leap Year", rank: 7 },
-        { id: 8, title: "Les Misérables", rank: 8 },
-        { id: 9, title: "Monty Python and the Holy Grail", rank: 9 }
-      ];
+  const handleClick = (link: string) => {
+    if (link === 'Privacy') {
+      handlePrivacyClick();
+    } else if (link === 'Admin Login') {
+      handleAdminClick();
+    }
+  };
+
+  const trendingContent = [
+    { id: 1, title: 'Indiana Jones and the Temple of Doom', rank: 1 },
+    { id: 2, title: 'A Cinderella Story', rank: 2 },
+    { id: 3, title: 'Grease', rank: 3 },
+    { id: 4, title: 'Sabrina', rank: 4 },
+    { id: 5, title: 'Hunt for the Wilderpeople', rank: 5 },
+    { id: 6, title: 'Kung Fu Panda', rank: 6 },
+    { id: 7, title: 'Leap Year', rank: 7 },
+    { id: 8, title: 'Les Misérables', rank: 8 },
+    { id: 9, title: 'Monty Python and the Holy Grail', rank: 9 },
+  ];
 
   const faqItems = [
     {
@@ -178,13 +185,13 @@ function WelcomePage() {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
- 
-    // Dynamically fetch image based on movie title
-    const getMovieImage = (title: string) => {
-        const imagePath = encodeURIComponent(title); // Proper URL encoding
-        return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
-    };
-    
+
+  // Dynamically fetch image based on movie title
+  const getMovieImage = (title: string) => {
+    const imagePath = encodeURIComponent(title); // Proper URL encoding
+    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  };
+
   return (
     <div
       style={{
@@ -413,177 +420,208 @@ function WelcomePage() {
           </div>
         </div>
 
-       {/* Trending Now Carousel */}
-<div className="container py-5">
-  <div className="d-flex align-items-center mb-4 justify-content-between">
-    <div className="d-flex align-items-center">
-      <div
-        style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '50%',
-          backgroundColor: '#d13e4a',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginRight: '12px',
-        }}
-      >
-        <Film size={20} className="text-white" />
-      </div>
-      <h2
-        className="text-black fw-bold mb-0"
-        style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.1em' }}
-      >
-        TRENDING NOW
-      </h2>
-    </div>
-  </div>
+        {/* Trending Now Carousel */}
+        <div className="container py-5">
+          <div className="d-flex align-items-center mb-4 justify-content-between">
+            <div className="d-flex align-items-center">
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: '#d13e4a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: '12px',
+                }}
+              >
+                <Film size={20} className="text-white" />
+              </div>
+              <h2
+                className="text-black fw-bold mb-0"
+                style={{
+                  fontFamily: '"Bebas Neue", sans-serif',
+                  letterSpacing: '0.1em',
+                }}
+              >
+                TRENDING NOW
+              </h2>
+            </div>
+          </div>
 
-  {/* Film Strip Container with Carousel */}
-  <div style={{ position: 'relative', padding: '60px 0', marginBottom: '40px' }}>
-    {/* Top Film Strip */}
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '15px',
-        backgroundImage:
-          'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
-      }}
-    ></div>
-
-    {/* Bottom Film Strip */}
-    <div
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '15px',
-        backgroundImage:
-          'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
-      }}
-    ></div>
-
-    {/* Carousel Container with Horizontal Scrolling */}
-    <div style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-    <div
-        style={{
-        display: 'flex',
-        transition: 'transform 0.5s ease',
-        }}
-    >
-        {trendingContent.map((item) => (
-        <div
-            key={item.id}
+          {/* Film Strip Container with Carousel */}
+          <div
             style={{
-            flex: `0 0 ${100 / visibleItems}%`,
-            padding: '0 8px',
-            transition: 'transform 0.3s',
-            cursor: 'pointer',
+              position: 'relative',
+              padding: '60px 0',
+              marginBottom: '40px',
             }}
-        >
-            <div className="position-relative">
+          >
+            {/* Top Film Strip */}
             <div
-                className="position-absolute top-0 start-0 p-2 z-1"
-                style={{
-                background: '#d13e4a',
-                color: '#fff',
-                fontWeight: 'bold',
-                clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)',
-                paddingRight: '15px',
-                }}
-            >
-                {item.rank}
-            </div>
-            <img
-                src={getMovieImage(item.title)}
-                className="img-fluid"
-                alt={item.title}
-                style={{
-                width: 'auto%', // Make images take up the full width of their container
-                height: '350px', // Fixed height to make images uniform
-                objectFit: 'cover', // Crop images to fit within the specified dimensions
-                border: '4px solid #000',
-                boxShadow: '0 5px 15px #d13e4a',
-                }}
-            />
-            <div className="text-center mt-2 text-black">{item.title}</div>
-            </div>
-        </div>
-        ))}
-    </div>
-    </div>
-</div>
-</div>
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '15px',
+                backgroundImage:
+                  'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
+              }}
+            ></div>
 
-                
-        {/* Features in Vintage Camera Style Layout */}
-        <div className="py-5" style={{
-        backgroundImage: 'radial-gradient(circle at 30% 50%, #d13e4a 0%, #f5e9d9 70%)',
-        position: 'relative'
-        }}>
-        <div className="container">
-            <div className="row justify-content-center">
-            <div className="col-lg-10">
-                <div className="d-flex align-items-center mb-4">
-                <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: '#d13e4a',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: '12px'
-                }}>
-                    <Camera size={20} className="text-white" />
-                </div>
-                <h2 className="text-white fw-bold mb-0" style={{ 
-                    fontFamily: '"Bebas Neue", sans-serif',
-                    letterSpacing: '0.1em'
-                }}>MORE REASONS TO JOIN</h2>
-                </div>
-                
-                <div className="row g-4">
-                {features.map((feature, idx) => (
-                    <div className="col-md-6 col-lg-3" key={idx}>
-                    <div className="h-100" style={{ 
-                        backgroundColor: 'rgba(209, 62, 74, 0.5)', 
-                        border: '1px solid rgba(255, 255, 255, 0.1)', 
-                        borderRadius: '8px', 
-                        overflow: 'hidden', 
-                        padding: '20px', 
-                        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)' 
-                    }}>
-                    <div className="mb-3 d-flex justify-content-center">
-                        <div style={{
-                            width: '70px',
-                            height: '70px',
-                            borderRadius: '50%',
-                            backgroundColor: '#d13e4a',
-                            border: '1px solid rgb(215, 65, 102)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            {feature.icon}
-                        </div>
+            {/* Bottom Film Strip */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '15px',
+                backgroundImage:
+                  'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
+              }}
+            ></div>
+
+            {/* Carousel Container with Horizontal Scrolling */}
+            <div style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  transition: 'transform 0.5s ease',
+                }}
+              >
+                {trendingContent.map((item) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      flex: `0 0 ${100 / visibleItems}%`,
+                      padding: '0 8px',
+                      transition: 'transform 0.3s',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div className="position-relative">
+                      <div
+                        className="position-absolute top-0 start-0 p-2 z-1"
+                        style={{
+                          background: '#d13e4a',
+                          color: '#fff',
+                          fontWeight: 'bold',
+                          clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)',
+                          paddingRight: '15px',
+                        }}
+                      >
+                        {item.rank}
+                      </div>
+                      <img
+                        src={getMovieImage(item.title)}
+                        className="img-fluid"
+                        alt={item.title}
+                        style={{
+                          width: 'auto%', // Make images take up the full width of their container
+                          height: '350px', // Fixed height to make images uniform
+                          objectFit: 'cover', // Crop images to fit within the specified dimensions
+                          border: '4px solid #000',
+                          boxShadow: '0 5px 15px #d13e4a',
+                        }}
+                      />
+                      <div className="text-center mt-2 text-black">
+                        {item.title}
+                      </div>
                     </div>
-                        <h5 className="text-white mb-2" style={{ fontFamily: '"Courier Prime", monospace' }}>
-                        {feature.title}
-                        </h5>
-                        <p className="text-light small mb-0">{feature.description}</p>
-                    </div>
-                    </div>
+                  </div>
                 ))}
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
+
+        {/* Features in Vintage Camera Style Layout */}
+        <div
+          className="py-5"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 30% 50%, #d13e4a 0%, #f5e9d9 70%)',
+            position: 'relative',
+          }}
+        >
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-lg-10">
+                <div className="d-flex align-items-center mb-4">
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      backgroundColor: '#d13e4a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: '12px',
+                    }}
+                  >
+                    <Camera size={20} className="text-white" />
+                  </div>
+                  <h2
+                    className="text-white fw-bold mb-0"
+                    style={{
+                      fontFamily: '"Bebas Neue", sans-serif',
+                      letterSpacing: '0.1em',
+                    }}
+                  >
+                    MORE REASONS TO JOIN
+                  </h2>
+                </div>
+
+                <div className="row g-4">
+                  {features.map((feature, idx) => (
+                    <div className="col-md-6 col-lg-3" key={idx}>
+                      <div
+                        className="h-100"
+                        style={{
+                          backgroundColor: 'rgba(209, 62, 74, 0.5)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          padding: '20px',
+                          boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)',
+                        }}
+                      >
+                        <div className="mb-3 d-flex justify-content-center">
+                          <div
+                            style={{
+                              width: '70px',
+                              height: '70px',
+                              borderRadius: '50%',
+                              backgroundColor: '#d13e4a',
+                              border: '1px solid rgb(215, 65, 102)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {feature.icon}
+                          </div>
+                        </div>
+                        <h5
+                          className="text-white mb-2"
+                          style={{ fontFamily: '"Courier Prime", monospace' }}
+                        >
+                          {feature.title}
+                        </h5>
+                        <p className="text-light small mb-0">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* FAQ in Theater Marquee Style */}
@@ -674,42 +712,44 @@ function WelcomePage() {
                 </p>
                 <div className="row justify-content-center">
                   <div className="col-lg-8">
-                  <InputGroup
-                    className="mb-3"
-                    style={{
-                      border: '3px solid rgba(215, 65, 103, 0.3)',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <Form.Control
-                      placeholder="Email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="py-3"
+                    <InputGroup
+                      className="mb-3"
                       style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        border: 'none',
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: 'black',
-                        fontFamily: 'serif',
+                        border: '3px solid rgba(215, 65, 103, 0.3)',
+                        borderRadius: '10px',
+                        overflow: 'hidden',
                       }}
-                    />
-                    <Button
-                      style={{
-                        backgroundColor: '#d13e4a',
-                        borderColor: '#d13e4a',
-                        color: '#fff',
-                        padding: '0 25px',
-                      }}
-                      onClick={() =>
-                        navigate(`/register?email=${encodeURIComponent(email)}`)
-                      }
                     >
-                      Get Started <ChevronRight size={20} className="ms-2" />
-                    </Button>
-                  </InputGroup>
+                      <Form.Control
+                        placeholder="Email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="py-3"
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: 'none',
+                          fontSize: '1.5rem',
+                          fontWeight: 'bold',
+                          color: 'black',
+                          fontFamily: 'serif',
+                        }}
+                      />
+                      <Button
+                        style={{
+                          backgroundColor: '#d13e4a',
+                          borderColor: '#d13e4a',
+                          color: '#fff',
+                          padding: '0 25px',
+                        }}
+                        onClick={() =>
+                          navigate(
+                            `/register?email=${encodeURIComponent(email)}`
+                          )
+                        }
+                      >
+                        Get Started <ChevronRight size={20} className="ms-2" />
+                      </Button>
+                    </InputGroup>
                   </div>
                 </div>
               </div>
@@ -752,38 +792,48 @@ function WelcomePage() {
                   </p>
                 </div>
 
-                    <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
-                    {[
-                        ["FAQ", "Help Center", "Account", "Media Center"],
-                        ["Investor Relations", "Jobs", "Ways to Watch", "Corporate Information"],
-                        ["Buy Gift Cards", "Cookie Preferences", "Legal Notices", "Terms of Use"],
-                        ["Privacy", "Admin Login", "Ad Choices", "Contact Us"]
-                    ].map((group, idx) => (
-                        <div className="col" key={idx}>
-                        <ul className="list-unstyled small">
-                            {group.map((link, i) => (
-                            <li key={i} className="mb-2">
-                                <a
-                                href="#"
-                                className="text-decoration-none"
-                                style={{ 
-                                    color: '#a9a9a9',
-                                    fontFamily: '"Courier Prime", monospace'
-                                }}
-                                onClick={() => handleClick(link)}
-                                >
-                                {link}
-                                </a>
-                            </li>
-                            ))}
-                        </ul>
-                        </div>
-                    ))}
+                <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
+                  {[
+                    ['FAQ', 'Help Center', 'Account', 'Media Center'],
+                    [
+                      'Investor Relations',
+                      'Jobs',
+                      'Ways to Watch',
+                      'Corporate Information',
+                    ],
+                    [
+                      'Buy Gift Cards',
+                      'Cookie Preferences',
+                      'Legal Notices',
+                      'Terms of Use',
+                    ],
+                    ['Privacy', 'Admin Login', 'Ad Choices', 'Contact Us'],
+                  ].map((group, idx) => (
+                    <div className="col" key={idx}>
+                      <ul className="list-unstyled small">
+                        {group.map((link, i) => (
+                          <li key={i} className="mb-2">
+                            <a
+                              href="#"
+                              className="text-decoration-none"
+                              style={{
+                                color: '#a9a9a9',
+                                fontFamily: '"Courier Prime", monospace',
+                              }}
+                              onClick={() => handleClick(link)}
+                            >
+                              {link}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                  ))}
                 </div>
-                </div>
+              </div>
             </div>
-            </footer>
+          </div>
+        </footer>
       </div>
     </div>
   );
