@@ -92,9 +92,7 @@ const Pagination = ({
               onClick={() => onPageChange(Number(item))}
               disabled={currentPage === item}
               className={`px-2 py-1 border rounded ${
-                currentPage === item
-                  ? 'font-bold underline bg-gray-200'
-                  : ''
+                currentPage === item ? 'font-bold underline bg-gray-200' : ''
               }`}
             >
               {item}
