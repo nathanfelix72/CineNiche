@@ -502,44 +502,47 @@ const MovieDetailsPage = () => {
                 {relatedMovies.length > 0 && (
                   <div className="related-movies">
                     <h3>Related Movies</h3>
-                    <div className="related-movies container">
-  <h3 className="text-center mb-4">You Might Also Like</h3>
-  <div
-    className="d-flex overflow-auto py-3 px-2"
-    style={{ gap: '1rem', scrollSnapType: 'x mandatory' }}
-  >
-    {relatedMovies.map((related) => (
-      <div
-        key={related.id}
-        className="flex-shrink-0"
-        style={{ width: '200px', scrollSnapAlign: 'start' }}
-      >
-        <Link
-          to={`/movie/${related.id}`}
-          className="text-decoration-none text-dark"
-        >
-          <div className="card h-100">
-            <img
-              src={getMovieImage(related.title)}
-              alt={related.title}
-              className="card-img-top"
-              onError={(e) => {
-                e.currentTarget.src = '/fallback-poster.jpg';
-              }}
-              style={{
-                height: '280px',
-                objectFit: 'cover',
-              }}
-            />
-            <div className="card-body">
-              <h6 className="card-title text-center">{related.title}</h6>
-            </div>
-          </div>
-        </Link>
-      </div>
-    ))}
-  </div>
-</div>
+                    <div className="container">
+                      <h3 className="text-center mb-4">You Might Also Like</h3>
+                      <div
+                        className="d-flex overflow-auto py-3 px-2"
+                        style={{ gap: '1rem', scrollSnapType: 'x mandatory' }}
+                      >
+                        {relatedMovies.map((related) => (
+                          <div
+                            key={related.id}
+                            className="flex-shrink-0"
+                            style={{ width: '200px', scrollSnapAlign: 'start' }}
+                          >
+                            <Link
+                              to={`/movie/${related.id}`}
+                              className="text-decoration-none text-dark"
+                            >
+                              <div className="card h-100">
+                                <img
+                                  src={getMovieImage(related.title)}
+                                  alt={related.title}
+                                  className="card-img-top"
+                                  onError={(e) => {
+                                    e.currentTarget.src =
+                                      '/fallback-poster.jpg';
+                                  }}
+                                  style={{
+                                    height: '280px',
+                                    objectFit: 'cover',
+                                  }}
+                                />
+                                <div className="card-body">
+                                  <h6 className="card-title text-center">
+                                    {related.title}
+                                  </h6>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
