@@ -4,7 +4,6 @@ import { MoviesTitle } from '../types/MoviesTitle';
 import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
 import { fetchRelatedMovies } from '../api/MoviesAPI';
-import './MovieDetailsPage.module.css';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import './movieDetailsPage.css';
 import { useNavigate, Link } from 'react-router-dom';
@@ -491,41 +490,54 @@ const MovieDetailsPage = () => {
                       .join(', ') || 'None'}
                   </p>
                 </div>
+
                 {/*  Related Movies Carousel */}
                 {relatedMovies.length > 0 && (
                   <div className="related-movies">
                     <h3>Related Movies</h3>
-                    <div className="carousel">
-                      {relatedMovies.map((related) => (
-                        <div key={related.id} className="carousel-item">
-                          <Link to={`/movie/${related.id}`}>
-                            <img
-                              src={getMovieImage(related.title)}
-                              alt={related.title}
-                              style={{
-                                width: '120px',
-                                height: '180px',
-                                objectFit: 'cover',
-                                borderRadius: '6px',
-                                display: 'block',
-                                marginBottom: '0.5rem',
-                              }}
-                              onError={(e) => {
-                                e.currentTarget.src = '/fallback-poster.jpg';
-                              }}
-                            />
-                            <div style={{ textAlign: 'center' }}>
-                              {related.title}
-                            </div>
-                          </Link>
-                        </div>
-                      ))}
+                    <div className="related-movies container">
+                      <h3 className="text-center mb-4">Related Movies</h3>
+                      <div className="row g-4">
+                        {relatedMovies.map((related) => (
+                          <div
+                            key={related.id}
+                            className="col-6 col-md-4 col-lg-3"
+                          >
+                            <Link
+                              to={`/movie/${related.id}`}
+                              className="text-decoration-none text-dark"
+                            >
+                              <div className="card h-100">
+                                <img
+                                  src={getMovieImage(related.title)}
+                                  alt={related.title}
+                                  className="card-img-top"
+                                  onError={(e) => {
+                                    e.currentTarget.src =
+                                      '/fallback-poster.jpg';
+                                  }}
+                                  style={{
+                                    height: '300px',
+                                    objectFit: 'cover',
+                                  }}
+                                />
+                                <div className="card-body">
+                                  <h6 className="card-title text-center">
+                                    {related.title}
+                                  </h6>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
+
           {/* Footer with Classic Cinema Credits Style */}
           <footer
             className="py-5"
