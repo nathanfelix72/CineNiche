@@ -88,7 +88,7 @@ const MovieDetailsPage = () => {
     { id: number; title: string }[]
   >([]);
   const [userId, setUserId] = useState<number | null>(null); // State for user ID
-  
+
   // Dynamically fetch image based on movie title
   const sanitizeTitle = (title: string): string => {
     return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
@@ -502,7 +502,7 @@ const MovieDetailsPage = () => {
                   <div className="related-movies">
                     <h3>Related Movies</h3>
                     <div className="related-movies container">
-                      <h3 className="text-center mb-4">Related Movies</h3>
+                      <h3 className="text-center mb-4"></h3>
                       <div className="row g-4">
                         {relatedMovies.map((related) => (
                           <div
