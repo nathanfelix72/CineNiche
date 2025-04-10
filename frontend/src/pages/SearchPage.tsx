@@ -141,7 +141,7 @@ const SearchPage = () => {
   const sourceMovies = hasSearched ? searchResults : movies;
 
   const sanitizeTitle = (title: string): string => {
-    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+    return title.replace(/[^\p{L}\p{N} ]/gu, '').trim();
   };
 
   // --- Image URL Generation ---
@@ -475,7 +475,7 @@ const SearchPage = () => {
             <footer
         className="py-5"
         style={{
-          backgroundColor: '#f5e9d9',
+            backgroundColor: 'transparent',
           borderTop: '3px double rgba(255, 255, 255, 0.1)',
           color: '#999',
           position: 'relative',

@@ -44,7 +44,7 @@ const HomePage = () => {
   };
 
   const sanitizeTitle = (title: string): string => {
-    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+    return title.replace(/[^\p{L}\p{N} ]/gu, '').trim();
   };
 
   // --- Image URL Generation ---
@@ -220,12 +220,7 @@ const HomePage = () => {
       </nav>
 
       <div className={styles.homePage}>
-        <Logout>
-          Logout <AuthorizedUser value="email" />
-        </Logout>
-        <br />
         <h1>Welcome {userName ? userName : userEmail}!</h1>
-        <button onClick={handleNavigateToAdminMovies}>Go to Admin Movies Page</button>
 
         {Object.entries(recs).map(([section, movies]) => (
           <div key={section} className={styles.carouselSection}>
@@ -259,7 +254,7 @@ const HomePage = () => {
     <footer
           className="py-5"
           style={{
-            backgroundColor: '#f5e9d9',
+            backgroundColor: 'transparent',
             borderTop: '3px double rgba(255, 255, 255, 0.1)',
             color: '#999',
             position: 'relative',
