@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { ChevronRight, Film, Camera, Download, Tv, Users, PlayCircle, ChevronLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronRight, Film, Camera, Download, Tv, Users, PlayCircle } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { InputGroup, Form, Button, Accordion } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -7,16 +7,23 @@ import { useNavigate } from 'react-router-dom';
 function WelcomePage() {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
-    const carouselRef = useRef(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(false);
+    
     const handlePrivacyClick = () => {
         // Navigate to the Privacy Policy page
         navigate('/privacy-policy');
     };
+
+    const handleAdminClick = () => {
+        // Navigate to the Privacy Policy page
+        navigate('/adminmovies');
+    };
+
     const handleClick = (link: string) => {
         if (link === "Privacy") {
             handlePrivacyClick();
+        }
+        else if (link === "Admin Login") {
+            handleAdminClick();
         }
     };
 
@@ -24,12 +31,12 @@ function WelcomePage() {
         { id: 1, title: "Indiana Jones and the Temple of Doom", rank: 1 },
         { id: 2, title: "A Cinderella Story", rank: 2 },
         { id: 3, title: "Grease", rank: 3 },
-        { id: 4, title: "Fiddler on the Roof", rank: 4 },
+        { id: 4, title: "Sabrina", rank: 4 },
         { id: 5, title: "Hunt for the Wilderpeople", rank: 5 },
         { id: 6, title: "Kung Fu Panda", rank: 6 },
-        { id: 7, title: "Godzilla", rank: 7 },
-        { id: 8, title: "Godzilla", rank: 8 },
-        { id: 9, title: "Godzilla", rank: 9 }
+        { id: 7, title: "Leap Year", rank: 7 },
+        { id: 8, title: "Les Misérables", rank: 8 },
+        { id: 9, title: "Monty Python and the Holy Grail", rank: 9 }
       ];
 
   const faqItems = [
@@ -123,32 +130,7 @@ function WelcomePage() {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const maxItems = trendingContent.length;
-  
-  const nextSlide = () => {
-    if (isAnimating) return;
-    
-    setIsAnimating(true);
-    const nextIndex = (currentIndex + 1) % maxItems;
-    setCurrentIndex(nextIndex);
-    
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 100);
-  };
-
-  const prevSlide = () => {
-    if (isAnimating) return;
-    
-    setIsAnimating(true);
-    const prevIndex = currentIndex === 0 ? maxItems - 1 : currentIndex - 1;
-    setCurrentIndex(prevIndex);
-    
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 100);
-  };
+ 
     // Dynamically fetch image based on movie title
     const getMovieImage = (title: string) => {
         const imagePath = encodeURIComponent(title); // Proper URL encoding
@@ -328,126 +310,179 @@ function WelcomePage() {
             </div>
           </div>
         </div>
-        {/* Trending Now Carousel */}
-        <div className="container py-5">
-                <div className="row justify-content-center">
-                    <div className="col-lg-11">
-                    <div className="d-flex align-items-center mb-4 justify-content-between">
-                        <div className="d-flex align-items-center">
-                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#d13e4a', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px' }}>
-                            <Film size={20} className="text-white" />
-                        </div>
-                        <h2 className="text-black fw-bold mb-0" style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.1em' }}>TRENDING NOW</h2>
-                        </div>
-                        {/* Carousel Navigation */}
-                        <div className="d-flex">
-                        <button className="btn btn-sm me-2" onClick={prevSlide} style={{ backgroundColor: '#d13e4a', borderColor: '#d13e4a', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <ChevronLeft size={20} className="text-white" />
-                        </button>
-                        <button className="btn btn-sm" onClick={nextSlide} style={{ backgroundColor: '#d13e4a', borderColor: '#d13e4a', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <ChevronRight size={20} className="text-white" />
-                        </button>
-                        </div>
-                    </div>
-                    {/* Film Strip Container with Carousel */}
-                    <div style={{ position: 'relative', padding: '30px 0', marginBottom: '40px' }}>
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '15px', backgroundImage: 'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)' }}></div>
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '15px', backgroundImage: 'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)' }}></div>
-                        <div ref={carouselRef} style={{ overflow: 'hidden', paddingTop: '15px', paddingBottom: '15px' }}>
-                        <div style={{ display: 'flex', transition: 'transform 0.5s ease', transform: `translateX(-${currentIndex * (100 / maxItems)}%)` }}>
-                            {trendingContent.map(item => (
-                            <div key={item.id} style={{ flex: `0 0 ${100 / visibleItems}%`, padding: '0 8px', transition: 'transform 0.3s', cursor: 'pointer' }}>
-                                <div className="position-relative">
-                                <div className="position-absolute top-0 start-0 p-2 z-1" style={{ background: '#d13e4a', color: '#fff', fontWeight: 'bold', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)', paddingRight: '15px' }}>
-                                    {item.rank}
-                                </div>
-                                <img 
-                                        src={getMovieImage(item.title)} 
-                                        className="img-fluid" 
-                                        alt={item.title} 
-                                        style={{ 
-                                            width: '100%',  // Make images take up the full width of their container
-                                            height: '325px',  // Fixed height to make images uniform
-                                            objectFit: 'cover',  // Crop images to fit within the specified dimensions
-                                            border: '4px solid #000', 
-                                            boxShadow: '0 5px 15px #d13e4a' 
-                                        }} 
-                                    />                                
-                                <div className="text-center mt-2 text-black">{item.title}</div>
-                                </div>
-                            </div>
-                            ))}
-                        </div>
-                        </div>
-                    </div>
-                    </div>
+
+       {/* Trending Now Carousel */}
+<div className="container py-5">
+  <div className="d-flex align-items-center mb-4 justify-content-between">
+    <div className="d-flex align-items-center">
+      <div
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          backgroundColor: '#d13e4a',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginRight: '12px',
+        }}
+      >
+        <Film size={20} className="text-white" />
+      </div>
+      <h2
+        className="text-black fw-bold mb-0"
+        style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.1em' }}
+      >
+        TRENDING NOW
+      </h2>
+    </div>
+  </div>
+
+  {/* Film Strip Container with Carousel */}
+  <div style={{ position: 'relative', padding: '60px 0', marginBottom: '40px' }}>
+    {/* Top Film Strip */}
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '15px',
+        backgroundImage:
+          'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
+      }}
+    ></div>
+
+    {/* Bottom Film Strip */}
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '15px',
+        backgroundImage:
+          'repeating-linear-gradient(90deg, #d13e4a, #d13e4a 15px, #333 15px, #333 30px)',
+      }}
+    ></div>
+
+    {/* Carousel Container with Horizontal Scrolling */}
+    <div style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
+    <div
+        style={{
+        display: 'flex',
+        transition: 'transform 0.5s ease',
+        }}
+    >
+        {trendingContent.map((item) => (
+        <div
+            key={item.id}
+            style={{
+            flex: `0 0 ${100 / visibleItems}%`,
+            padding: '0 8px',
+            transition: 'transform 0.3s',
+            cursor: 'pointer',
+            }}
+        >
+            <div className="position-relative">
+            <div
+                className="position-absolute top-0 start-0 p-2 z-1"
+                style={{
+                background: '#d13e4a',
+                color: '#fff',
+                fontWeight: 'bold',
+                clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)',
+                paddingRight: '15px',
+                }}
+            >
+                {item.rank}
+            </div>
+            <img
+                src={getMovieImage(item.title)}
+                className="img-fluid"
+                alt={item.title}
+                style={{
+                width: 'auto%', // Make images take up the full width of their container
+                height: '350px', // Fixed height to make images uniform
+                objectFit: 'cover', // Crop images to fit within the specified dimensions
+                border: '4px solid #000',
+                boxShadow: '0 5px 15px #d13e4a',
+                }}
+            />
+            <div className="text-center mt-2 text-black">{item.title}</div>
+            </div>
+        </div>
+        ))}
+    </div>
+    </div>
+</div>
+</div>
+
+                
+        {/* Features in Vintage Camera Style Layout */}
+        <div className="py-5" style={{
+        backgroundImage: 'radial-gradient(circle at 30% 50%, #d13e4a 0%, #f5e9d9 70%)',
+        position: 'relative'
+        }}>
+        <div className="container">
+            <div className="row justify-content-center">
+            <div className="col-lg-10">
+                <div className="d-flex align-items-center mb-4">
+                <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    backgroundColor: '#d13e4a',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '12px'
+                }}>
+                    <Camera size={20} className="text-white" />
                 </div>
+                <h2 className="text-white fw-bold mb-0" style={{ 
+                    fontFamily: '"Bebas Neue", sans-serif',
+                    letterSpacing: '0.1em'
+                }}>MORE REASONS TO JOIN</h2>
                 </div>
                 
-                {/* Features in Vintage Camera Style Layout */}
-                <div className="py-5" style={{
-                backgroundImage: 'radial-gradient(circle at 30% 50%, #d13e4a 0%, #f5e9d9 70%)',
-                position: 'relative'
-                }}>
-                <div className="container">
-                    <div className="row justify-content-center">
-                    <div className="col-lg-10">
-                        <div className="d-flex align-items-center mb-4">
+                <div className="row g-4">
+                {features.map((feature, idx) => (
+                    <div className="col-md-6 col-lg-3" key={idx}>
+                    <div className="h-100" style={{ 
+                        backgroundColor: 'rgba(209, 62, 74, 0.5)', 
+                        border: '1px solid rgba(255, 255, 255, 0.1)', 
+                        borderRadius: '8px', 
+                        overflow: 'hidden', 
+                        padding: '20px', 
+                        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)' 
+                    }}>
+                    <div className="mb-3 d-flex justify-content-center">
                         <div style={{
-                            width: '36px',
-                            height: '36px',
+                            width: '70px',
+                            height: '70px',
                             borderRadius: '50%',
                             backgroundColor: '#d13e4a',
+                            border: '1px solid rgb(215, 65, 102)',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: '12px'
+                            justifyContent: 'center'
                         }}>
-                            <Camera size={20} className="text-white" />
-                        </div>
-                        <h2 className="text-white fw-bold mb-0" style={{ 
-                            fontFamily: '"Bebas Neue", sans-serif',
-                            letterSpacing: '0.1em'
-                        }}>MORE REASONS TO JOIN</h2>
-                        </div>
-                        
-                        <div className="row g-4">
-                        {features.map((feature, idx) => (
-                            <div className="col-md-6 col-lg-3" key={idx}>
-                            <div className="h-100" style={{ 
-                                backgroundColor: 'rgba(209, 62, 74, 0.5)', 
-                                border: '1px solid rgba(255, 255, 255, 0.1)', 
-                                borderRadius: '8px', 
-                                overflow: 'hidden', 
-                                padding: '20px', 
-                                boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)' 
-                            }}>
-                            <div className="mb-3 d-flex justify-content-center">
-                                <div style={{
-                                    width: '70px',
-                                    height: '70px',
-                                    borderRadius: '50%',
-                                    backgroundColor: '#d13e4a',
-                                    border: '1px solid rgb(215, 65, 102)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}>
-                                    {feature.icon}
-                                </div>
-                            </div>
-                                <h5 className="text-white mb-2" style={{ fontFamily: '"Courier Prime", monospace' }}>
-                                {feature.title}
-                                </h5>
-                                <p className="text-light small mb-0">{feature.description}</p>
-                            </div>
-                            </div>
-                        ))}
+                            {feature.icon}
                         </div>
                     </div>
+                        <h5 className="text-white mb-2" style={{ fontFamily: '"Courier Prime", monospace' }}>
+                        {feature.title}
+                        </h5>
+                        <p className="text-light small mb-0">{feature.description}</p>
                     </div>
+                    </div>
+                ))}
                 </div>
-                </div>
+            </div>
+            </div>
+        </div>
+        </div>
 
         {/* FAQ in Theater Marquee Style */}
         <div className="container py-5">
@@ -582,7 +617,7 @@ function WelcomePage() {
                         ["FAQ", "Help Center", "Account", "Media Center"],
                         ["Investor Relations", "Jobs", "Ways to Watch", "Corporate Information"],
                         ["Buy Gift Cards", "Cookie Preferences", "Legal Notices", "Terms of Use"],
-                        ["Privacy", "Speed Test", "Ad Choices", "Contact Us"]
+                        ["Privacy", "Admin Login", "Ad Choices", "Contact Us"]
                     ].map((group, idx) => (
                         <div className="col" key={idx}>
                         <ul className="list-unstyled small">

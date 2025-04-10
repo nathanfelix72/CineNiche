@@ -11,10 +11,19 @@ function PrivacyPolicy() {
     navigate('/privacy-policy');
   };
 
+  const handleAdminClick = () => {
+    // Navigate to the Privacy Policy page
+    navigate('/adminmovies');
+  };
+
   const handleClick = (link: string) => {
     if (link === "Privacy") {
       handlePrivacyClick();
     }
+    else if (link === "Admin Login") {
+      handleAdminClick();
+    }
+
   };
 
   const faqItems = [
@@ -343,7 +352,7 @@ function PrivacyPolicy() {
                         ["FAQ", "Help Center", "Account", "Media Center"],
                         ["Investor Relations", "Jobs", "Ways to Watch", "Corporate Information"],
                         ["Buy Gift Cards", "Cookie Preferences", "Legal Notices", "Terms of Use"],
-                        ["Privacy", "Speed Test", "Ad Choices", "Contact Us"]
+                        ["Privacy", "Admin Login", "Ad Choices", "Contact Us"]
                     ].map((group, idx) => (
                         <div className="col" key={idx}>
                         <ul className="list-unstyled small">

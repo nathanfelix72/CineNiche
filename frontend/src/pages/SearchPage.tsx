@@ -3,7 +3,7 @@ import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
 import Pagination from '../components/Pagination'; // Adjust path if needed
 import { Link } from 'react-router-dom';
-import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle } from 'react-icons/fa';
+import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
 
@@ -46,7 +46,7 @@ const SearchPage = () => {
     navigate('/privacy-policy');
   };
 
-  const handlePrivacyClick2 = () => {
+  const handleAdminClick = () => {
     // Navigate to the Privacy Policy page
     navigate('/adminmovies');
   };
@@ -56,7 +56,7 @@ const SearchPage = () => {
     if (link === "Privacy") {
       handlePrivacyClick();
     } else if (link === "Admin Page") {
-      handlePrivacyClick2();
+      handleAdminClick();
     }
   };
 
@@ -260,16 +260,23 @@ const SearchPage = () => {
               {/* Profile Icon */}
             <div className="dropdown">
             <button
-                className="btn btn-dark"
+                className="btn"
                 onClick={toggleProfileDropdown}
                 style={{
-                  borderRadius: '50%',
-                  padding: '20px',  // Increased padding for a bigger circle
-                  fontSize: '24px',  // Increased font size for the icon
+                    backgroundColor: '#d13e4a',  // Set background color to pink
+                    borderRadius: '50%',  // Make the button circular
+                    padding: '20px',  // Padding for the size of the circle
+                    fontSize: '20px',  // Font size for the icon
+                    border: 'none',  // Remove the default button border
+                    width: '60px',  // Set width to match height for a perfect circle
+                    height: '60px',  // Set height to match width for a perfect circle
+                    display: 'flex',  // Use flexbox to center the icon
+                    justifyContent: 'center',  // Center the icon horizontally
+                    alignItems: 'center',  // Center the icon vertically
                 }}
-              >
-                <i className="bi bi-person-circle"></i> {/* New icon (gear icon) */}
-              </button>
+                >
+                <FaStar />  {/* Star icon */}
+            </button>
                 {isProfileDropdownOpen && (
                   <div className="dropdown-menu show" style={{ position: 'absolute', right: 0, }}>
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Help</p>

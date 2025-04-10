@@ -5,7 +5,7 @@ import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
 import './MovieDetailsPage.css';
 import { useNavigate } from 'react-router-dom';
-import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle } from 'react-icons/fa';
+import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle, FaStar } from 'react-icons/fa';
 import { Film } from 'lucide-react';
 
 const StarRatingInput = ({
@@ -89,7 +89,7 @@ const MovieDetailsPage = () => {
     navigate('/privacy-policy');
   };
 
-  const handlePrivacyClick2 = () => {
+  const handleAdminClick = () => {
     // Navigate to the Privacy Policy page
     navigate('/adminmovies');
   };
@@ -99,7 +99,7 @@ const MovieDetailsPage = () => {
     if (link === "Privacy") {
       handlePrivacyClick();
     } else if (link === "Admin Page") {
-      handlePrivacyClick2();
+      handleAdminClick();
     }
   };
 
@@ -218,16 +218,23 @@ const MovieDetailsPage = () => {
           {/* Profile Icon */}
         <div className="dropdown">
         <button
-            className="btn btn-dark"
+            className="btn"
             onClick={toggleProfileDropdown}
             style={{
-              borderRadius: '50%',
-              padding: '20px',  // Increased padding for a bigger circle
-              fontSize: '24px',  // Increased font size for the icon
+                backgroundColor: '#d13e4a',  // Set background color to pink
+                borderRadius: '50%',  // Make the button circular
+                padding: '20px',  // Padding for the size of the circle
+                fontSize: '20px',  // Font size for the icon
+                border: 'none',  // Remove the default button border
+                width: '60px',  // Set width to match height for a perfect circle
+                height: '60px',  // Set height to match width for a perfect circle
+                display: 'flex',  // Use flexbox to center the icon
+                justifyContent: 'center',  // Center the icon horizontally
+                alignItems: 'center',  // Center the icon vertically
             }}
-          >
-            <i className="bi bi-person-circle"></i> {/* New icon (gear icon) */}
-          </button>
+            >
+            <FaStar />  {/* Star icon */}
+        </button>
             {isProfileDropdownOpen && (
               <div className="dropdown-menu show" style={{ position: 'absolute', right: 0, }}>
                 <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Help</p>
@@ -254,14 +261,69 @@ const MovieDetailsPage = () => {
             className="img-fluid" 
             alt={movie.title} 
             style={{ 
-                width: '100%',  // Make images take up the full width of their container
-                height: '100%',  // Fixed height to make images uniform
+                width: 'auto',  // Make images take up the full width of their container
+                height: 'auto',  // Fixed height to make images uniform
                 objectFit: 'cover',  // Crop images to fit within the specified dimensions
                 border: '4px solid #000', 
                 boxShadow: '0 5px 15px #d13e4a' 
             }} 
         /> 
+        {/* Play Button */}
+        <button
+          className="btn btn-play"
+          onClick={() => navigate(`/movie/${movie.showId}`)} // Redirect to the movie details page
+          style={{
+            margin: '5px',
+            padding: '10px 15px',
+            fontSize: '16px',
+            backgroundColor: '#d13e4a',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          <FaPlayCircle style={{ marginRight: '8px' }} />
+          PLAY
+        </button>
+        {/* Play Button */}
+        <button
+          className="btn btn-play"
+          onClick={() => navigate(`/movie/${movie.showId}`)} // Redirect to the movie details page
+          style={{
+            margin: '5px',
+            padding: '10px 15px',
+            fontSize: '16px',
+            backgroundColor: '#d13e4a',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          TRAILER
+        </button>
+        <button
+          className="btn btn-play"
+          onClick={() => navigate(`/movie/${movie.showId}`)} // Redirect to the movie details page
+          style={{
+            margin: '5px',
+            padding: '10px 15px',
+            fontSize: '16px',
+            backgroundColor: '#d13e4a',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '50px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+        <FaPlus />
+        </button>
         </div>
+        
 
         {/* Movie Information */}
         <div className="movie-description">
