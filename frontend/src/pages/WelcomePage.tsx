@@ -698,7 +698,7 @@ function WelcomePage() {
                     >
                       {item.question}
                     </Accordion.Header>
-                    <Accordion.Body className="text-light">
+                    <Accordion.Body className="text-black">
                       {item.answer}
                     </Accordion.Body>
                   </Accordion.Item>
