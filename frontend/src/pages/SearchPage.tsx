@@ -9,7 +9,15 @@ import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
 import Pagination from '../components/Pagination'; // Adjust path if needed
 import { Link } from 'react-router-dom';
-import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle, FaStar } from 'react-icons/fa';
+import {
+  FaHome,
+  FaSearch,
+  FaPlus,
+  FaFilm,
+  FaTv,
+  FaPlayCircle,
+  FaStar,
+} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
 import Logout from '../components/Logout';
@@ -61,7 +69,7 @@ const SearchPage = () => {
   const handleClick = (link: string) => {
     if (link === 'Privacy') {
       handlePrivacyClick();
-    } else if (link === "Admin Page") {
+    } else if (link === 'Admin Page') {
       handleAdminClick();
     }
   };
@@ -128,13 +136,17 @@ const SearchPage = () => {
   // Determine which list is the source for image verification
   const sourceMovies = hasSearched ? searchResults : movies;
 
-  // --- Image URL Generation ---
-  const getMovieImage = (title: string) => {
-    if (!title) return ''; // Handle cases with missing titles gracefully
-    const imagePath = encodeURIComponent(title); // Proper URL encoding
-    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  const sanitizeTitle = (title: string): string => {
+    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
   };
 
+  // --- Image URL Generation ---
+  const getMovieImage = (title: string) => {
+    if (!title) return '';
+    const imagePath = encodeURIComponent(sanitizeTitle(title));
+    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  };
+  
   // --- Image Verification Effect ---
   useEffect(() => {
     if (isLoadingData || sourceMovies.length === 0) {
@@ -281,43 +293,69 @@ const SearchPage = () => {
             </button>
             {/* Profile Icon */}
             <div className="dropdown">
-            <button
+              <button
                 className="btn"
                 onClick={toggleProfileDropdown}
                 style={{
-                    backgroundColor: '#d13e4a',  // Set background color to pink
-                    borderRadius: '50%',  // Make the button circular
-                    padding: '20px',  // Padding for the size of the circle
-                    fontSize: '20px',  // Font size for the icon
-                    border: 'none',  // Remove the default button border
-                    width: '60px',  // Set width to match height for a perfect circle
-                    height: '60px',  // Set height to match width for a perfect circle
-                    display: 'flex',  // Use flexbox to center the icon
-                    justifyContent: 'center',  // Center the icon horizontally
-                    alignItems: 'center',  // Center the icon vertically
+                  backgroundColor: '#d13e4a', // Set background color to pink
+                  borderRadius: '50%', // Make the button circular
+                  padding: '20px', // Padding for the size of the circle
+                  fontSize: '20px', // Font size for the icon
+                  border: 'none', // Remove the default button border
+                  width: '60px', // Set width to match height for a perfect circle
+                  height: '60px', // Set height to match width for a perfect circle
+                  display: 'flex', // Use flexbox to center the icon
+                  justifyContent: 'center', // Center the icon horizontally
+                  alignItems: 'center', // Center the icon vertically
                 }}
+              >
+                <FaStar /> {/* Star icon */}
+              </button>
+              {isProfileDropdownOpen && (
+                <div
+                  className="dropdown-menu show"
+                  style={{ position: 'absolute', right: 0 }}
                 >
-                <FaStar />  {/* Star icon */}
-            </button>
-                {isProfileDropdownOpen && (
-                  <div className="dropdown-menu show" style={{ position: 'absolute', right: 0, }}>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>User</p>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Help</p>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Profile</p>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Account</p>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>App Settings</p>
-                    <button className="dropdown-item fw-bold" onClick={() => navigate('/login')}>
-                      <Logout  style={{color: '#d13e4a'}}>
-                        Logout <AuthorizedUser value="email" />
-                      </Logout>
-                    </button>
-                  </div>
-                )}
-              </div>
+                  <p
+                    className="dropdown-item fw-bold"
+                    style={{ color: '#d13e4a' }}
+                  >
+                    Help
+                  </p>
+                  <p
+                    className="dropdown-item fw-bold"
+                    style={{ color: '#d13e4a' }}
+                  >
+                    Profile
+                  </p>
+                  <p
+                    className="dropdown-item fw-bold"
+                    style={{ color: '#d13e4a' }}
+                  >
+                    Account
+                  </p>
+                  <p
+                    className="dropdown-item fw-bold"
+                    style={{ color: '#d13e4a' }}
+                  >
+                    App Settings
+                  </p>
+                  <button
+                    className="dropdown-item fw-bold"
+                    onClick={() => navigate('/login')}
+                    style={{ color: '#d13e4a' }}
+                  >
+                    <Logout>
+                      Logout <AuthorizedUser value="email" />
+                    </Logout>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        </nav>
-    <div>
+        </div>
+      </nav>
+      <div>
         <br />
         <br />
         <br />
@@ -328,7 +366,12 @@ const SearchPage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
           className="form-control mb-3"
-          style={{ maxWidth: '300px', display: 'inline-block', color: 'black', fontSize: '1rem'}}
+          style={{
+            maxWidth: '300px',
+            display: 'inline-block',
+            color: 'black',
+            fontSize: '1rem',
+          }}
         />
 
         {/* Conditional Messages */}
