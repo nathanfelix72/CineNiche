@@ -70,7 +70,7 @@ const SearchPage = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQueryRef.current); // Update debouncedQuery after delay
-    }, 500); // 500ms delay to trigger the search after typing stops
+    }, 700); // 500ms delay to trigger the search after typing stops
 
     return () => {
       clearTimeout(handler); // Clear timeout on cleanup to prevent issues when the user types quickly
@@ -301,14 +301,15 @@ const SearchPage = () => {
             </button>
                 {isProfileDropdownOpen && (
                   <div className="dropdown-menu show" style={{ position: 'absolute', right: 0, }}>
+                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>User</p>
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Help</p>
-                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Edit Profile</p>
+                    <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Profile</p>
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Account</p>
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>App Settings</p>
-                    <button className="dropdown-item fw-bold" onClick={() => navigate('/login')} style={{color: '#d13e4a'}}>
-                    <Logout>
-                      Logout <AuthorizedUser value="email" />
-                    </Logout>
+                    <button className="dropdown-item fw-bold" onClick={() => navigate('/login')}>
+                      <Logout  style={{color: '#d13e4a'}}>
+                        Logout <AuthorizedUser value="email" />
+                      </Logout>
                     </button>
                   </div>
                 )}
@@ -327,7 +328,7 @@ const SearchPage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
           className="form-control mb-3"
-          style={{ maxWidth: '300px', display: 'inline-block' }}
+          style={{ maxWidth: '300px', display: 'inline-block', color: 'black', fontSize: '1rem'}}
         />
 
         {/* Conditional Messages */}

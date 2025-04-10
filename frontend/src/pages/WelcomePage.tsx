@@ -225,7 +225,7 @@ function WelcomePage() {
             </div>
             <div className="d-flex align-items-center gap-3">
               <select
-                className="form-select bg-transparent text-white border-secondary"
+                className="form-select bg-transparent text-black border-secondary"
                 style={{
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                 }}
@@ -327,6 +327,10 @@ function WelcomePage() {
                       style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         border: 'none',
+                        fontSize: '1.5rem',
+                        fontWeight: 'bold',
+                        color: 'black',
+                        fontFamily: 'serif',
                       }}
                     />
                     <Button
@@ -643,7 +647,7 @@ function WelcomePage() {
                     key={index}
                     className="mb-3"
                     style={{
-                      backgroundColor: 'rgba(35, 35, 35, 0.5)',
+                      backgroundColor: ' rgba(228, 98, 139, 0.46)',
                       border: '1px solid rgba(215, 65, 103, 0.3)',
                       borderRadius: '4px',
                       overflow: 'hidden',
@@ -670,40 +674,42 @@ function WelcomePage() {
                 </p>
                 <div className="row justify-content-center">
                   <div className="col-lg-8">
-                    <InputGroup
-                      className="mb-3"
+                  <InputGroup
+                    className="mb-3"
+                    style={{
+                      border: '3px solid rgba(215, 65, 103, 0.3)',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Form.Control
+                      placeholder="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="py-3"
                       style={{
-                        border: '2px solid rgba(215, 65, 103, 0.3)',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        border: 'none',
+                        fontSize: '1.5rem',
+                        fontWeight: 'bold',
+                        color: 'black',
+                        fontFamily: 'serif',
                       }}
+                    />
+                    <Button
+                      style={{
+                        backgroundColor: '#d13e4a',
+                        borderColor: '#d13e4a',
+                        color: '#fff',
+                        padding: '0 25px',
+                      }}
+                      onClick={() =>
+                        navigate(`/register?email=${encodeURIComponent(email)}`)
+                      }
                     >
-                      <Form.Control
-                        placeholder="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="py-3"
-                        style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                          border: 'none',
-                        }}
-                      />
-                      <Button
-                        style={{
-                          backgroundColor: '#d13e4a',
-                          borderColor: '#d13e4a',
-                          color: '#fff',
-                          padding: '0 25px',
-                        }}
-                        onClick={() =>
-                          navigate(
-                            `/register?email=${encodeURIComponent(email)}`
-                          )
-                        }
-                      >
-                        Get Started <ChevronRight size={20} className="ms-2" />
-                      </Button>
-                    </InputGroup>
+                      Get Started <ChevronRight size={20} className="ms-2" />
+                    </Button>
+                  </InputGroup>
                   </div>
                 </div>
               </div>

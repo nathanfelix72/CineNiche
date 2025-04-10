@@ -126,7 +126,7 @@ const Pagination = ({
       </div>
 
       <br />
-      <label>
+      <label style={{ color: 'black' }}>
         Results per page:
         <select
           value={pageSize}
@@ -134,7 +134,7 @@ const Pagination = ({
             onPageSizeChange(Number(p.target.value));
             onPageChange(1);
           }}
-          className="ml-2 border rounded px-2 py-1 text-black"
+          className="ml-2 border rounded px-2 py-1 text-white"
         >
           <option value="5">5</option>
           <option value="10">10</option>

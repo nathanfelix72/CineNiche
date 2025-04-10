@@ -282,7 +282,7 @@ function PrivacyPolicy() {
             </div>
             <div className="d-flex align-items-center gap-3">
               <select
-                className="form-select bg-transparent text-white border-secondary"
+                className="form-select bg-transparent text-black border-secondary"
                 style={{
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                 }}
@@ -355,7 +355,7 @@ function PrivacyPolicy() {
                     key={index}
                     className="mb-3"
                     style={{
-                      backgroundColor: 'rgba(35, 35, 35, 0.5)',
+                      backgroundColor: 'rgba(228, 98, 139, 0.46)',
                       border: '1px solid rgba(215, 65, 103, 0.3)',
                       borderRadius: '4px',
                       overflow: 'hidden',

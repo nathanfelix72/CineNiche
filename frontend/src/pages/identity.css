@@ -43,12 +43,12 @@ body {
   background-color: transparent;
   border: 1px solid black;
   border-radius: 0;
-  font-size: 0.75rem;
+  font-size: 1rem;
   padding: 0.5rem;
 }
 
 .form-control:focus {
-  color: #d13e4a;
+  color: black;
   border-color: #ff5555;
   outline: none;
   box-shadow: none;
