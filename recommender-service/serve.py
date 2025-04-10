@@ -2,8 +2,22 @@
 from fastapi import FastAPI, Query
 from hybridMovieRecommender import get_hybrid_recommendations
 from userMovieRecommender import get_user_homepage_recommendations
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://black-flower-0d9471f1e.6.azurestaticapps.net",  
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def health_check():
