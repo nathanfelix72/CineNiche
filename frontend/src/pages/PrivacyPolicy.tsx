@@ -382,7 +382,7 @@ function PrivacyPolicy() {
           style={{
             backgroundColor: '#f5e9d9',
             borderTop: '3px double rgba(255, 255, 255, 0.1)',
-            color: '#999',
+            color: 'black',
             position: 'relative',
           }}
         >
@@ -437,7 +437,7 @@ function PrivacyPolicy() {
                               href="#"
                               className="text-decoration-none"
                               style={{
-                                color: '#a9a9a9',
+                                color: 'black',
                                 fontFamily: '"Courier Prime", monospace',
                               }}
                               onClick={() => handleClick(link)}
