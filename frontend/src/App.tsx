@@ -16,61 +16,19 @@ import ProfilePage from './pages/ProfilePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/Layout';
 import CookieConsent from 'react-cookie-consent';
-import { useEffect, useState } from 'react';
 import SearchPage from './pages/SearchPage';
 function App() {
-  // Track consent status
-  const [isConsentGiven, setIsConsentGiven] = useState(false);
-
-  useEffect(() => {
-    // Check if consent is already stored in localStorage
-    const consent = localStorage.getItem('cookieConsent');
-    if (consent) {
-      setIsConsentGiven(true);
-    }
-  }, []);
-
-  // Handle consent acceptance
-  const handleConsent = () => {
-    localStorage.setItem('cookieConsent', 'true');
-    setIsConsentGiven(true);
-  };
-
   return (
     <>
       {/* Cookie Consent Component */}
-      <CookieConsent
-        onAccept={handleConsent}
-        location="bottom"
-        buttonText="Got it!"
-        cookieName="userCookieConsent"
-        style={{ background: '#2B373B', color: 'white' }}
-        buttonStyle={{
-          background: '#4CAF50',
-          color: 'white',
-          fontSize: '13px',
-          padding: '10px 20px',
-          borderRadius: '5px',
-        }}
-      >
+      <CookieConsent>
         This website uses cookies to enhance the user experience.
       </CookieConsent>
 
       <Router>
         <Layout>
           <Routes>
-            {/* Protected Route: Admin Movies Page */}
-            <Route
-              path="/adminmovies"
-              element={
-                isConsentGiven ? (
-                  <AdminMoviesPage />
-                ) : (
-                  <Navigate to="/homepage" />
-                )
-              }
-            />
-
+            <Route path="/adminmovies" element={<AdminMoviesPage />} />
             <Route path="/" element={<WelcomePage />} />
             <Route path="/adminmovies" element={<AdminMoviesPage />} />
             <Route path="/login" element={<LoginPage />} />
