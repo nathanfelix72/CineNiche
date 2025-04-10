@@ -5,8 +5,9 @@ import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
 import { useNavigate } from 'react-router-dom';
-import AuthorizeView from '../components/AuthorizeView.tsx';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView.tsx';
 import RequireRole from '../components/RequireRole.tsx';
+import Logout from '../components/Logout.tsx';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<MoviesTitle[]>([]);
@@ -111,7 +112,9 @@ const AdminMoviesPage = () => {
               onClick={() => navigate('/login')}
               style={{ marginRight: '2rem' }}
             >
-              Logout
+              <Logout>
+                Logout <AuthorizedUser value="email" />
+              </Logout>
             </button>
             <button
               className="submit-btn mb-3"
