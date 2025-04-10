@@ -23,7 +23,6 @@ function App() {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/adminmovies" element={<AdminMoviesPage />} />
             <Route path="/" element={<WelcomePage />} />
             <Route path="/adminmovies" element={<AdminMoviesPage />} />
             <Route path="/login" element={<LoginPage />} />

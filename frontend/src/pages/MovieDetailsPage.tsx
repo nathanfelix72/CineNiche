@@ -412,14 +412,6 @@ const MovieDetailsPage = () => {
                       setMovie(updated);
                     }}
                   />
-                  <StarRatingInput
-                    showId={movie.showId}
-                    userId={userId} // Pass the userId to StarRatingInput
-                    onRatingSubmitted={async () => {
-                      const updated = await fetchMovieById(movie.showId);
-                      setMovie(updated);
-                    }}
-                  />
 
                   <p>
                     <strong>Duration:</strong> {movie.duration}
