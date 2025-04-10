@@ -136,13 +136,17 @@ const SearchPage = () => {
   // Determine which list is the source for image verification
   const sourceMovies = hasSearched ? searchResults : movies;
 
-  // --- Image URL Generation ---
-  const getMovieImage = (title: string) => {
-    if (!title) return ''; // Handle cases with missing titles gracefully
-    const imagePath = encodeURIComponent(title); // Proper URL encoding
-    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  const sanitizeTitle = (title: string): string => {
+    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
   };
 
+  // --- Image URL Generation ---
+  const getMovieImage = (title: string) => {
+    if (!title) return '';
+    const imagePath = encodeURIComponent(sanitizeTitle(title));
+    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  };
+  
   // --- Image Verification Effect ---
   useEffect(() => {
     if (isLoadingData || sourceMovies.length === 0) {
