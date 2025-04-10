@@ -50,18 +50,21 @@ function Register() {
     // --- Modification starts here ---
     setError(''); // Clear previous errors before submitting
 
-    fetch('https://localhost:5000/register', {
-      // Ensure this URL matches your backend
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        // MapIdentityApi might also accept 'confirmPassword', check its requirements if needed
-      }),
-    })
+    fetch(
+      'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/register',
+      {
+        // Ensure this URL matches your backend
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          // MapIdentityApi might also accept 'confirmPassword', check its requirements if needed
+        }),
+      }
+    )
       .then(async (response) => {
         // Make the callback async to use await
         console.log('Registration Response Status:', response.status);

@@ -1,9 +1,21 @@
 import React from 'react';
 
 type GenreFilterProps = {
-  selectedGenres: string[]; // ✅ PLURAL
+  selectedGenres: string[];
   setSelectedGenres: (genres: string[]) => void;
   genres: string[];
+};
+
+const formatGenreLabel = (genre: string): string => {
+  return genre
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space before capital letters
+    .split(' ')
+    .map((word) => {
+      if (word.toLowerCase() === 'tv') return 'TV';
+      if (word.toLowerCase() === 'id') return 'ID';
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
 };
 
 const GenreFilter: React.FC<GenreFilterProps> = ({
@@ -18,6 +30,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
       setSelectedGenres([...selectedGenres, genre]);
     }
   };
+
   return (
     <div
       className="genre-filter mb-3"
@@ -29,10 +42,11 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
           className={`btn ${selectedGenres.includes(genre) ? 'btn-dark' : 'btn-outline-dark'}`}
           onClick={() => toggleGenre(genre)}
         >
-          {genre}
+          {formatGenreLabel(genre)} 
         </button>
       ))}
     </div>
   );
 };
+
 export default GenreFilter;
