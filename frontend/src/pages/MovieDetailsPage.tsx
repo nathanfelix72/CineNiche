@@ -428,21 +428,6 @@ const MovieDetailsPage = () => {
                       .map(([key]) => genreDisplayNames[key])
                       .join(', ') || 'None'}
                   </p>
-                  <p>
-                    <strong>Duration:</strong> {movie.duration}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {movie.description}
-                  </p>
-                  <p>
-                    <strong>Genres:</strong>{' '}
-                    {Object.entries(movie)
-                      .filter(
-                        ([key, value]) => genreKeys.includes(key) && value === 1
-                      )
-                      .map(([key]) => genreDisplayNames[key])
-                      .join(', ') || 'None'}
-                  </p>
 
                   {/* Related Movies Carousel */}
                   <RelatedMovies relatedMovies={relatedMovies} />
