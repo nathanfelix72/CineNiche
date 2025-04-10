@@ -49,6 +49,43 @@ const SearchPage = () => {
 
   //for genre filter
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const genreKeyToLabel: Record<string, string> = {
+    action: 'Action',
+    adventure: 'Adventure',
+    animeSeriesInternationalTvShows: 'Anime Series / Intl. TV',
+    britishTvShowsDocuseriesInternationalTvShows:
+      'British / Docuseries / Intl. TV',
+    children: 'Children',
+    comedies: 'Comedies',
+    comediesDramasInternationalMovies: 'Comedies / Dramas / Intl. Movies',
+    comediesInternationalMovies: 'Comedies / Intl. Movies',
+    comediesRomanticMovies: 'Romantic Comedies',
+    crimeTvShowsDocuseries: 'Crime Docuseries',
+    documentaries: 'Documentaries',
+    documentariesInternationalMovies: 'Intl. Documentaries',
+    docuseries: 'Docuseries',
+    dramas: 'Dramas',
+    dramasInternationalMovies: 'Intl. Dramas',
+    dramasRomanticMovies: 'Romantic Dramas',
+    familyMovies: 'Family Movies',
+    fantasy: 'Fantasy',
+    horrorMovies: 'Horror',
+    internationalMoviesThrillers: 'Intl. Thrillers',
+    internationalTvShowsRomanticTvShowsTvDramas: 'Intl. Romantic TV / Dramas',
+    kidsTv: 'Kids TV',
+    languageTvShows: 'Language TV Shows',
+    musicals: 'Musicals',
+    natureTv: 'Nature TV',
+    realityTv: 'Reality TV',
+    spirituality: 'Spirituality',
+    tvAction: 'TV Action',
+    tvComedies: 'TV Comedies',
+    tvDramas: 'TV Dramas',
+    talkShowsTvComedies: 'Talk Shows / TV Comedies',
+    thrillers: 'Thrillers',
+  };
+
+  const genreKeys = Object.keys(genreKeyToLabel);
 
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
@@ -381,40 +418,7 @@ const SearchPage = () => {
         <GenreFilter
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
-          genres={[
-            'action',
-            'adventure',
-            'animeSeriesInternationalTvShows',
-            'britishTvShowsDocuseriesInternationalTvShows',
-            'children',
-            'comedies',
-            'comediesDramasInternationalMovies',
-            'comediesInternationalMovies',
-            'comediesRomanticMovies',
-            'crimeTvShowsDocuseries',
-            'documentaries',
-            'documentariesInternationalMovies',
-            'docuseries',
-            'dramas',
-            'dramasInternationalMovies',
-            'dramasRomanticMovies',
-            'familyMovies',
-            'fantasy',
-            'horrorMovies',
-            'internationalMoviesThrillers',
-            'internationalTvShowsRomanticTvShowsTvDramas',
-            'kidsTv',
-            'languageTvShows',
-            'musicals',
-            'natureTv',
-            'realityTv',
-            'spirituality',
-            'tvAction',
-            'tvComedies',
-            'tvDramas',
-            'talkShowsTvComedies',
-            'thrillers',
-          ]}
+          genres={genreKeys}
         />
 
         {/* Conditional Messages */}
@@ -525,15 +529,15 @@ const SearchPage = () => {
           </div>
         )}
       </div>
-            {/* Footer with Classic Cinema Credits Style */}
-            <footer
+      {/* Footer with Classic Cinema Credits Style */}
+      <footer
         className="py-5"
         style={{
-            backgroundColor: 'transparent',
+          backgroundColor: 'transparent',
           borderTop: '3px double rgba(255, 255, 255, 0.1)',
           color: 'black',
           position: 'relative',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
         }}
       >
         {/* Film style perforation at top of footer */}
