@@ -44,13 +44,14 @@ const HomePage = () => {
   };
 
   const sanitizeTitle = (title: string): string => {
-    return title
-      .normalize('NFD')                // Decompose accented characters
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
-      .replace(/[^\p{L}\p{N}\s]/gu, '') // Remove other non-alphanumeric
-      .trim();
+    // Only remove characters like ":" or "?" but KEEP all letters — including accents & decomposed chars
+    return title.replace(/[^\p{L}\p{N}\s]/gu, '').trim();
   };
 
+  // //https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Naruto%20Shippuden%20the%20Movie%20The%20Will%20of%20Fire.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D
+  
+  // Right One//https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Naruto%20Shippu%CC%82den%20the%20Movie%20The%20Will%20of%20Fire.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D
+  
   // --- Image URL Generation ---
   const getMovieImage = (title: string) => {
     if (!title) return '';
