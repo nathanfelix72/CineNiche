@@ -382,7 +382,7 @@ const SearchPage = () => {
                   style={{
                     display: 'block',
                     textDecoration: 'none',
-                    color: 'inherit',
+                    color: 'black',
                   }}
                 >
                   <img

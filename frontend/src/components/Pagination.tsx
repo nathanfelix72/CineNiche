@@ -134,7 +134,7 @@ const Pagination = ({
             onPageSizeChange(Number(p.target.value));
             onPageChange(1);
           }}
-          className="ml-2 border rounded px-2 py-1"
+          className="ml-2 border rounded px-2 py-1 text-black"
         >
           <option value="5">5</option>
           <option value="10">10</option>
