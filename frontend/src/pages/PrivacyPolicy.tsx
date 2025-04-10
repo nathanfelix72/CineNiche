@@ -353,7 +353,7 @@ function PrivacyPolicy() {
                     key={index}
                     className="mb-3"
                     style={{
-                      backgroundColor: 'rgba(228, 98, 139, 0.46)',
+                      backgroundColor: '#d13e4a',
                       border: '1px solid rgba(215, 65, 103, 0.3)',
                       borderRadius: '4px',
                       overflow: 'hidden',
