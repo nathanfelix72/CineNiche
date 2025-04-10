@@ -32,36 +32,36 @@ function LoginPage() {
   // handle submit event for the form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); // Clear any previous errors
-
+    setError('');
+  
+    
     if (!email || !password) {
       setError('Please fill in all fields.');
       return;
     }
-
+  
     const loginUrl = rememberme
       ? 'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/login?useCookies=true'
       : 'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/login?useSessionCookies=true';
-
+  
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
-        credentials: 'include', // Ensures cookies are sent & received
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }), // email and password from form
+        body: JSON.stringify({ email, password }),
       });
-
-      // Ensure we only parse JSON if there is content
+  
       let data = null;
       const contentLength = response.headers.get('content-length');
       if (contentLength && parseInt(contentLength, 10) > 0) {
         data = await response.json();
       }
-
+  
       if (!response.ok) {
         throw new Error(data?.message || 'Invalid email or password.');
       }
-
+  
       navigate('/');
     } catch (error: any) {
       setError(error.message || 'Error logging in.');

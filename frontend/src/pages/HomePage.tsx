@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import styles from './HomePage.module.css';
+
+//  read recommender API URL from .env
+const RECOMMENDER_API = import.meta.env.VITE_RECOMMENDER_API;
 
 const HomePage = () => {
   const [recs, setRecs] = useState<{
@@ -11,9 +14,9 @@ const HomePage = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
-  const navigate = useNavigate(); // Initialize the navigate hook
+  const navigate = useNavigate();
 
-  // Step 1: Fetch current user info (email, userId, and name)
+  // Fetch current user info
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -35,16 +38,13 @@ const HomePage = () => {
     fetchUserInfo();
   }, []);
 
-  // Step 2: Fetch user recommendations
+  // Fetch user recommendations from your recommender API
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !RECOMMENDER_API) return;
 
     const fetchRecs = async () => {
       try {
-        const res = await fetch(
-          `https://localhost:5000/api/recommendations/user?userId=${userId}`,
-          { credentials: 'include' }
-        );
+        const res = await fetch(`${RECOMMENDER_API}/user-recs?user_id=${userId}`);
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -62,11 +62,8 @@ const HomePage = () => {
     fetchRecs();
   }, [userId]);
 
-  console.log('Rendering recs:', recs);
-
-  // Navigate to the Admin Movies page
   const handleNavigateToAdminMovies = () => {
-    navigate('/adminmovies'); // Navigate to the admin movies page
+    navigate('/adminmovies');
   };
 
   return (
@@ -78,7 +75,6 @@ const HomePage = () => {
         <br />
         <h1>Welcome {userName ? userName : userEmail}!</h1>
 
-        {/* Add the button to navigate to the admin movies page */}
         <button onClick={handleNavigateToAdminMovies}>
           Go to Admin Movies Page
         </button>
