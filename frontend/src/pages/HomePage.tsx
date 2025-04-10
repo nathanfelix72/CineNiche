@@ -44,9 +44,9 @@ const HomePage = () => {
   };
 
   const sanitizeTitle = (title: string): string => {
-    return title.replace(/[^\wÀ-ž\s]/gi, '').trim();
+    return title.replace(/[^\p{L}\p{N}\s]/gu, '').trim();
   };
-
+  
   // --- Image URL Generation ---
   const getMovieImage = (title: string) => {
     if (!title) return '';
