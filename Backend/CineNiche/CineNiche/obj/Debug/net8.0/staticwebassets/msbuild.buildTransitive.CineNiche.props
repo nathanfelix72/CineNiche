@@ -1,7 +1,0 @@
-﻿<Project>
-<<<<<<< HEAD
-  <Import Project="../buildMultiTargeting/CineNiche.props" />
-=======
-  <Import Project="..\buildMultiTargeting\CineNiche.props" />
->>>>>>> main
-</Project>

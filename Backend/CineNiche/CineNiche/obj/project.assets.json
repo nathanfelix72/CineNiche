@@ -3031,11 +3031,17 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "/Users/amysessions/.nuget/packages/": {}
+=======
+    "C:\\Users\\natha\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+>>>>>>> 97ab9d6a3508ec03f68e5abef7907e83f6ab8b33
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/CineNiche.csproj",
       "projectName": "CineNiche",
       "projectPath": "/Users/amysessions/Desktop/INTEX2/CineNiche/Backend/CineNiche/CineNiche/CineNiche.csproj",
@@ -3044,11 +3050,30 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/amysessions/.nuget/NuGet/NuGet.Config"
+=======
+      "projectUniqueName": "C:\\Users\\natha\\source\\repos\\CineNiche\\Backend\\CineNiche\\CineNiche\\CineNiche.csproj",
+      "projectName": "CineNiche",
+      "projectPath": "C:\\Users\\natha\\source\\repos\\CineNiche\\Backend\\CineNiche\\CineNiche\\CineNiche.csproj",
+      "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\natha\\source\\repos\\CineNiche\\Backend\\CineNiche\\CineNiche\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> 97ab9d6a3508ec03f68e5abef7907e83f6ab8b33
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+<<<<<<< HEAD
+=======
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+>>>>>>> 97ab9d6a3508ec03f68e5abef7907e83f6ab8b33
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3066,7 +3091,12 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
+<<<<<<< HEAD
       }
+=======
+      },
+      "SdkAnalysisLevel": "9.0.100"
+>>>>>>> 97ab9d6a3508ec03f68e5abef7907e83f6ab8b33
     },
     "frameworks": {
       "net8.0": {
@@ -3120,7 +3150,11 @@
             "privateAssets": "all"
           }
         },
+<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
+=======
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+>>>>>>> 97ab9d6a3508ec03f68e5abef7907e83f6ab8b33
       }
     }
   },

@@ -341,7 +341,7 @@ export const fetchRelatedMovies = async (title: string) => {
   if (!res.ok) throw new Error("Failed to fetch related movies");
 
   const data = await res.json();
-  console.log("fetchRelatedMovies response:", data);
+  console.log('fetchRelatedMovies response:', data);
 
   return data.recommended || data;
 };

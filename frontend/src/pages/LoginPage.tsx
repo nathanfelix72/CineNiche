@@ -61,8 +61,8 @@ function LoginPage() {
       if (!response.ok) {
         throw new Error(data?.message || 'Invalid email or password.');
       }
-  
-      navigate('/');
+
+      navigate('/homepage');
     } catch (error: any) {
       setError(error.message || 'Error logging in.');
       console.error('Fetch attempt failed:', error);
@@ -70,29 +70,44 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ 
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundImage: 'url(/images/niche_movie.png)', // Set the image URL here
-      backgroundSize: 'cover', // Ensures the image covers the entire background
-      backgroundPosition: 'center', // Centers the image
-      backgroundRepeat: 'no-repeat', // Prevents the image from repeating
-      overflowY: 'auto',
-      zIndex: 9999,
-      display: 'flex', // Centers the card horizontally and vertically
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-       <div className="position-absolute top-0 start-0 w-100 h-100" style={{
-            backgroundColor: 'rgba(158, 86, 86, 0.69)',
-            zIndex: 0,
-        }}></div>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'url(/images/niche_movie.png)', // Set the image URL here
+        backgroundSize: 'cover', // Ensures the image covers the entire background
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+        overflowY: 'auto',
+        zIndex: 9999,
+        display: 'flex', // Centers the card horizontally and vertically
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        className="position-absolute top-0 start-0 w-100 h-100"
+        style={{
+          backgroundColor: 'rgba(158, 86, 86, 0.69)',
+          zIndex: 0,
+        }}
+      ></div>
       <div className="container">
         <div className="row justify-content-center">
-          <div className="card border-0 shadow rounded-3" style={{ maxWidth: '400px', width: '100%', backgroundImage: 'radial-gradient(circle at 5% 90%, #d13e4a 0%, #f5e9d9 70%)',}}>  {/* Adjust the width here */}
+          <div
+            className="card border-0 shadow rounded-3"
+            style={{
+              maxWidth: '400px',
+              width: '100%',
+              backgroundImage:
+                'radial-gradient(circle at 5% 90%, #d13e4a 0%, #f5e9d9 70%)',
+            }}
+          >
+            {' '}
+            {/* Adjust the width here */}
             <div className="card-body p-4 p-sm-5">
               <h5 className="card-title text-center mb-5 fs-2">Sign In</h5>
               <form onSubmit={handleSubmit}>

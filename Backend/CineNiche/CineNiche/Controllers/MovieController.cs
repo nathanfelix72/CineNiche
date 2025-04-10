@@ -9,7 +9,7 @@ namespace CineNiche.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesContext _moviesContext;
@@ -33,6 +33,17 @@ namespace CineNiche.Controllers
             [FromQuery] string? searchQuery = null
         )
         {
+            string? favMovie = Request.Cookies["FavoriteMovie"];
+            Console.WriteLine("-----COOKIE-----\n" + favMovie);
+
+            HttpContext.Response.Cookies.Append("FavoriteMovie", "Angry Birds", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddMinutes(10)
+            });
+
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
             // If there is a search query, filter movies based on title using LIKE for case-insensitive search
@@ -77,6 +88,7 @@ namespace CineNiche.Controllers
         }
         
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddProject([FromBody] MoviesTitle newMovie)
         {
             _moviesContext.MoviesTitles.Add(newMovie);
@@ -85,6 +97,7 @@ namespace CineNiche.Controllers
         }
 
         [HttpPut("UpdateMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult UpdateMovie(int showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _moviesContext.MoviesTitles.Find(showId);
@@ -142,6 +155,7 @@ namespace CineNiche.Controllers
         }
 
         [HttpDelete("DeleteMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(int showId)
         {
             var movie = _moviesContext.MoviesTitles.Find(showId);
