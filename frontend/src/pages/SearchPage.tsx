@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
+import Logout from '../components/Logout';
+import { AuthorizedUser } from '../components/AuthorizeView';
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -304,7 +306,9 @@ const SearchPage = () => {
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>Account</p>
                     <p className="dropdown-item fw-bold" style={{color: '#d13e4a'}}>App Settings</p>
                     <button className="dropdown-item fw-bold" onClick={() => navigate('/login')} style={{color: '#d13e4a'}}>
-                      Logout
+                    <Logout>
+                      Logout <AuthorizedUser value="email" />
+                    </Logout>
                     </button>
                   </div>
                 )}
