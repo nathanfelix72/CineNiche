@@ -448,7 +448,6 @@ const SearchPage = () => {
                         border: '2px solid #fff',
                         borderRadius: '4px',
                         display: 'block',
-                        margin: '0 auto 10px auto',
                       }}
                     loading="lazy"
                   />
@@ -472,10 +471,8 @@ const SearchPage = () => {
           </div>
         )}
       </div>
-      <br />
-      <br />
-      {/* Footer with Classic Cinema Credits Style */}
-      <footer
+            {/* Footer with Classic Cinema Credits Style */}
+            <footer
         className="py-5"
         style={{
           backgroundColor: '#f5e9d9',
@@ -552,6 +549,8 @@ const SearchPage = () => {
           </div>
         </div>
       </footer>
+      <br />
+      <br />
     </div>
   );
 };

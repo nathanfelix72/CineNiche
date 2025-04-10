@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import styles from './HomePage.module.css';
-import { getMovieImage } from '../utils/imageHelpers';
 import {FaHome,FaSearch,FaPlus,FaFilm,FaTv,FaPlayCircle,FaStar} from 'react-icons/fa';
 import { Film } from 'lucide-react';
 
@@ -43,7 +42,19 @@ const HomePage = () => {
       handleAdminClick();
     }
   };
-  
+
+  const sanitizeTitle = (title: string): string => {
+    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+  };
+
+  // --- Image URL Generation ---
+  const getMovieImage = (title: string) => {
+    if (!title) return '';
+    const imagePath = encodeURIComponent(sanitizeTitle(title));
+    return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
+  };
+
+
   // Fetch current user info
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -223,18 +234,20 @@ const HomePage = () => {
               {movies.map((movie) => (
                 <div key={movie.id} className={styles.carouselItem}>
                   <Link to={`/movie/${movie.id}`}>
-                    <img
-                      src={getMovieImage(movie.title)}
-                      alt={movie.title}
-                      style={{
-                        width: '120px',
-                        height: '180px',
-                        objectFit: 'cover',
-                        borderRadius: '6px',
+                  <img
+                    src={getMovieImage(movie.title!)}
+                    className="img-fluid"
+                    alt={movie.title}
+                    style={{
+                        width: '200px',              // Set fixed width
+                        height: '300px',             // Set fixed height
+                        objectFit: 'cover',          // Crop image to fill box without distortion
+                        border: '2px solid #fff',
+                        borderRadius: '4px',
                         display: 'block',
-                        marginBottom: '0.5rem',
                       }}
-                    />
+                    loading="lazy"
+                  />
                     <div style={{ textAlign: 'center' }}>{movie.title}</div>
                   </Link>
                 </div>
@@ -242,9 +255,7 @@ const HomePage = () => {
             </div>
           </div>
         ))}
-      </div>
-    </div>
-    {/* Footer with Classic Cinema Credits Style */}
+           {/* Footer with Classic Cinema Credits Style */}
     <footer
           className="py-5"
           style={{
@@ -322,6 +333,8 @@ const HomePage = () => {
             </div>
           </div>
         </footer>
+      </div>
+    </div>
   </AuthorizeView>
   );
 };
