@@ -505,7 +505,7 @@ const SearchPage = () => {
         )}
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {adjustedTotalPages > 1 && (
           <div className="mt-4">
             <Pagination
               currentPage={pageNum}
