@@ -591,7 +591,7 @@ const SearchPage = () => {
                             href="#"
                             className="text-decoration-none"
                             style={{
-                              color: '#a9a9a9',
+                              color: 'black',
                               fontFamily: '"Courier Prime", monospace',
                             }}
                             onClick={() => handleClick(link)}
