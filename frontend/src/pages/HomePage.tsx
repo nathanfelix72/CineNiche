@@ -223,7 +223,7 @@ const HomePage = () => {
             <h2>{section}</h2>
             <div className={styles.carousel}>
               {movies.map((movie) => (
-                <div key={movie.id} className={styles.carouselItem}>
+                <div key={movie.id}>
                   <Link to={`/movie/${movie.id}`}>
                   <img
                     src={getMovieImage(movie.title!)}
@@ -239,7 +239,7 @@ const HomePage = () => {
                       }}
                     loading="lazy"
                   />
-                    <div style={{ textAlign: 'center' }}>{movie.title}</div>
+                    <div className='text-black' style={{ textAlign: 'center' }}>{movie.title}</div>
                   </Link>
                 </div>
               ))}
@@ -252,8 +252,9 @@ const HomePage = () => {
           style={{
             backgroundColor: 'transparent',
             borderTop: '3px double rgba(255, 255, 255, 0.1)',
-            color: '#999',
+            color: 'black',
             position: 'relative',
+            fontWeight: 'bold'
           }}
         >
           {/* Film style perforation at top of footer */}
