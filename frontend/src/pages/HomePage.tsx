@@ -230,7 +230,7 @@ const HomePage = () => {
                     className="img-fluid"
                     alt={movie.title}
                     style={{
-                        width: '200px',              // Set fixed width
+                        width: 'auto',              // Set fixed width
                         height: '300px',             // Set fixed height
                         objectFit: 'cover',          // Crop image to fill box without distortion
                         border: '2px solid #fff',
@@ -239,7 +239,7 @@ const HomePage = () => {
                       }}
                     loading="lazy"
                   />
-                    <div className='text-black' style={{ textAlign: 'center' }}>{movie.title}</div>
+                    <div className='text-black' style={{ textAlign: 'center' , textDecoration: 'none'}}>{movie.title}</div>
                   </Link>
                 </div>
               ))}
@@ -308,7 +308,7 @@ const HomePage = () => {
                               href="#"
                               className="text-decoration-none"
                               style={{
-                                color: '#a9a9a9',
+                                color: 'black',
                                 fontFamily: '"Courier Prime", monospace',
                               }}
                               onClick={() => handleClick(link)}
