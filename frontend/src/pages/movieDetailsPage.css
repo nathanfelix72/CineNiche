@@ -92,7 +92,7 @@
 }
 
 .carousel {
-  display: flex;
+  display: flex !important;
   gap: 1rem;
   overflow-x: auto;
   padding-bottom: 1rem;
@@ -117,6 +117,7 @@
   text-align: center;
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .carousel-item:hover {
