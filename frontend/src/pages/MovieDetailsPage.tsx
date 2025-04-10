@@ -6,7 +6,7 @@ import { genreDisplayNames } from '../utils/genreDisplayNames';
 import { fetchRelatedMovies } from '../api/MoviesAPI';
 import './MovieDetailsPage.module.css';
 import RelatedMovies from '../components/RelatedMovies';
-import AuthorizeView from '../components/AuthorizeView';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import './movieDetailsPage.css';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -19,6 +19,7 @@ import {
   FaStar,
 } from 'react-icons/fa';
 import { Film } from 'lucide-react';
+import Logout from '../components/Logout';
 
 const StarRatingInput = ({
   showId,
@@ -349,7 +350,9 @@ const MovieDetailsPage = () => {
                           onClick={() => navigate('/login')}
                           style={{ color: '#d13e4a' }}
                         >
-                          Logout
+                          <Logout>
+                            Logout <AuthorizedUser value="email" />
+                          </Logout>
                         </button>
                       </div>
                     )}
