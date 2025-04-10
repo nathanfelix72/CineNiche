@@ -75,7 +75,7 @@ builder.Services.AddCors(options =>
 // Add HttpClient for Python recommender microservice
 builder.Services.AddHttpClient<MovieRecommenderService>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:8000");
+    client.BaseAddress = new Uri("https://cinenicheapi.ngrok-free.app/docs");
 });
 builder.Services.AddScoped<MovieRecommenderService>();
 
@@ -86,6 +86,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -147,8 +151,37 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
         return Results.Unauthorized();
     }
 
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
-    return Results.Json(new { email = email }); // Return as JSON
-}).RequireAuthorization();
+    var claims = user.Claims.Select(c => new { c.Type, c.Value }).ToList();
+    // Check specifically for the role claim type (usually ClaimTypes.Role or "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+    var roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+    return Results.Ok(new
+    {
+        IsAuthenticated = user.Identity.IsAuthenticated,
+        AuthType = user.Identity.AuthenticationType, // Should show "Identity.Application"
+        UserName = user.Identity.Name, // Often the email
+        UserId = user.FindFirstValue(ClaimTypes.NameIdentifier),
+        Roles = roles, // Explicitly show roles
+        AllClaims = claims // Show all claims for debugging
+    });
+}).RequireAuthorization(); // Keep this to ensure the user IS authenticated
+
+app.MapGet("/debugauth", (ClaimsPrincipal user) =>
+{
+    if (!user.Identity?.IsAuthenticated ?? false)
+    {
+        return Results.Unauthorized();
+    }
+    var claims = user.Claims.Select(c => new { c.Type, c.Value }).ToList();
+    var roles = claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role").Select(c => c.Value).ToList(); // Check common role claim types
+
+    return Results.Ok(new {
+        IsAuthenticated = user.Identity.IsAuthenticated,
+        UserName = user.Identity.Name,
+        UserId = user.FindFirstValue(ClaimTypes.NameIdentifier),
+        Roles = roles, // What roles does the backend see?
+        AllClaims = claims
+    });
+}).RequireAuthorization(); // Ensures the user is authenticated
 
 app.Run();

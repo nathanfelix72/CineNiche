@@ -4,7 +4,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import sqlite3
 
 # Connect to SQLite and load tables
-conn = sqlite3.connect("../Backend/CineNiche/CineNiche/Movies.sqlite") 
+import os
+conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "Movies.sqlite"))
 df_ratings = pd.read_sql_query("SELECT * FROM movies_ratings", conn)
 df_titles = pd.read_sql_query("SELECT * FROM movies_titles", conn)
 conn.close()
@@ -40,7 +41,6 @@ df_titles['genre_tags'] = df_titles[genre_cols].apply(
 # Clean & merge
 df_titles = df_titles.drop_duplicates()
 df_ratings = df_ratings.drop_duplicates()
-
 
 # merge tables
 df_movies = df_ratings.merge(df_titles, on='show_id')

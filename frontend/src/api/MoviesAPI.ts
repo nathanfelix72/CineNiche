@@ -16,6 +16,8 @@ const USER_API_URL =
 const ROLE_URL =
   'https://cineniche-backend-eshedfdkc8c4amft.westus2-01.azurewebsites.net/Role';
 
+const RECOMMENDER_API = import.meta.env.VITE_RECOMMENDER_API;
+
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
@@ -329,14 +331,25 @@ export const fetchUsersInRole = async (
   }
 };
 
+
+
 export const fetchRelatedMovies = async (title: string) => {
-  const res = await fetch(`http://localhost:8000/recommend?title=${encodeURIComponent(title)}&count=6`);
+  const res = await fetch(
+    `${RECOMMENDER_API}/recommend?title=${encodeURIComponent(title)}&count=6`
+  );
+
   if (!res.ok) throw new Error("Failed to fetch related movies");
 
   const data = await res.json();
-  console.log("fetchRelatedMovies response:", data);
+  console.log('fetchRelatedMovies response:', data);
 
-  // Either return data directly or data.recommended
-  return data.recommended || data; 
+  return data.recommended || data;
 };
 
+export const fetchUserRecommendations = async (userId: number) => {
+  const res = await fetch(`${RECOMMENDER_API}/user-recs?user_id=${userId}`);
+
+  if (!res.ok) throw new Error("Failed to fetch user recommendations");
+
+  return await res.json(); // This will return an object with categories and recs
+};

@@ -5,6 +5,9 @@ import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
 import { useNavigate } from 'react-router-dom';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView.tsx';
+import RequireRole from '../components/RequireRole.tsx';
+import Logout from '../components/Logout.tsx';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<MoviesTitle[]>([]);
@@ -83,176 +86,189 @@ const AdminMoviesPage = () => {
 
   if (loading) return <p>Loading movies...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
-  
+
   return (
-    <div style={{ 
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundImage: 'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
-      overflowY: 'auto',
-      zIndex: 9999,
-      paddingTop: '50px',  // Adds space at the top
-      paddingBottom: '50px',  // Adds space at the bottom
-    }}>
-
-      {/* Buttons for navigation */}
-      <div style={{ marginBottom: '1rem'}}>
-        <button
-          className="submit-btn mb-3"
-          onClick={() => navigate('/welcomepage')}
-          style={{ marginRight: '2rem'}}
-
-        >
-          Logout
-        </button>
-        <button
-          className="submit-btn mb-3"
-          onClick={() => navigate('/homepage')}
-        >
-          Homepage
-        </button>
-
-      </div>
-    <div className="movie-form"
-    style={{
-      maxWidth: '1200px', // Increase the max width of the container for a wider form
-      margin: '0 auto', // Center horizontally
-      padding: '20px',
-      textAlign: 'center', // Center text
-    }}
-    >
-      <h1 style={{fontFamily: 'Monoton, cursive', wordSpacing: '0.3em', color: '#d13e4a'}}>
-        ADMIN MOVIES PAGE
-      </h1>
-
-      {!showForm && (
-        <button
-          className="submit-btn mb-3"
-          onClick={() => setShowForm(true)}
-        >
-          Add Movie
-        </button>
-      )}
-
-      {showForm && !editingMovie && (
-        <NewMovieForm
-          onSuccess={() => {
-            setShowForm(false);
-            fetchMovies(pageSize, pageNum, []).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
-
-      {editingMovie && !showForm && (
-        <EditMovieForm
-          moviesTitle={editingMovie}
-          onSuccess={() => {
-            setEditingMovie(null);
-            fetchMovies(pageSize, pageNum, []).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setEditingMovie(null)}
-        />
-      )}
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault(); // prevent page refresh
-          handleSearch();
-        }}
-        style={{ marginBottom: '1rem' }}
-      >
-        <input
-          type="text"
-          placeholder="Search by movie title..."
-          value={searchQuery}
-          onChange={(e) => {
-            const value = e.target.value;
-            setSearchQuery(value);
-            if (value.trim() === '') {
-              setHasSearched(false);
-              setSearchResults([]);
-            }
-          }}
-          className="form-control"
+    <AuthorizeView>
+      <RequireRole role="Administrator" redirectTo="/homepage">
+        <div
           style={{
-            maxWidth: '300px',
-            display: 'inline-block',
-            marginRight: '0.5rem',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage:
+              'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
+            overflowY: 'auto',
+            zIndex: 9999,
+            paddingTop: '50px', // Adds space at the top
+            paddingBottom: '50px', // Adds space at the bottom
           }}
-        />
+        >
+          {/* Buttons for navigation */}
+          <div style={{ marginBottom: '1rem' }}>
+            <button
+              className="submit-btn mb-3"
+              onClick={() => navigate('/login')}
+              style={{ marginRight: '2rem' }}
+            >
+              <Logout>
+                Logout <AuthorizedUser value="email" />
+              </Logout>
+            </button>
+            <button
+              className="submit-btn mb-3"
+              onClick={() => navigate('/homepage')}
+            >
+              Homepage
+            </button>
+          </div>
+          <div
+            className="movie-form"
+            style={{
+              maxWidth: '1200px', // Increase the max width of the container for a wider form
+              margin: '0 auto', // Center horizontally
+              padding: '20px',
+              textAlign: 'center', // Center text
+            }}
+          >
+            <h1
+              style={{
+                fontFamily: 'Monoton, cursive',
+                wordSpacing: '0.3em',
+                color: '#d13e4a',
+              }}
+            >
+              ADMIN MOVIES PAGE
+            </h1>
 
-        <button type="submit" className="submit-btn">
-          Search
-        </button>
-      </form>
+            {!showForm && (
+              <button
+                className="submit-btn mb-3"
+                onClick={() => setShowForm(true)}
+              >
+                Add Movie
+              </button>
+            )}
 
-      <table className="table table-hover table-light">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Type</th>
-            <th>Title</th>
-            <th>Rating</th>
-            <th>Avg Star Rating</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Display either the search results or full list of movies */}
-          {(hasSearched ? searchResults : movies).map((m) => (
-            <tr key={m.showId}>
-              <td>{m.showId}</td>
-              <td>{m.type}</td>
-              <td>{m.title}</td>
-              <td>{m.rating}</td>
-              <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
-              <td>
-                <button
-                  className="submit-btn btn-sm w-20 mb-1"
-                  onClick={() => setEditingMovie(m)}
-                >
-                  Edit
-                </button>
-                <br/>
-                <button
-                  className="cancel-btn btn-sm w-20 mb-1"
-                  onClick={() => handleDelete(Number(m.showId))}
-                >
-                  Delete
-                </button>
-                <br/>
-                <button
-                  className="genre-tag btn-sm w-20 mb-1"
-                  onClick={() => navigate(`/movie/${m.showId}`)}
-                >
-                  More Info
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            {showForm && !editingMovie && (
+              <NewMovieForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchMovies(pageSize, pageNum, []).then((data) =>
+                    setMovies(data.movies)
+                  );
+                }}
+                onCancel={() => setShowForm(false)}
+              />
+            )}
 
-      <Pagination
-        currentPage={pageNum}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        onPageChange={setPageNum}
-        onPageSizeChange={(newSize: SetStateAction<number>) => {
-          setPageSize(newSize);
-          setPageNum(1);
-        }}
-      />
-    </div>
-    </div>
+            {editingMovie && !showForm && (
+              <EditMovieForm
+                moviesTitle={editingMovie}
+                onSuccess={() => {
+                  setEditingMovie(null);
+                  fetchMovies(pageSize, pageNum, []).then((data) =>
+                    setMovies(data.movies)
+                  );
+                }}
+                onCancel={() => setEditingMovie(null)}
+              />
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // prevent page refresh
+                handleSearch();
+              }}
+              style={{ marginBottom: '1rem' }}
+            >
+              <input
+                type="text"
+                placeholder="Search by movie title..."
+                value={searchQuery}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchQuery(value);
+                  if (value.trim() === '') {
+                    setHasSearched(false);
+                    setSearchResults([]);
+                  }
+                }}
+                className="form-control"
+                style={{
+                  maxWidth: '300px',
+                  display: 'inline-block',
+                  marginRight: '0.5rem',
+                }}
+              />
+
+              <button type="submit" className="submit-btn">
+                Search
+              </button>
+            </form>
+
+            <table className="table table-hover table-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>Title</th>
+                  <th>Rating</th>
+                  <th>Avg Star Rating</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Display either the search results or full list of movies */}
+                {(hasSearched ? searchResults : movies).map((m) => (
+                  <tr key={m.showId}>
+                    <td>{m.showId}</td>
+                    <td>{m.type}</td>
+                    <td>{m.title}</td>
+                    <td>{m.rating}</td>
+                    <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
+                    <td>
+                      <button
+                        className="submit-btn btn-sm w-20 mb-1"
+                        onClick={() => setEditingMovie(m)}
+                      >
+                        Edit
+                      </button>
+                      <br />
+                      <button
+                        className="cancel-btn btn-sm w-20 mb-1"
+                        onClick={() => handleDelete(Number(m.showId))}
+                      >
+                        Delete
+                      </button>
+                      <br />
+                      <button
+                        className="genre-tag btn-sm w-20 mb-1"
+                        onClick={() => navigate(`/movie/${m.showId}`)}
+                      >
+                        More Info
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <Pagination
+              currentPage={pageNum}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              onPageChange={setPageNum}
+              onPageSizeChange={(newSize: SetStateAction<number>) => {
+                setPageSize(newSize);
+                setPageNum(1);
+              }}
+            />
+          </div>
+        </div>
+      </RequireRole>
+    </AuthorizeView>
   );
 };
 

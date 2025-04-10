@@ -28,7 +28,7 @@ body {
 /* Card title */
 .card-title {
   font-family: 'Monoton', cursive;
-  color: #ffd700;
+  color: black;
   letter-spacing: 3px;
   text-align: center;
   text-transform: uppercase;
@@ -39,16 +39,16 @@ body {
 /* Input fields */
 .form-control {
   font-family: serif;
-  color: #ffd700;
+  color: black;
   background-color: transparent;
-  border: 1px solid #fcecc9;
+  border: 1px solid black;
   border-radius: 0;
   font-size: 0.75rem;
   padding: 0.5rem;
 }
 
 .form-control:focus {
-  color: #ffffff;
+  color: #d13e4a;
   border-color: #ff5555;
   outline: none;
   box-shadow: none;

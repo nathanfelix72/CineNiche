@@ -1,0 +1,156 @@
+/* Movie Details Page Styles */
+.movie-details {
+  padding: 2rem;
+  background-color: #f5e9d9;  /* Vintage cream/paper background */
+  border-radius: 8px;
+  max-width: 1200px; /* Increased max-width for better layout */
+  margin: 2rem auto;
+  box-shadow: 0 8px 20px rgba(97, 42, 58, 0.2);  /* Warmer shadow */
+  font-family: 'Courier Prime', monospace;
+  color: #2d2626;  /* Warmer dark color */
+  border: 4px double #d74167;  /* Double border for vintage feel */
+}
+
+/* Movie Info Container - Main layout */
+.movie-info {
+  display: flex;
+  flex-wrap: wrap; /* Allows responsive layout */
+  gap: 2.5rem;
+}
+
+/* Movie Poster */
+.movie-poster {
+  flex: 0 0 450px; /* Increased width for a bigger poster */
+}
+
+.movie-poster img {
+  height: 1000px;
+  max-height: 1000px; /* Increased max height to fit a larger image */
+  border-radius: 4px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  border: 4px solid #000;
+  transition: transform 0.3s ease;
+}
+
+.movie-poster img:hover {
+  transform: scale(1.05);  /* Slight zoom on hover to give some effect */
+}
+
+/* Movie Description and Details */
+.movie-description {
+  flex: 1;
+  min-width: 300px; /* Ensures readability on smaller screens */
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.movie-description h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: #d13e4a;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #d13e4a;
+  padding-bottom: 0.5rem;
+}
+
+.movie-description p {
+  margin-bottom: 0.8rem;
+}
+
+.movie-description strong {
+  color: #a62639;
+  font-weight: bold;
+}
+
+/* Star Rating */
+.movie-description .star-rating {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: rgba(255, 245, 230, 0.6);
+  border-radius: 8px;
+  border-left: 4px solid #f5c518;
+}
+
+/* Related Movies Section */
+.related-movies {
+  margin-top: 2.5rem;
+  width: 100%;
+  padding-top: 1.5rem;
+  border-top: 2px dotted #d13e4a;
+}
+
+.related-movies h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #d13e4a;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background-color: #d13e4a;
+  border-radius: 20px;
+}
+
+.carousel-item {
+  min-width: 180px;
+  background: #f3f3f3;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.carousel-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-item a {
+  color: #2d2626;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.carousel-item a:hover {
+  color: #d13e4a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .movie-info {
+    flex-direction: column;
+  }
+  
+  .movie-poster {
+    margin: 0 auto;
+  }
+  
+  .movie-description h2 {
+    text-align: center;
+    font-size: 2.2rem;
+  }
+}
+
