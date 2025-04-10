@@ -503,12 +503,16 @@ const MovieDetailsPage = () => {
                   <div className="related-movies">
                     <h3>Related Movies</h3>
                     <div className="container">
-                      <h3 className="text-center mb-4"></h3>
-                      <div className="row g-4">
+                      <h3 className="text-center mb-4">You Might Also Like</h3>
+                      <div
+                        className="d-flex overflow-auto py-3 px-2"
+                        style={{ gap: '1rem', scrollSnapType: 'x mandatory' }}
+                      >
                         {relatedMovies.map((related) => (
                           <div
                             key={related.id}
-                            className="col-6 col-md-4 col-lg-3"
+                            className="flex-shrink-0"
+                            style={{ width: '200px', scrollSnapAlign: 'start' }}
                           >
                             <Link
                               to={`/movie/${related.id}`}
@@ -524,7 +528,7 @@ const MovieDetailsPage = () => {
                                       '/fallback-poster.jpg';
                                   }}
                                   style={{
-                                    height: '300px',
+                                    height: '280px',
                                     objectFit: 'cover',
                                   }}
                                 />
