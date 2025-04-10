@@ -141,7 +141,7 @@ const SearchPage = () => {
   const sourceMovies = hasSearched ? searchResults : movies;
 
   const sanitizeTitle = (title: string): string => {
-    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+    return title.replace(/[^\p{L}\p{N} ]/gu, '').trim();
   };
 
   // --- Image URL Generation ---
@@ -525,16 +525,15 @@ const SearchPage = () => {
           </div>
         )}
       </div>
-      <br />
-      <br />
-      {/* Footer with Classic Cinema Credits Style */}
-      <footer
+            {/* Footer with Classic Cinema Credits Style */}
+            <footer
         className="py-5"
         style={{
-          backgroundColor: '#f5e9d9',
+            backgroundColor: 'transparent',
           borderTop: '3px double rgba(255, 255, 255, 0.1)',
-          color: '#999',
+          color: 'black',
           position: 'relative',
+          fontWeight: 'bold'
         }}
       >
         {/* Film style perforation at top of footer */}
@@ -605,6 +604,8 @@ const SearchPage = () => {
           </div>
         </div>
       </footer>
+      <br />
+      <br />
     </div>
   );
 };
