@@ -1,4 +1,10 @@
-import { SetStateAction, useEffect, useState, useRef, useCallback } from 'react';
+import {
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
 import Pagination from '../components/Pagination'; // Adjust path if needed
@@ -7,9 +13,8 @@ import { FaHome, FaSearch, FaPlus, FaFilm, FaTv, FaPlayCircle, FaStar } from 're
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
 
-
 const SearchPage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // State for movie data
   const [movies, setMovies] = useState<MoviesTitle[]>([]); // For Browse
@@ -51,9 +56,8 @@ const SearchPage = () => {
     navigate('/adminmovies');
   };
 
-
   const handleClick = (link: string) => {
-    if (link === "Privacy") {
+    if (link === 'Privacy') {
       handlePrivacyClick();
     } else if (link === "Admin Page") {
       handleAdminClick();
@@ -63,7 +67,7 @@ const SearchPage = () => {
   // --- Debouncing ---
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedQuery(searchQueryRef.current);  // Update debouncedQuery after delay
+      setDebouncedQuery(searchQueryRef.current); // Update debouncedQuery after delay
     }, 500); // 500ms delay to trigger the search after typing stops
 
     return () => {
@@ -72,47 +76,47 @@ const SearchPage = () => {
   }, [searchQuery]); // Only re-run effect when searchQuery changes
 
   // --- Data Fetching ---
-  const loadMovieData = useCallback(async (
-    pSize: number,
-    pNum: number,
-    query?: string
-  ) => {
-    console.log(`Workspaceing: page=${pNum}, size=${pSize}, query='${query || ''}'`);
-    setIsLoadingData(true);
-    setIsVerifyingImages(false); // Reset verification state on new fetch
-    setDisplayableMovies([]); // Clear previous displayable movies
-    setError(null);
+  const loadMovieData = useCallback(
+    async (pSize: number, pNum: number, query?: string) => {
+      console.log(
+        `Workspaceing: page=${pNum}, size=${pSize}, query='${query || ''}'`
+      );
+      setIsLoadingData(true);
+      setIsVerifyingImages(false); // Reset verification state on new fetch
+      setDisplayableMovies([]); // Clear previous displayable movies
+      setError(null);
 
-    const isSearching = (query?.trim() || '').length > 0;
-    setHasSearched(isSearching);
+      const isSearching = (query?.trim() || '').length > 0;
+      setHasSearched(isSearching);
 
-    try {
-      // Always use the provided pSize and pNum for the API call
-      const data = await fetchMovies(pSize, pNum, [], query);
+      try {
+        // Always use the provided pSize and pNum for the API call
+        const data = await fetchMovies(pSize, pNum, [], query);
 
-      if (isSearching) {
-        setMovies([]); // Clear browse movies when searching
-        setSearchResults(data.movies);
-        console.log("Search results:", data.movies);
-      } else {
-        setSearchResults([]); // Clear search results when Browse
-        setMovies(data.movies);
-        console.log("Browse results:", data.movies);
+        if (isSearching) {
+          setMovies([]); // Clear browse movies when searching
+          setSearchResults(data.movies);
+          console.log('Search results:', data.movies);
+        } else {
+          setSearchResults([]); // Clear search results when Browse
+          setMovies(data.movies);
+          console.log('Browse results:', data.movies);
+        }
+
+        // Calculate total pages based on the API response and current pageSize
+        setTotalPages(Math.ceil(data.totalNumMovies / pSize));
+      } catch (err) {
+        console.error('Error fetching movie data:', err);
+        setError((err as Error).message || 'Failed to load movie data.');
+        setMovies([]); // Clear data on error
+        setSearchResults([]);
+        setTotalPages(0);
+      } finally {
+        setIsLoadingData(false); // Mark data loading as complete
       }
-
-      // Calculate total pages based on the API response and current pageSize
-      setTotalPages(Math.ceil(data.totalNumMovies / pSize));
-
-    } catch (err) {
-      console.error('Error fetching movie data:', err);
-      setError((err as Error).message || 'Failed to load movie data.');
-      setMovies([]); // Clear data on error
-      setSearchResults([]);
-      setTotalPages(0);
-    } finally {
-      setIsLoadingData(false); // Mark data loading as complete
-    }
-  }, []); // No dependencies, relies on arguments
+    },
+    []
+  ); // No dependencies, relies on arguments
 
   // Effect to trigger data fetch on page, size, or debounced query change
   useEffect(() => {
@@ -154,17 +158,19 @@ const SearchPage = () => {
     setIsVerifyingImages(true); // Start verification
 
     Promise.all(sourceMovies.map(checkImage))
-      .then(results => {
+      .then((results) => {
         if (!isCancelled) {
-          const validMovies = results.filter(movie => movie !== null) as MoviesTitle[];
+          const validMovies = results.filter(
+            (movie) => movie !== null
+          ) as MoviesTitle[];
           setDisplayableMovies(validMovies);
-          console.log("Displayable movies after verification:", validMovies);
+          console.log('Displayable movies after verification:', validMovies);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (!isCancelled) {
-          console.error("Error during image verification:", err);
-          setError("Failed to verify some movie posters.");
+          console.error('Error during image verification:', err);
+          setError('Failed to verify some movie posters.');
           setDisplayableMovies([]); // Clear display on verification error
         }
       })
@@ -182,7 +188,8 @@ const SearchPage = () => {
 
   // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
-    const resolvedSize = typeof newSize === 'function' ? newSize(pageSize) : newSize;
+    const resolvedSize =
+      typeof newSize === 'function' ? newSize(pageSize) : newSize;
     setPageSize(resolvedSize);
     setPageNum(1); // Reset to first page when page size changes
   };
@@ -192,72 +199,85 @@ const SearchPage = () => {
   if (isVerifyingImages) return <p>Verifying movie posters...</p>;
 
   // Error State
-  if (error && !isLoadingData && !isVerifyingImages) return <p className="text-red-500">Error: {error}</p>;
-
-  
+  if (error && !isLoadingData && !isVerifyingImages)
+    return <p className="text-red-500">Error: {error}</p>;
 
   // Content Rendering
   return (
-    <div style={{ 
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
-          overflowY: 'auto',
-          zIndex: 9999,
-          paddingTop: '50px',  // Adds space at the top
-          paddingBottom: '50px',  // Adds space at the bottom
-        }}>
-          <nav className="navbar navbar-expand-lg navbar-dark px-4 py-3" style={{
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage:
+          'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
+        overflowY: 'auto',
+        zIndex: 9999,
+        paddingTop: '50px', // Adds space at the top
+        paddingBottom: '50px', // Adds space at the bottom
+      }}
+    >
+      <nav
+        className="navbar navbar-expand-lg navbar-dark px-4 py-3"
+        style={{
           background: 'linear-gradient(90deg, #d13e4a 0%, #f5e9d9 100%)',
           borderBottom: '3px double rgba(255, 255, 255, 0.15)',
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 9999
-        }}>
-          <div className="container-fluid justify-content-between">
-            <div className="d-flex align-items-center">
-              <h1 className="navbar-brand fs-2 fw-bold mb-0" style={{
+          zIndex: 9999,
+        }}
+      >
+        <div className="container-fluid justify-content-between">
+          <div className="d-flex align-items-center">
+            <h1
+              className="navbar-brand fs-2 fw-bold mb-0"
+              style={{
                 fontFamily: 'Monoton, cursive',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
               }}
-              >
-                CINENICHE
-              </h1>
-            </div>
-    
-            <div className="d-flex align-items-center gap-3">
-              {/* Navigation Buttons */}
-              <button className="btn fw-bold nav-btn" onClick={() => navigate('/homepage')}>
-                <FaHome className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Home</span>
-              </button>
-              <button className="btn fw-bold nav-btn" onClick={() => navigate('/search')}>
-                <FaSearch className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Search</span>
-              </button>
-              <button className="btn fw-bold nav-btn">
-                <FaPlus className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Watchlist</span>
-              </button>
-              <button className="btn fw-bold nav-btn">
-                <FaFilm className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Movies</span>
-              </button>
-              <button className="btn fw-bold nav-btn">
-                <FaTv className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Series</span>
-              </button>
-              <button className="btn fw-bold nav-btn">
-                <FaPlayCircle className="nav-icon" style={{margin:'0.5rem'}} />
-                <span>Originals</span>
-              </button>
-              {/* Profile Icon */}
+            >
+              CINENICHE
+            </h1>
+          </div>
+
+          <div className="d-flex align-items-center gap-3">
+            {/* Navigation Buttons */}
+            <button
+              className="btn fw-bold nav-btn"
+              onClick={() => navigate('/homepage')}
+            >
+              <FaHome className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Home</span>
+            </button>
+            <button
+              className="btn fw-bold nav-btn"
+              onClick={() => navigate('/search')}
+            >
+              <FaSearch className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Search</span>
+            </button>
+            <button className="btn fw-bold nav-btn">
+              <FaPlus className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Watchlist</span>
+            </button>
+            <button className="btn fw-bold nav-btn">
+              <FaFilm className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Movies</span>
+            </button>
+            <button className="btn fw-bold nav-btn">
+              <FaTv className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Series</span>
+            </button>
+            <button className="btn fw-bold nav-btn">
+              <FaPlayCircle className="nav-icon" style={{ margin: '0.5rem' }} />
+              <span>Originals</span>
+            </button>
+            {/* Profile Icon */}
             <div className="dropdown">
             <button
                 className="btn"
@@ -296,138 +316,190 @@ const SearchPage = () => {
         <br />
         <br />
         <br />
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search by movie title..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
-        className="form-control mb-3"
-        style={{ maxWidth: '300px', display: 'inline-block' }}
-      />
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search by movie title..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
+          className="form-control mb-3"
+          style={{ maxWidth: '300px', display: 'inline-block' }}
+        />
 
-      {/* Conditional Messages */}
-      {hasSearched && sourceMovies.length === 0 && !isLoadingData && !isVerifyingImages && (
-         <p>No movies found matching "{debouncedQuery}". Try a different search.</p>
-      )}
-      {hasSearched && sourceMovies.length > 0 && displayableMovies.length === 0 && !isLoadingData && !isVerifyingImages && (
-        <p>Found movies matching "{debouncedQuery}", but none have available posters for this page.</p>
-      )}
-      {!hasSearched && movies.length > 0 && displayableMovies.length === 0 && !isLoadingData && !isVerifyingImages &&(
-         <p>No movie posters available to display for this page.</p>
-      )}
-       {!hasSearched && movies.length === 0 && !isLoadingData && !isVerifyingImages &&(
-         <p>No movies found.</p>
-      )}
+        {/* Conditional Messages */}
+        {hasSearched &&
+          sourceMovies.length === 0 &&
+          !isLoadingData &&
+          !isVerifyingImages && (
+            <p>
+              No movies found matching "{debouncedQuery}". Try a different
+              search.
+            </p>
+          )}
+        {hasSearched &&
+          sourceMovies.length > 0 &&
+          displayableMovies.length === 0 &&
+          !isLoadingData &&
+          !isVerifyingImages && (
+            <p>
+              Found movies matching "{debouncedQuery}", but none have available
+              posters for this page.
+            </p>
+          )}
+        {!hasSearched &&
+          movies.length > 0 &&
+          displayableMovies.length === 0 &&
+          !isLoadingData &&
+          !isVerifyingImages && (
+            <p>No movie posters available to display for this page.</p>
+          )}
+        {!hasSearched &&
+          movies.length === 0 &&
+          !isLoadingData &&
+          !isVerifyingImages && <p>No movies found.</p>}
 
-      {/* Movie Grid - Render directly from displayableMovies */}
-      {displayableMovies.length > 0 && (
-        <div className="movie-posters-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)', // 4 items per row
-          gap: '1rem',
-          marginTop: '20px',
-          marginLeft: '10px',
-          marginRight: '10px'
-        }}>
-          {displayableMovies.map((movie) => (
-            <div key={movie.showId} className="movie-poster" style={{ textAlign: 'center' }}>
-              <Link to={`/movie/${movie.showId}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                <img
-                  src={getMovieImage(movie.title!)}
-                  className="img-fluid"
-                  alt={movie.title}
+        {/* Movie Grid - Render directly from displayableMovies */}
+        {displayableMovies.length > 0 && (
+          <div
+            className="movie-posters-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)', // 4 items per row
+              gap: '1rem',
+              marginTop: '20px',
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
+          >
+            {displayableMovies.map((movie) => (
+              <div
+                key={movie.showId}
+                className="movie-poster"
+                style={{ textAlign: 'center' }}
+              >
+                <Link
+                  to={`/movie/${movie.showId}`}
                   style={{
-                    width: 'auto',
-                    height: 'auto',
-                    objectFit: 'cover',
-                    border: '2px solid #fff',
-                    borderRadius: '4px',
                     display: 'block',
-                    margin: '0 auto 10px auto'
+                    textDecoration: 'none',
+                    color: 'inherit',
                   }}
-                  loading="lazy"
-                />
-                <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
+                >
+                  <img
+                    src={getMovieImage(movie.title!)}
+                    className="img-fluid"
+                    alt={movie.title}
+                    style={{
+                      width: 'auto',
+                      height: 'auto',
+                      objectFit: 'cover',
+                      border: '2px solid #fff',
+                      borderRadius: '4px',
+                      display: 'block',
+                      margin: '0 auto 10px auto',
+                    }}
+                    loading="lazy"
+                  />
+                  <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4">
-          <Pagination
-            currentPage={pageNum}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            onPageChange={setPageNum}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        </div>
-      )}
-    </div>
-    <br />
-    <br />
-    {/* Footer with Classic Cinema Credits Style */}
-    <footer className="py-5" style={{ 
-            backgroundColor: '#f5e9d9',
-            borderTop: '3px double rgba(255, 255, 255, 0.1)',
-            color: '#999',
-            position: 'relative'
-            }}>
-            {/* Film style perforation at top of footer */}
-            <div className="position-absolute" style={{
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '3px',
-                backgroundImage: 'repeating-linear-gradient(90deg, rgba(215, 65, 103, 0.2) 0px, rgba(215, 65, 103, 0.2) 6px, transparent 6px, transparent 12px)'
-            }}></div>
-            
-            <div className="container">
-                <div className="row justify-content-center">
-                <div className="col-lg-10">
-                    <div className="d-flex align-items-center justify-content-center mb-3">
-                    <Film size={16} className= "me-2" />
-                    <p className="mb-0" style={{ fontFamily: '"Courier Prime", monospace' }}>
-                        Questions? Call 1-123-456-7890
-                    </p>
-                    </div>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-4">
+            <Pagination
+              currentPage={pageNum}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              onPageChange={setPageNum}
+              onPageSizeChange={handlePageSizeChange}
+            />
+          </div>
+        )}
+      </div>
+      <br />
+      <br />
+      {/* Footer with Classic Cinema Credits Style */}
+      <footer
+        className="py-5"
+        style={{
+          backgroundColor: '#f5e9d9',
+          borderTop: '3px double rgba(255, 255, 255, 0.1)',
+          color: '#999',
+          position: 'relative',
+        }}
+      >
+        {/* Film style perforation at top of footer */}
+        <div
+          className="position-absolute"
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            backgroundImage:
+              'repeating-linear-gradient(90deg, rgba(215, 65, 103, 0.2) 0px, rgba(215, 65, 103, 0.2) 6px, transparent 6px, transparent 12px)',
+          }}
+        ></div>
 
-                    <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
-                    {[
-                        ["FAQ", "Help Center", "Account", "Media Center"],
-                        ["Investor Relations", "Jobs", "Ways to Watch", "Corporate Information"],
-                        ["Buy Gift Cards", "Cookie Preferences", "Legal Notices", "Terms of Use"],
-                        ["Privacy", "Admin Page", "Ad Choices", "Contact Us"]
-                    ].map((group, idx) => (
-                        <div className="col" key={idx}>
-                        <ul className="list-unstyled small">
-                            {group.map((link, i) => (
-                            <li key={i} className="mb-2">
-                                <a
-                                href="#"
-                                className="text-decoration-none"
-                                style={{ 
-                                    color: '#a9a9a9',
-                                    fontFamily: '"Courier Prime", monospace'
-                                }}
-                                onClick={() => handleClick(link)}
-                                >
-                                {link}
-                                </a>
-                            </li>
-                            ))}
-                        </ul>
-                        </div>
-                    ))}
-                    </div>
-                </div>
-                </div>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-lg-10">
+              <div className="d-flex align-items-center justify-content-center mb-3">
+                <Film size={16} className="me-2" />
+                <p
+                  className="mb-0"
+                  style={{ fontFamily: '"Courier Prime", monospace' }}
+                >
+                  Questions? Call 1-123-456-7890
+                </p>
+              </div>
+
+              <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
+                {[
+                  ['FAQ', 'Help Center', 'Account', 'Media Center'],
+                  [
+                    'Investor Relations',
+                    'Jobs',
+                    'Ways to Watch',
+                    'Corporate Information',
+                  ],
+                  [
+                    'Buy Gift Cards',
+                    'Cookie Preferences',
+                    'Legal Notices',
+                    'Terms of Use',
+                  ],
+                  ['Privacy', 'Admin Page', 'Ad Choices', 'Contact Us'],
+                ].map((group, idx) => (
+                  <div className="col" key={idx}>
+                    <ul className="list-unstyled small">
+                      {group.map((link, i) => (
+                        <li key={i} className="mb-2">
+                          <a
+                            href="#"
+                            className="text-decoration-none"
+                            style={{
+                              color: '#a9a9a9',
+                              fontFamily: '"Courier Prime", monospace',
+                            }}
+                            onClick={() => handleClick(link)}
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
-            </footer>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

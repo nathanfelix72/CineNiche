@@ -1,6 +1,7 @@
 // Backend/Services/MovieRecommenderService.cs
 
 using System.Text.Json;
+using CineNiche.Data;
 
 namespace CineNiche.Services
 {
@@ -11,6 +12,7 @@ namespace CineNiche.Services
         public MovieRecommenderService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            Console.WriteLine("MovieRecommenderService HttpClient BaseAddress: " + _httpClient.BaseAddress);
         }
 
         // Call the Python endpoint for content-based recommendations
@@ -26,15 +28,15 @@ namespace CineNiche.Services
         }
 
         // Call the Python endpoint for collaborative/genre-based user homepage recommendations
-        public async Task<Dictionary<string, List<string>>> GetUserRecommendations(int userId)
+        public async Task<Dictionary<string, List<MovieRecommendation>>> GetUserRecommendations(int userId)
         {
-            var response = await _httpClient.GetAsync($"/user-recs?user_id={userId}");
+            var response = await _httpClient.GetAsync("http://localhost:8000/user-recs?user_id=" + userId);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+            var result = JsonSerializer.Deserialize<Dictionary<string, List<MovieRecommendation>>>(json);
 
-            return result ?? new Dictionary<string, List<string>>();
+            return result ?? new Dictionary<string, List<MovieRecommendation>>();
         }
 
         // This matches the JSON returned from /recommend
