@@ -501,7 +501,7 @@ const MovieDetailsPage = () => {
                 {relatedMovies.length > 0 && (
                   <div className="related-movies">
                     <h3>Related Movies</h3>
-                    <div className="related-movies container">
+                    <div className="container">
                       <h3 className="text-center mb-4"></h3>
                       <div className="row g-4">
                         {relatedMovies.map((related) => (
