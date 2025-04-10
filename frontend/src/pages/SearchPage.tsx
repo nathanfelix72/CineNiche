@@ -316,12 +316,6 @@ const SearchPage = () => {
                     className="dropdown-item fw-bold"
                     style={{ color: '#d13e4a' }}
                   >
-                    User
-                  </p>
-                  <p
-                    className="dropdown-item fw-bold"
-                    style={{ color: '#d13e4a' }}
-                  >
                     Help
                   </p>
                   <p
