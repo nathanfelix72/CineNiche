@@ -45,7 +45,7 @@ const SearchPage = () => {
   // State for pagination
   const [pageSize, setPageSize] = useState<number>(20); // Set to 20 for 20 movies per page
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
-  const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
+  // const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
   //for genre filter
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -54,13 +54,9 @@ const SearchPage = () => {
     adventure: 'Adventure',
     comedies: 'Comedies',
     dramas: 'Dramas',
-    fantasy: 'Fantasy',
-    horrorMovies: 'Horror',
     documentaries: 'Documentaries',
     thrillers: 'Thrillers',
     familyMovies: 'Family Movies',
-    kidsTv: 'Kids TV',
-    musicals: 'Musicals',
     realityTv: 'Reality TV',
     tvComedies: 'TV Comedies',
     tvDramas: 'TV Dramas',
@@ -136,13 +132,13 @@ const SearchPage = () => {
         }
 
         // Calculate total pages based on the API response and current pageSize
-        setTotalPages(Math.ceil(data.totalNumMovies / pSize));
+        // setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
         console.error('Error fetching movie data:', err);
         setError((err as Error).message || 'Failed to load movie data.');
         setMovies([]); // Clear data on error
         setSearchResults([]);
-        setTotalPages(0);
+        // setTotalPages(0);
       } finally {
         setIsLoadingData(false); // Mark data loading as complete
       }
@@ -222,6 +218,11 @@ const SearchPage = () => {
     };
   }, [sourceMovies, isLoadingData]);
 
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setPageNum(1);
+  }, [selectedGenres]);
+
   // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
     const resolvedSize =
@@ -237,6 +238,26 @@ const SearchPage = () => {
   // Error State
   if (error && !isLoadingData && !isVerifyingImages)
     return <p className="text-red-500">Error: {error}</p>;
+
+  // Filter movies BEFORE pagination
+  const filteredMovies = displayableMovies.filter((movie) => {
+    if (selectedGenres.length === 0) return true;
+    return selectedGenres.some((genre) =>
+      Object.entries(movie).some(
+        ([key, value]) =>
+          key.toLowerCase().includes(genre.toLowerCase()) && value === 1
+      )
+    );
+  });
+
+  // Calculate total pages based on filtered results
+  const adjustedTotalPages = Math.ceil(filteredMovies.length / pageSize);
+
+  // Paginate the filtered movies
+  const paginatedMovies = filteredMovies.slice(
+    (pageNum - 1) * pageSize,
+    pageNum * pageSize
+  );
 
   // Content Rendering
   return (
@@ -442,67 +463,53 @@ const SearchPage = () => {
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)', // 4 items per row
               gap: '1rem',
-              // marginTop: '20px',
-              // marginLeft: '10px',
-              // marginRight: '10px',
-              marginTop: '10px',
-              marginLeft: '5px',
-              marginRight: '5px',
+              marginTop: '20px',
+              marginLeft: '10px',
+              marginRight: '10px',
             }}
           >
-            {displayableMovies
-              .filter((movie) => {
-                if (selectedGenres.length === 0) return true;
-                return selectedGenres.some((genre) =>
-                  Object.entries(movie).some(
-                    ([key, value]) =>
-                      key.toLowerCase().includes(genre.toLowerCase()) &&
-                      value === 1
-                  )
-                );
-              })
-              .map((movie) => (
-                <div
-                  key={movie.showId}
-                  className="movie-poster"
-                  style={{ textAlign: 'center' }}
+            {paginatedMovies.map((movie) => (
+              <div
+                key={movie.showId}
+                className="movie-poster"
+                style={{ textAlign: 'center' }}
+              >
+                <Link
+                  to={`/movie/${movie.showId}`}
+                  style={{
+                    display: 'block',
+                    textDecoration: 'none',
+                    color: 'black',
+                  }}
                 >
-                  <Link
-                    to={`/movie/${movie.showId}`}
+                  <img
+                    src={getMovieImage(movie.title!)}
+                    className="img-fluid"
+                    alt={movie.title}
                     style={{
+                      width: '200px', // Set fixed width
+                      height: '300px', // Set fixed height
+                      objectFit: 'cover', // Crop image to fill box without distortion
+                      border: '2px solid #fff',
+                      borderRadius: '4px',
                       display: 'block',
-                      textDecoration: 'none',
-                      color: 'black',
+                      // margin: '0 auto 10px auto',
                     }}
-                  >
-                    <img
-                      src={getMovieImage(movie.title!)}
-                      className="img-fluid"
-                      alt={movie.title}
-                      style={{
-                        width: '200px', // Set fixed width
-                        height: '300px', // Set fixed height
-                        objectFit: 'cover', // Crop image to fill box without distortion
-                        border: '2px solid #fff',
-                        borderRadius: '4px',
-                        display: 'block',
-                        // margin: '0 auto 10px auto',
-                      }}
-                      loading="lazy"
-                    />
-                    <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
-                  </Link>
-                </div>
-              ))}
+                    loading="lazy"
+                  />
+                  <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
+                </Link>
+              </div>
+            ))}
           </div>
         )}
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {adjustedTotalPages > 1 && (
           <div className="mt-4">
             <Pagination
               currentPage={pageNum}
-              totalPages={totalPages}
+              totalPages={adjustedTotalPages}
               pageSize={pageSize}
               onPageChange={setPageNum}
               onPageSizeChange={handlePageSizeChange}
