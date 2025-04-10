@@ -103,10 +103,6 @@ const HomePage = () => {
     fetchRecs();
   }, [userId]);
 
-  const handleNavigateToAdminMovies = () => {
-    navigate('/adminmovies');
-  };
-
   return (
     <AuthorizeView>
     <div
