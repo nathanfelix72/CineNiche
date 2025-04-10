@@ -5,7 +5,6 @@ import { fetchMovieById } from '../api/MoviesAPI';
 import { genreDisplayNames } from '../utils/genreDisplayNames';
 import { fetchRelatedMovies } from '../api/MoviesAPI';
 import './MovieDetailsPage.module.css';
-import RelatedMovies from '../components/RelatedMovies';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import './movieDetailsPage.css';
 import { useNavigate, Link } from 'react-router-dom';
@@ -491,29 +490,36 @@ const MovieDetailsPage = () => {
                       .map(([key]) => genreDisplayNames[key])
                       .join(', ') || 'None'}
                   </p>
-
-                  {/* Related Movies Carousel */}
-                  <RelatedMovies relatedMovies={relatedMovies} />
                 </div>
-                {/* 🎯 Related Movies Carousel */}
+                {/*  Related Movies Carousel */}
                 {relatedMovies.length > 0 && (
                   <div className="related-movies">
                     <h3>Related Movies</h3>
                     <div className="carousel">
-                      {relatedMovies.map(
-                        (
-                          movie // Renamed variable to 'movie'
-                        ) => (
-                          // Use movie.id as the key
-                          <div key={movie.id} className="carousel-item">
-                            {/* Use Link component and movie.id for the route */}
-                            <Link to={`/movie/${movie.id}`}>
-                              {/* Display the movie.title */}
-                              {movie.title}
-                            </Link>
-                          </div>
-                        )
-                      )}
+                      {relatedMovies.map((related) => (
+                        <div key={related.id} className="carousel-item">
+                          <Link to={`/movie/${related.id}`}>
+                            <img
+                              src={getMovieImage(related.title)}
+                              alt={related.title}
+                              style={{
+                                width: '120px',
+                                height: '180px',
+                                objectFit: 'cover',
+                                borderRadius: '6px',
+                                display: 'block',
+                                marginBottom: '0.5rem',
+                              }}
+                              onError={(e) => {
+                                e.currentTarget.src = '/fallback-poster.jpg';
+                              }}
+                            />
+                            <div style={{ textAlign: 'center' }}>
+                              {related.title}
+                            </div>
+                          </Link>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
