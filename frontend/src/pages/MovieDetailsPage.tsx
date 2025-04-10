@@ -503,7 +503,6 @@ const MovieDetailsPage = () => {
                   <div className="related-movies">
                     <h3>Related Movies</h3>
                     <div className="container">
-                      <h3 className="text-center mb-4">You Might Also Like</h3>
                       <div
                         className="d-flex overflow-auto py-3 px-2"
                         style={{ gap: '1rem', scrollSnapType: 'x mandatory' }}
