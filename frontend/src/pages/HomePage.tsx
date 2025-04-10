@@ -44,7 +44,7 @@ const HomePage = () => {
   };
 
   const sanitizeTitle = (title: string): string => {
-    return title.replace(/[^\p{L}\p{N} ]/gu, '').trim();
+    return title.replace(/[^\wÀ-ž\s]/gi, '').trim();
   };
 
   // --- Image URL Generation ---
@@ -241,7 +241,7 @@ const HomePage = () => {
               width: '200px',
             }}
           >
-            <Link to={`/movie/${movie.id}`}>
+            <Link to={`/movie/${movie.id}`} style={{textDecoration: 'none'}}>
               <img
                 src={getMovieImage(movie.title!)}
                 className="img-fluid"
@@ -261,7 +261,6 @@ const HomePage = () => {
                 className="text-black"
                 style={{
                   textAlign: 'center',
-                  textDecoration: 'none',
                   fontWeight: '500',
                 }}
               >
