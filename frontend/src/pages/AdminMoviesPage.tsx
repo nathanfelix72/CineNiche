@@ -117,16 +117,25 @@ const AdminMoviesPage = () => {
           }}
         >
         <div style={{ marginBottom: '1rem' }}>
-          <button className="submit-btn mb-3" onClick={() => navigate('/login')} style={{ marginRight: '2rem' }}>
-            <Logout >
-            <span style={{ color: 'white', textDecoration: 'none' }}> Logout<AuthorizedUser value="email" /></span>
-            </Logout>
-          </button>
-          <button className="submit-btn mb-3" onClick={() => navigate('/homepage')}>
-            Homepage
-          </button>
-        </div>
+        <button
+          className="submit-btn mb-3"
+          onClick={() => navigate('/login')}
+          style={{ marginRight: '2rem', color: 'white', fontWeight: 'bold', textDecoration: 'none' }}
+        >
+          <Logout>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontWeight: 'bold' }}>Logout</span>
+              <span style={{ fontWeight: 'bold' }}>
+                <AuthorizedUser value="email" />
+              </span>
+            </div>
+          </Logout>
+        </button>
 
+        <button className="submit-btn mb-3" onClick={() => navigate('/homepage')}>
+          Homepage
+        </button>
+      </div>
           <div
             className="movie-form"
             style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', textAlign: 'center' }}
