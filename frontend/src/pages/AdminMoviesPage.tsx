@@ -120,7 +120,6 @@ const AdminMoviesPage = () => {
           <Logout>
             <span
               className="submit-btn mb-3"
-              style={{ marginRight: '2rem', color: 'white', fontWeight: 'bold', textDecoration: 'none' }}
             >
               Logout
             </span>
