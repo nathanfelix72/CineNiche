@@ -16,10 +16,12 @@ import {
   FaFilm,
   FaTv,
   FaPlayCircle,
+  FaStar,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
-import GenreFilter from '../components/GenreFilter';
+import Logout from '../components/Logout';
+import { AuthorizedUser } from '../components/AuthorizeView';
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -42,10 +44,7 @@ const SearchPage = () => {
   // State for pagination
   const [pageSize, setPageSize] = useState<number>(20); // Set to 20 for 20 movies per page
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
-  // const [ totalPages, setTotalPages] = useState<number>(0); // Total pages from API
-
-  // for genre filter
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
 
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
@@ -62,7 +61,7 @@ const SearchPage = () => {
     navigate('/privacy-policy');
   };
 
-  const handlePrivacyClick2 = () => {
+  const handleAdminClick = () => {
     // Navigate to the Privacy Policy page
     navigate('/adminmovies');
   };
@@ -71,7 +70,7 @@ const SearchPage = () => {
     if (link === 'Privacy') {
       handlePrivacyClick();
     } else if (link === 'Admin Page') {
-      handlePrivacyClick2();
+      handleAdminClick();
     }
   };
 
@@ -79,7 +78,7 @@ const SearchPage = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQueryRef.current); // Update debouncedQuery after delay
-    }, 500); // 500ms delay to trigger the search after typing stops
+    }, 700); // 500ms delay to trigger the search after typing stops
 
     return () => {
       clearTimeout(handler); // Clear timeout on cleanup to prevent issues when the user types quickly
@@ -115,13 +114,13 @@ const SearchPage = () => {
         }
 
         // Calculate total pages based on the API response and current pageSize
-        // setTotalPages(Math.ceil(data.totalNumMovies / pSize));
+        setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
         console.error('Error fetching movie data:', err);
         setError((err as Error).message || 'Failed to load movie data.');
         setMovies([]); // Clear data on error
         setSearchResults([]);
-        // setTotalPages(0);
+        setTotalPages(0);
       } finally {
         setIsLoadingData(false); // Mark data loading as complete
       }
@@ -137,10 +136,14 @@ const SearchPage = () => {
   // Determine which list is the source for image verification
   const sourceMovies = hasSearched ? searchResults : movies;
 
+  const sanitizeTitle = (title: string): string => {
+    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+  };
+
   // --- Image URL Generation ---
   const getMovieImage = (title: string) => {
-    if (!title) return ''; // Handle cases with missing titles gracefully
-    const imagePath = encodeURIComponent(title); // Proper URL encoding
+    if (!title) return '';
+    const imagePath = encodeURIComponent(sanitizeTitle(title));
     return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
   };
 
@@ -208,23 +211,6 @@ const SearchPage = () => {
   // Loading States
   if (isLoadingData) return <p>Loading movie data...</p>;
   if (isVerifyingImages) return <p>Verifying movie posters...</p>;
-
-  const filteredMovies = displayableMovies.filter((movie) => {
-    if (selectedGenres.length === 0) return true;
-
-    return selectedGenres.some((genre) =>
-      Object.entries(movie).some(
-        ([key, value]) =>
-          key.toLowerCase().includes(genre.toLowerCase()) && value === 1
-      )
-    );
-  });
-  const adjustedTotalPages = Math.ceil(filteredMovies.length / pageSize);
-
-  const paginatedMovies = filteredMovies.slice(
-    (pageNum - 1) * pageSize,
-    pageNum * pageSize
-  );
 
   // Error State
   if (error && !isLoadingData && !isVerifyingImages)
@@ -308,16 +294,22 @@ const SearchPage = () => {
             {/* Profile Icon */}
             <div className="dropdown">
               <button
-                className="btn btn-dark"
+                className="btn"
                 onClick={toggleProfileDropdown}
                 style={{
-                  borderRadius: '50%',
-                  padding: '20px', // Increased padding for a bigger circle
-                  fontSize: '24px', // Increased font size for the icon
+                  backgroundColor: '#d13e4a', // Set background color to pink
+                  borderRadius: '50%', // Make the button circular
+                  padding: '20px', // Padding for the size of the circle
+                  fontSize: '20px', // Font size for the icon
+                  border: 'none', // Remove the default button border
+                  width: '60px', // Set width to match height for a perfect circle
+                  height: '60px', // Set height to match width for a perfect circle
+                  display: 'flex', // Use flexbox to center the icon
+                  justifyContent: 'center', // Center the icon horizontally
+                  alignItems: 'center', // Center the icon vertically
                 }}
               >
-                <i className="bi bi-person-circle"></i>{' '}
-                {/* New icon (gear icon) */}
+                <FaStar /> {/* Star icon */}
               </button>
               {isProfileDropdownOpen && (
                 <div
@@ -334,7 +326,7 @@ const SearchPage = () => {
                     className="dropdown-item fw-bold"
                     style={{ color: '#d13e4a' }}
                   >
-                    Edit Profile
+                    Profile
                   </p>
                   <p
                     className="dropdown-item fw-bold"
@@ -353,7 +345,9 @@ const SearchPage = () => {
                     onClick={() => navigate('/login')}
                     style={{ color: '#d13e4a' }}
                   >
-                    Logout
+                    <Logout>
+                      Logout <AuthorizedUser value="email" />
+                    </Logout>
                   </button>
                 </div>
               )}
@@ -372,13 +366,14 @@ const SearchPage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
           className="form-control mb-3"
-          style={{ maxWidth: '300px', display: 'inline-block' }}
+          style={{
+            maxWidth: '300px',
+            display: 'inline-block',
+            color: 'black',
+            fontSize: '1rem',
+          }}
         />
-        {/* genre filtering */}
-        <GenreFilter
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-        />
+
 
         {/* Conditional Messages */}
         {hasSearched &&
@@ -425,7 +420,7 @@ const SearchPage = () => {
               marginRight: '10px',
             }}
           >
-            {paginatedMovies.map((movie) => (
+            {displayableMovies.map((movie) => (
               <div
                 key={movie.showId}
                 className="movie-poster"
@@ -436,7 +431,7 @@ const SearchPage = () => {
                   style={{
                     display: 'block',
                     textDecoration: 'none',
-                    color: 'inherit',
+                    color: 'black',
                   }}
                 >
                   <img
@@ -444,14 +439,14 @@ const SearchPage = () => {
                     className="img-fluid"
                     alt={movie.title}
                     style={{
-                      width: 'auto',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      border: '2px solid #fff',
-                      borderRadius: '4px',
-                      display: 'block',
-                      margin: '0 auto 10px auto',
-                    }}
+                        width: '200px',              // Set fixed width
+                        height: '300px',             // Set fixed height
+                        objectFit: 'cover',          // Crop image to fill box without distortion
+                        border: '2px solid #fff',
+                        borderRadius: '4px',
+                        display: 'block',
+                        margin: '0 auto 10px auto',
+                      }}
                     loading="lazy"
                   />
                   <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
@@ -462,11 +457,11 @@ const SearchPage = () => {
         )}
 
         {/* Pagination */}
-        {adjustedTotalPages > 1 && (
+        {totalPages > 1 && (
           <div className="mt-4">
             <Pagination
               currentPage={pageNum}
-              totalPages={adjustedTotalPages}
+              totalPages={totalPages}
               pageSize={pageSize}
               onPageChange={setPageNum}
               onPageSizeChange={handlePageSizeChange}
