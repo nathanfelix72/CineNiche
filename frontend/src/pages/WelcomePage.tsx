@@ -106,7 +106,7 @@ function WelcomePage() {
       question: 'What can I watch on CineNiche?',
       answer: (
         <div style={{ textAlign: 'left' }}>
-          Netflix has an extensive library of feature films, documentaries, TV
+          CineNiche has an extensive library of feature films, documentaries, TV
           shows, anime, award-winning CineNiche originals, and more.
           <br /> <br />
           Watch as much as you want, anytime you want.

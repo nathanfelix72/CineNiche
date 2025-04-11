@@ -474,19 +474,19 @@ import {
                     }}
                   >
                     <img
-                      src={getMovieImage(movie.title!)}
-                      className="img-fluid"
-                      alt={movie.title}
-                      style={{
-                        width: '200px', // Set fixed width
-                        height: '300px', // Set fixed height
-                        objectFit: 'cover', // Crop image to fill box without distortion
-                        border: '2px solid #fff',
-                        borderRadius: '4px',
-                        display: 'block',
-                        margin: '0 auto 10px auto',
-                      }}
-                      loading="lazy"
+                        src={getMovieImage(movie.title!)}
+                        className="img-fluid"
+                        alt={movie.title}
+                        style={{
+                            width: '260px',             // Bigger width
+                            height: '390px',            // Bigger height
+                            objectFit: 'cover',
+                            border: '2px solid #fff',
+                            borderRadius: '4px',
+                            display: 'block',
+                            margin: '0 auto',           // Less vertical space
+                        }}
+                        loading="lazy"
                     />
                     <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
                   </Link>
