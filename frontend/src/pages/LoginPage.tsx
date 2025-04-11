@@ -28,6 +28,9 @@ function LoginPage() {
   const handleRegisterClick = () => {
     navigate('/register');
   };
+  const handleLandingClick = () => {
+    navigate('/');
+  };
 
   // handle submit event for the form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -179,6 +182,14 @@ function LoginPage() {
                 </div>
                 <hr className="my-4" />
                 <div className="d-grid mb-2">
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-google  btn-login text-uppercase fw-bold text-white"
+                    onClick={handleLandingClick}
+                  >
+                    Landing Page
+                  </button>
+                </div>
                 </div>
               </form>
               {error && <p className="error">{error}</p>}
