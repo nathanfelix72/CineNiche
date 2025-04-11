@@ -16,61 +16,75 @@ import {
   FaFilm,
   FaTv,
   FaPlayCircle,
+  FaStar,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
+import Logout from '../components/Logout';
+import { AuthorizedUser } from '../components/AuthorizeView';
 
 const SearchPage = () => {
   const navigate = useNavigate();
+
   // State for movie data
   const [movies, setMovies] = useState<MoviesTitle[]>([]); // For Browse
   const [searchResults, setSearchResults] = useState<MoviesTitle[]>([]); // For search results
   const [displayableMovies, setDisplayableMovies] = useState<MoviesTitle[]>([]); // Movies with verified posters for the current page
+
   // State for search
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false); // Track if a search operation is active
+
   // State for loading and errors
   const [error, setError] = useState<string | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true); // Loading for API fetch
   const [isVerifyingImages, setIsVerifyingImages] = useState(false); // Loading for image checks
+
   // State for pagination
   const [pageSize, setPageSize] = useState<number>(20); // Set to 20 for 20 movies per page
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
-  // for genre filter
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
   searchQueryRef.current = searchQuery; // Keep ref updated
+
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!isProfileDropdownOpen);
   };
+
   const handlePrivacyClick = () => {
     // Navigate to the Privacy Policy page
     navigate('/privacy-policy');
   };
-  const handlePrivacyClick2 = () => {
+
+  const handleAdminClick = () => {
     // Navigate to the Privacy Policy page
     navigate('/adminmovies');
   };
+
   const handleClick = (link: string) => {
     if (link === 'Privacy') {
       handlePrivacyClick();
     } else if (link === 'Admin Page') {
-      handlePrivacyClick2();
+      handleAdminClick();
     }
   };
+
   // --- Debouncing ---
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQueryRef.current); // Update debouncedQuery after delay
-    }, 500); // 500ms delay to trigger the search after typing stops
+    }, 700); // 500ms delay to trigger the search after typing stops
+
     return () => {
       clearTimeout(handler); // Clear timeout on cleanup to prevent issues when the user types quickly
     };
   }, [searchQuery]); // Only re-run effect when searchQuery changes
+
   // --- Data Fetching ---
   const loadMovieData = useCallback(
     async (pSize: number, pNum: number, query?: string) => {
@@ -81,11 +95,14 @@ const SearchPage = () => {
       setIsVerifyingImages(false); // Reset verification state on new fetch
       setDisplayableMovies([]); // Clear previous displayable movies
       setError(null);
+
       const isSearching = (query?.trim() || '').length > 0;
       setHasSearched(isSearching);
+
       try {
         // Always use the provided pSize and pNum for the API call
         const data = await fetchMovies(pSize, pNum, [], query);
+
         if (isSearching) {
           setMovies([]); // Clear browse movies when searching
           setSearchResults(data.movies);
@@ -95,6 +112,7 @@ const SearchPage = () => {
           setMovies(data.movies);
           console.log('Browse results:', data.movies);
         }
+
         // Calculate total pages based on the API response and current pageSize
         setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
@@ -109,18 +127,26 @@ const SearchPage = () => {
     },
     []
   ); // No dependencies, relies on arguments
+
   // Effect to trigger data fetch on page, size, or debounced query change
   useEffect(() => {
     loadMovieData(pageSize, pageNum, debouncedQuery);
   }, [pageSize, pageNum, debouncedQuery, loadMovieData]); // Dependencies that trigger a refetch
+
   // Determine which list is the source for image verification
   const sourceMovies = hasSearched ? searchResults : movies;
+
+  const sanitizeTitle = (title: string): string => {
+    return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
+  };
+
   // --- Image URL Generation ---
   const getMovieImage = (title: string) => {
-    if (!title) return ''; // Handle cases with missing titles gracefully
-    const imagePath = encodeURIComponent(title); // Proper URL encoding
+    if (!title) return '';
+    const imagePath = encodeURIComponent(sanitizeTitle(title));
     return `https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/${imagePath}.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D`;
   };
+
   // --- Image Verification Effect ---
   useEffect(() => {
     if (isLoadingData || sourceMovies.length === 0) {
@@ -128,6 +154,7 @@ const SearchPage = () => {
       setIsVerifyingImages(false);
       return;
     }
+
     const checkImage = (movie: MoviesTitle): Promise<MoviesTitle | null> => {
       return new Promise((resolve) => {
         if (!movie.title) {
@@ -140,8 +167,10 @@ const SearchPage = () => {
         img.src = getMovieImage(movie.title);
       });
     };
+
     let isCancelled = false; // Flag to handle component unmount or dependency change during async operations
     setIsVerifyingImages(true); // Start verification
+
     Promise.all(sourceMovies.map(checkImage))
       .then((results) => {
         if (!isCancelled) {
@@ -164,11 +193,13 @@ const SearchPage = () => {
           setIsVerifyingImages(false); // Finish verification
         }
       });
+
     return () => {
       isCancelled = true;
       setIsVerifyingImages(false);
     };
   }, [sourceMovies, isLoadingData]);
+
   // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
     const resolvedSize =
@@ -176,12 +207,15 @@ const SearchPage = () => {
     setPageSize(resolvedSize);
     setPageNum(1); // Reset to first page when page size changes
   };
+
   // Loading States
   if (isLoadingData) return <p>Loading movie data...</p>;
   if (isVerifyingImages) return <p>Verifying movie posters...</p>;
+
   // Error State
   if (error && !isLoadingData && !isVerifyingImages)
     return <p className="text-red-500">Error: {error}</p>;
+
   // Content Rendering
   return (
     <div
@@ -224,6 +258,7 @@ const SearchPage = () => {
               CINENICHE
             </h1>
           </div>
+
           <div className="d-flex align-items-center gap-3">
             {/* Navigation Buttons */}
             <button
@@ -259,16 +294,22 @@ const SearchPage = () => {
             {/* Profile Icon */}
             <div className="dropdown">
               <button
-                className="btn btn-dark"
+                className="btn"
                 onClick={toggleProfileDropdown}
                 style={{
-                  borderRadius: '50%',
-                  padding: '20px', // Increased padding for a bigger circle
-                  fontSize: '24px', // Increased font size for the icon
+                  backgroundColor: '#d13e4a', // Set background color to pink
+                  borderRadius: '50%', // Make the button circular
+                  padding: '20px', // Padding for the size of the circle
+                  fontSize: '20px', // Font size for the icon
+                  border: 'none', // Remove the default button border
+                  width: '60px', // Set width to match height for a perfect circle
+                  height: '60px', // Set height to match width for a perfect circle
+                  display: 'flex', // Use flexbox to center the icon
+                  justifyContent: 'center', // Center the icon horizontally
+                  alignItems: 'center', // Center the icon vertically
                 }}
               >
-                <i className="bi bi-person-circle"></i>{' '}
-                {/* New icon (gear icon) */}
+                <FaStar /> {/* Star icon */}
               </button>
               {isProfileDropdownOpen && (
                 <div
@@ -285,7 +326,7 @@ const SearchPage = () => {
                     className="dropdown-item fw-bold"
                     style={{ color: '#d13e4a' }}
                   >
-                    Edit Profile
+                    Profile
                   </p>
                   <p
                     className="dropdown-item fw-bold"
@@ -304,7 +345,9 @@ const SearchPage = () => {
                     onClick={() => navigate('/login')}
                     style={{ color: '#d13e4a' }}
                   >
-                    Logout
+                    <Logout>
+                      Logout <AuthorizedUser value="email" />
+                    </Logout>
                   </button>
                 </div>
               )}
@@ -323,9 +366,14 @@ const SearchPage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Directly set the search query as the user types
           className="form-control mb-3"
-          style={{ maxWidth: '300px', display: 'inline-block' }}
+          style={{
+            maxWidth: '300px',
+            display: 'inline-block',
+            color: 'black',
+            fontSize: '1rem',
+          }}
         />
-       
+
         {/* Conditional Messages */}
         {hasSearched &&
           sourceMovies.length === 0 &&
@@ -357,6 +405,7 @@ const SearchPage = () => {
           movies.length === 0 &&
           !isLoadingData &&
           !isVerifyingImages && <p>No movies found.</p>}
+
         {/* Movie Grid - Render directly from displayableMovies */}
         {displayableMovies.length > 0 && (
           <div
@@ -381,7 +430,7 @@ const SearchPage = () => {
                   style={{
                     display: 'block',
                     textDecoration: 'none',
-                    color: 'inherit',
+                    color: 'black',
                   }}
                 >
                   <img
@@ -389,14 +438,14 @@ const SearchPage = () => {
                     className="img-fluid"
                     alt={movie.title}
                     style={{
-                      width: 'auto',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      border: '2px solid #fff',
-                      borderRadius: '4px',
-                      display: 'block',
-                      margin: '0 auto 10px auto',
-                    }}
+                        width: '200px',              // Set fixed width
+                        height: '300px',             // Set fixed height
+                        objectFit: 'cover',          // Crop image to fill box without distortion
+                        border: '2px solid #fff',
+                        borderRadius: '4px',
+                        display: 'block',
+                        margin: '0 auto 10px auto',
+                      }}
                     loading="lazy"
                   />
                   <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
@@ -405,6 +454,7 @@ const SearchPage = () => {
             ))}
           </div>
         )}
+
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-4">
@@ -442,6 +492,7 @@ const SearchPage = () => {
               'repeating-linear-gradient(90deg, rgba(215, 65, 103, 0.2) 0px, rgba(215, 65, 103, 0.2) 6px, transparent 6px, transparent 12px)',
           }}
         ></div>
+
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-10">
@@ -454,6 +505,7 @@ const SearchPage = () => {
                   Questions? Call 1-123-456-7890
                 </p>
               </div>
+
               <div className="row row-cols-2 row-cols-md-4 g-4 mb-4">
                 {[
                   ['FAQ', 'Help Center', 'Account', 'Media Center'],
@@ -499,4 +551,5 @@ const SearchPage = () => {
     </div>
   );
 };
+
 export default SearchPage;
