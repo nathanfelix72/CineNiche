@@ -326,9 +326,9 @@ const HomePage = () => {
                 }}
               />
               
-              {/* Content */}
-              <div className="container h-100 d-flex align-items-center position-relative" style={{ zIndex: 2 }}>
-                <div className="col-md-6">
+             {/* Content */}
+              <div className="container h-100 d-flex align-items-start position-relative" style={{ zIndex: 2 }}>
+                <div className="col-md-6 text-start">
                   <span 
                     className="badge mb-2"
                     style={{
@@ -345,6 +345,7 @@ const HomePage = () => {
                     style={{
                       color: '#fff',
                       textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                      textAlign: 'left',
                     }}
                   >
                     {item.title}
@@ -359,6 +360,7 @@ const HomePage = () => {
                       color: '#f5e9d9',
                       textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
                       maxWidth: '90%',
+                      textAlign: 'left',
                     }}
                   >
                     {item.description}
