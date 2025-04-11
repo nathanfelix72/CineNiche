@@ -51,6 +51,15 @@ const HomePage = () => {
       year: "2004",
       description: "Teen Sam meets the boy of her dreams at a dance before returning to toil in her stepmother's diner. Can her lost cell phone bring them together?",
       backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/A%20Cinderella%20Story.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
+    },
+    {
+      id: 6243,
+      title: "Barbie: The Princess & The Popstar",
+      type: "MOVIE",
+      rating: "82% Match",
+      year: "2012",
+      description: "Barbie stars as a princess who would rather sing and dance than be a royal. When a famous pop star visits the kingdom they decide to switch places.",
+      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Barbie%20The%20Princess%20%20the%20Popstar.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
     }
   ];
 
