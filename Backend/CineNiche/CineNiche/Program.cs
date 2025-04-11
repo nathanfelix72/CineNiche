@@ -110,13 +110,11 @@ builder.Services.AddScoped<MovieRecommenderService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-else
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// You might want HSTS in production regardless of Swagger UI
+if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 }
