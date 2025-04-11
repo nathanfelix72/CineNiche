@@ -78,16 +78,26 @@ const SearchPage = () => {
   // State for genre filter
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
-    // Popular genres for the filter
-    const popularGenres = [
-      'Action',
-      'Comedy',
-      'Drama',
-      'Horror',
-      'Thriller',
-      'Family',
-      'Documentary'
-    ];
+  // Popular genres for the filter
+  const popularGenres = [
+    'Action',
+    'Comedy',
+    'Drama',
+    'Horror',
+    'Thriller',
+    'Family',
+    'Documentary',
+  ];
+
+  const genreKeyMap: { [label: string]: keyof MoviesTitle } = {
+    Action: 'action',
+    Comedy: 'comedies',
+    Drama: 'dramas',
+    Horror: 'horrorMovies',
+    Thriller: 'internationalMoviesThrillers',
+    Family: 'familyMovies',
+    Documentary: 'documentaries',
+  };
 
   // --- Debouncing ---
   useEffect(() => {
@@ -148,8 +158,14 @@ const SearchPage = () => {
     loadMovieData(pageSize, pageNum, debouncedQuery);
   }, [pageSize, pageNum, debouncedQuery, loadMovieData]); // Dependencies that trigger a refetch
 
-  // Determine which list is the source for image verification
   const sourceMovies = hasSearched ? searchResults : movies;
+
+  // Determine which list is the source for image verification
+  const genreKey = selectedGenre ? genreKeyMap[selectedGenre] : null;
+
+  const filteredByGenre = sourceMovies.filter((movie) =>
+    genreKey ? (movie[genreKey] as number) > 0 : true
+  );
 
   const sanitizeTitle = (title: string): string => {
     return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
@@ -164,7 +180,7 @@ const SearchPage = () => {
 
   // --- Image Verification Effect ---
   useEffect(() => {
-    if (isLoadingData || sourceMovies.length === 0) {
+    if (isLoadingData || filteredByGenre.length === 0) {
       setDisplayableMovies([]); // Clear displayable movies if no source or still loading data
       setIsVerifyingImages(false);
       return;
@@ -186,7 +202,7 @@ const SearchPage = () => {
     let isCancelled = false; // Flag to handle component unmount or dependency change during async operations
     setIsVerifyingImages(true); // Start verification
 
-    Promise.all(sourceMovies.map(checkImage))
+    Promise.all(filteredByGenre.map(checkImage))
       .then((results) => {
         if (!isCancelled) {
           const validMovies = results.filter(
@@ -213,7 +229,7 @@ const SearchPage = () => {
       isCancelled = true;
       setIsVerifyingImages(false);
     };
-  }, [sourceMovies, isLoadingData]);
+  }, [sourceMovies, isLoadingData, genreKey]);
 
   // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
