@@ -21,16 +21,10 @@ function WelcomePage() {
     navigate('/privacy-policy');
   };
 
-  const handleAdminClick = () => {
-    // Navigate to the Privacy Policy page
-    navigate('/adminmovies');
-  };
 
   const handleClick = (link: string) => {
     if (link === 'Privacy') {
       handlePrivacyClick();
-    } else if (link === 'Admin Login') {
-      handleAdminClick();
     }
   };
 
@@ -807,7 +801,7 @@ function WelcomePage() {
                       'Legal Notices',
                       'Terms of Use',
                     ],
-                    ['Privacy', 'Admin Login', 'Ad Choices', 'Contact Us'],
+                    ['Privacy', 'Ad Choices', 'Contact Us'],
                   ].map((group, idx) => (
                     <div className="col" key={idx}>
                       <ul className="list-unstyled small">
