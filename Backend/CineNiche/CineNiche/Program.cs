@@ -86,19 +86,7 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 0;
         // limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     });
-
-    // Define another policy if needed, e.g., for general API calls
-    // options.AddFixedWindowLimiter(policyName: "apiPolicy", limiterOptions => { ... });
-
-    // Set the default status code for rejected requests
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    // --- How clients are identified ---
-    // By default (without complex configuration), the limiter often uses
-    // IP address for unauthenticated requests. For authenticated requests,
-    // it might use claims if configured. Defining partitions (e.g., per user ID)
-    // is possible but more complex. Starting with IP-based limits for login/register
-    // is often sufficient.
 });
 
 // Add HttpClient for Python recommender microservice
@@ -110,11 +98,14 @@ builder.Services.AddScoped<MovieRecommenderService>();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
 
 // You might want HSTS in production regardless of Swagger UI
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
 {
     app.UseHsts();
 }
