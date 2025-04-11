@@ -39,7 +39,6 @@ const SearchPage = () => {
   const [pageNum, setPageNum] = useState<number>(1); // Current page number
   const [totalPages, setTotalPages] = useState<number>(0); // Total pages from API
   // for genre filter
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   // Ref for debouncing (optional, could also use searchQuery directly in cleanup)
   const searchQueryRef = useRef(searchQuery);
   searchQueryRef.current = searchQuery; // Keep ref updated
@@ -325,7 +324,7 @@ const SearchPage = () => {
           className="form-control mb-3"
           style={{ maxWidth: '300px', display: 'inline-block' }}
         />
-       
+
         {/* Conditional Messages */}
         {hasSearched &&
           sourceMovies.length === 0 &&
