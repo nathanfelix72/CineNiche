@@ -337,7 +337,7 @@ const HomePage = () => {
               
              {/* Content */}
               <div className="container h-100 d-flex align-items-center position-relative" style={{ zIndex: 2 }}>
-                <div className="col-md-6 text-start">
+                <div className="col-md-6 text-start px-5">
                   <span 
                     className="badge mb-2"
                     style={{
