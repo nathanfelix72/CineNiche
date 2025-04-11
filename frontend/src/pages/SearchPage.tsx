@@ -374,6 +374,7 @@ const SearchPage = () => {
           }}
         />
 
+
         {/* Conditional Messages */}
         {hasSearched &&
           sourceMovies.length === 0 &&
