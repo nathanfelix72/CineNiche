@@ -23,18 +23,19 @@ const AdminMoviesPage = () => {
   const [editingMovie, setEditingMovie] = useState<MoviesTitle | null>(null);
   const navigate = useNavigate();
 
-  // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
-    const resolvedSize =
-      typeof newSize === 'function' ? newSize(pageSize) : newSize;
+    const resolvedSize = typeof newSize === 'function' ? newSize(pageSize) : newSize;
     setPageSize(resolvedSize);
-    setPageNum(1); // Reset to first page when page size changes
+    setPageNum(1);
   };
 
-  // Initial movie load (no filter)
+  // 🔧 Load movies when not searching
   useEffect(() => {
+    if (hasSearched) return;
+
     const loadMovies = async () => {
       try {
+        setLoading(true);
         const data = await fetchMovies(pageSize, pageNum, []);
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
@@ -46,54 +47,57 @@ const AdminMoviesPage = () => {
     };
 
     loadMovies();
-  }, [pageSize, pageNum]);
+  }, [pageSize, pageNum, hasSearched]);
+
+  // 🔧 Load search results on pagination change
+  useEffect(() => {
+    const fetchSearchedMovies = async () => {
+      if (!hasSearched || !searchQuery.trim()) return;
+
+      try {
+        setLoading(true);
+        const data = await fetchMovies(pageSize, pageNum, [], searchQuery);
+        setSearchResults(data.movies);
+        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSearchedMovies();
+  }, [pageSize, pageNum, hasSearched, searchQuery]);
 
   const handleDelete = async (showId: number) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this movie?'
-    );
+    const confirmDelete = window.confirm('Are you sure you want to delete this movie?');
     if (!confirmDelete) return;
 
     try {
       await deleteMovie(showId);
       setMovies(movies.filter((m) => Number(m.showId) !== showId));
+      setSearchResults(searchResults.filter((m) => Number(m.showId) !== showId));
     } catch {
       alert('Failed to delete movie. Please try again.');
     }
   };
 
-  // Handle search logic
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       // Clear search
       setSearchResults([]);
       setHasSearched(false);
       setPageNum(1);
-      try {
-        const data = await fetchMovies(pageSize, 1, [], '');
-        setMovies(data.movies);
-        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
-      } catch (err) {
-        console.error('Error fetching all movies:', err);
-        alert('Failed to load all movies.');
-      }
     } else {
-      // Do the actual search
-      try {
-        const data = await fetchMovies(pageSize, 1, [], searchQuery);
-        setSearchResults(data.movies);
-        setHasSearched(true);
-        setPageNum(1);
-        setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
-      } catch (err) {
-        console.error('Search error:', err);
-        alert('Something went wrong while searching.');
-      }
+      setHasSearched(true);
+      setPageNum(1);
     }
   };
 
   if (loading) return <p>Loading movies...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
+
+  const moviesToDisplay = hasSearched ? searchResults : movies;
 
   return (
     <AuthorizeView>
@@ -105,40 +109,36 @@ const AdminMoviesPage = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage:
-              'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
+            backgroundImage: 'radial-gradient(circle at 20% 70%, #d13e4a 0%, #f5e9d9 70%)',
             overflowY: 'auto',
             zIndex: 9999,
-            paddingTop: '50px', // Adds space at the top
-            paddingBottom: '50px', // Adds space at the bottom
+            paddingTop: '50px',
+            paddingBottom: '50px',
           }}
         >
-          {/* Buttons for navigation */}
-          <div style={{ marginBottom: '1rem' }}>
-            <button
-              className="submit-btn mb-3"
-              onClick={() => navigate('/login')}
-              style={{ marginRight: '2rem' }}
-            >
-              <Logout>
-                Logout <AuthorizedUser value="email" />
-              </Logout>
-            </button>
-            <button
-              className="submit-btn mb-3"
-              onClick={() => navigate('/homepage')}
-            >
-              Homepage
-            </button>
-          </div>
+        <div style={{ marginBottom: '1rem' }}>
+        <button
+          className="submit-btn mb-3"
+          onClick={() => navigate('/login')}
+          style={{ marginRight: '2rem', color: 'white', fontWeight: 'bold', textDecoration: 'none' }}
+        >
+          <Logout>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontWeight: 'bold' }}>Logout</span>
+              <span style={{ fontWeight: 'bold' }}>
+                <AuthorizedUser value="email" />
+              </span>
+            </div>
+          </Logout>
+        </button>
+
+        <button className="submit-btn mb-3" onClick={() => navigate('/homepage')}>
+          Homepage
+        </button>
+      </div>
           <div
             className="movie-form"
-            style={{
-              maxWidth: '1200px', // Increase the max width of the container for a wider form
-              margin: '0 auto', // Center horizontally
-              padding: '20px',
-              textAlign: 'center', // Center text
-            }}
+            style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', textAlign: 'center' }}
           >
             <h1
               style={{
@@ -151,10 +151,7 @@ const AdminMoviesPage = () => {
             </h1>
 
             {!showForm && (
-              <button
-                className="submit-btn mb-3"
-                onClick={() => setShowForm(true)}
-              >
+              <button className="submit-btn mb-3" onClick={() => setShowForm(true)}>
                 Add Movie
               </button>
             )}
@@ -163,9 +160,7 @@ const AdminMoviesPage = () => {
               <NewMovieForm
                 onSuccess={() => {
                   setShowForm(false);
-                  fetchMovies(pageSize, pageNum, []).then((data) =>
-                    setMovies(data.movies)
-                  );
+                  fetchMovies(pageSize, pageNum, []).then((data) => setMovies(data.movies));
                 }}
                 onCancel={() => setShowForm(false)}
               />
@@ -176,9 +171,7 @@ const AdminMoviesPage = () => {
                 moviesTitle={editingMovie}
                 onSuccess={() => {
                   setEditingMovie(null);
-                  fetchMovies(pageSize, pageNum, []).then((data) =>
-                    setMovies(data.movies)
-                  );
+                  fetchMovies(pageSize, pageNum, []).then((data) => setMovies(data.movies));
                 }}
                 onCancel={() => setEditingMovie(null)}
               />
@@ -186,7 +179,7 @@ const AdminMoviesPage = () => {
 
             <form
               onSubmit={(e) => {
-                e.preventDefault(); // prevent page refresh
+                e.preventDefault();
                 handleSearch();
               }}
               style={{ marginBottom: '1rem' }}
@@ -195,22 +188,10 @@ const AdminMoviesPage = () => {
                 type="text"
                 placeholder="Search by movie title..."
                 value={searchQuery}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSearchQuery(value);
-                  if (value.trim() === '') {
-                    setHasSearched(false);
-                    setSearchResults([]);
-                  }
-                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="form-control"
-                style={{
-                  maxWidth: '300px',
-                  display: 'inline-block',
-                  marginRight: '0.5rem',
-                }}
+                style={{ maxWidth: '300px', display: 'inline-block', marginRight: '0.5rem' }}
               />
-
               <button type="submit" className="submit-btn">
                 Search
               </button>
@@ -228,8 +209,7 @@ const AdminMoviesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* Display either the search results or full list of movies */}
-                {(hasSearched ? searchResults : movies).map((m) => (
+                {moviesToDisplay.map((m) => (
                   <tr key={m.showId}>
                     <td>{m.showId}</td>
                     <td>{m.type}</td>
@@ -237,10 +217,7 @@ const AdminMoviesPage = () => {
                     <td>{m.rating}</td>
                     <td>{m.avgStarRating?.toFixed(1) ?? '—'}</td>
                     <td>
-                      <button
-                        className="submit-btn btn-sm w-20 mb-1"
-                        onClick={() => setEditingMovie(m)}
-                      >
+                      <button className="submit-btn btn-sm w-20 mb-1" onClick={() => setEditingMovie(m)}>
                         Edit
                       </button>
                       <br />
@@ -263,7 +240,6 @@ const AdminMoviesPage = () => {
               </tbody>
             </table>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-4">
                 <Pagination
