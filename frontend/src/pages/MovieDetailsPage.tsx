@@ -515,28 +515,32 @@ const MovieDetailsPage = () => {
                           >
                             <Link
                               to={`/movie/${related.id}`}
-                              className="text-decoration-none text-dark"
-                            >
-                              <div className="card h-100">
-                                <img
-                                  src={getMovieImage(related.title)}
-                                  alt={related.title}
-                                  className="card-img-top"
-                                  onError={(e) => {
-                                    e.currentTarget.src =
-                                      '/fallback-poster.jpg';
-                                  }}
+                              style={{textDecoration: 'none'}}
+                            >                              
+                            <img
+                                src={getMovieImage(related.title!)}
+                                className="img-fluid"
+                                alt={related.title}
+                                style={{
+                                  width: '200px',
+                                  height: '300px',
+                                  objectFit: 'cover',
+                                  border: '2px solid #fff',
+                                  borderRadius: '4px',
+                                  display: 'block',
+                                  margin: '0 auto 10px auto',
+                                }}
+                                loading="lazy"
+                              />
+                               <div
+                                  className="text-black"
                                   style={{
-                                    height: '280px',
-                                    objectFit: 'cover',
+                                    textAlign: 'center',
+                                    fontWeight: '500',
                                   }}
-                                />
-                                <div className="card-body">
-                                  <h6 className="card-title text-center">
-                                    {related.title}
-                                  </h6>
+                                >
+                                  {related.title}
                                 </div>
-                              </div>
                             </Link>
                           </div>
                         ))}
