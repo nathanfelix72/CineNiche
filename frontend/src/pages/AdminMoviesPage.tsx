@@ -5,7 +5,7 @@ import NewMovieForm from '../components/NewMovieForm.tsx';
 import EditMovieForm from '../components/EditMovieForm.tsx';
 import Pagination from '../components/Pagination.tsx';
 import { useNavigate } from 'react-router-dom';
-import AuthorizeView from '../components/AuthorizeView.tsx';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView.tsx';
 import RequireRole from '../components/RequireRole.tsx';
 import Logout from '../components/Logout.tsx';
 
@@ -117,13 +117,14 @@ const AdminMoviesPage = () => {
           }}
         >
           <div style={{ marginBottom: '1rem' }}>
-          <Logout>
-            <span
-              className="submit-btn mb-3"
-            >
-              Logout
-            </span>
-          </Logout>
+          <button
+            onClick={() => navigate('/login')}
+            style={{ color: '#d13e4a' }}
+          >
+            <Logout>
+              Logout <AuthorizedUser value="email" />
+            </Logout>
+          </button>
             <button className="submit-btn mb-3" onClick={() => navigate('/homepage')}>
               Homepage
             </button>
