@@ -23,6 +23,14 @@ const AdminMoviesPage = () => {
   const [editingMovie, setEditingMovie] = useState<MoviesTitle | null>(null);
   const navigate = useNavigate();
 
+  // --- Render Logic ---
+  const handlePageSizeChange = (newSize: SetStateAction<number>) => {
+    const resolvedSize =
+      typeof newSize === 'function' ? newSize(pageSize) : newSize;
+    setPageSize(resolvedSize);
+    setPageNum(1); // Reset to first page when page size changes
+  };
+
   // Initial movie load (no filter)
   useEffect(() => {
     const loadMovies = async () => {
@@ -255,16 +263,18 @@ const AdminMoviesPage = () => {
               </tbody>
             </table>
 
-            <Pagination
-              currentPage={pageNum}
-              totalPages={totalPages}
-              pageSize={pageSize}
-              onPageChange={setPageNum}
-              onPageSizeChange={(newSize: SetStateAction<number>) => {
-                setPageSize(newSize);
-                setPageNum(1);
-              }}
-            />
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-4">
+                <Pagination
+                  currentPage={pageNum}
+                  totalPages={totalPages}
+                  pageSize={pageSize}
+                  onPageChange={setPageNum}
+                  onPageSizeChange={handlePageSizeChange}
+                />
+              </div>
+            )}
           </div>
         </div>
       </RequireRole>
