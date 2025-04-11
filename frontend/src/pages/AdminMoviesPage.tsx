@@ -119,16 +119,11 @@ const AdminMoviesPage = () => {
           <div style={{ marginBottom: '1rem' }}>
           <button
             className="submit-btn mb-3"
-            onClick={() => navigate('/login')}
-            style={{
-              marginRight: '2rem',
-              color: 'white',
-              fontWeight: 'bold',
-              textDecoration: 'none',
-            }}
-          >
+            onClick={() => navigate('/login')}>
             <Logout>
-              Logout
+              <span style={{ color: 'white', fontWeight: 'bold', textDecoration: 'none' }}>
+                Logout
+              </span>
             </Logout>
           </button>
             <button className="submit-btn mb-3" onClick={() => navigate('/homepage')}>
