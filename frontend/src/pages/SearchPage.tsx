@@ -3,7 +3,6 @@ import {
   useEffect,
   useState,
   useRef,
-  useCallback,
 } from 'react';
 import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
@@ -99,6 +98,8 @@ const SearchPage = () => {
     Documentary: 'documentaries',
   };
 
+  const [allFetchedMovies, setAllFetchedMovies] = useState<MoviesTitle[]>([]);
+
   // --- Debouncing ---
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -111,62 +112,58 @@ const SearchPage = () => {
   }, [searchQuery]); // Only re-run effect when searchQuery changes
 
   // --- Data Fetching ---
-  const loadMovieData = useCallback(
-    async (pSize: number, pNum: number, baseQuery: string) => {
-      const combinedQuery =
-        selectedGenre && baseQuery
-          ? `${selectedGenre} ${baseQuery}`
-          : selectedGenre || baseQuery || '';
-  
-      console.log(`Loading: page=${pNum}, size=${pSize}, query='${combinedQuery}'`);
-  
+  useEffect(() => {
+    const fetchData = async () => {
       setIsLoadingData(true);
-      setIsVerifyingImages(false);
-      setDisplayableMovies([]);
       setError(null);
-  
-      const isSearching = combinedQuery.trim().length > 0;
-      setHasSearched(isSearching);
-  
+      setHasSearched(!!debouncedQuery || !!selectedGenre);
+
       try {
-        const data = await fetchMovies(pSize, pNum, [], combinedQuery);
-        if (isSearching) {
-          setMovies([]);
-          setSearchResults(data.movies);
+        // If filtering by genre with no search query, fetch *all* movies once
+        if (selectedGenre && !debouncedQuery) {
+          const data = await fetchMovies(10000, 1, [], ''); // fetch *all* movies
+          const genreKey = genreKeyMap[selectedGenre];
+          const filtered = data.movies.filter((movie) => movie[genreKey]);
+        
+          setAllFetchedMovies(filtered);
+          setTotalPages(Math.ceil(filtered.length / pageSize));
+          setMovies([]); // clear paginated results
         } else {
-          setSearchResults([]);
-          setMovies(data.movies);
+          const data = await fetchMovies(pageSize, pageNum, [], debouncedQuery);
+          setSearchResults(debouncedQuery ? data.movies : []);
+          setMovies(debouncedQuery ? [] : data.movies);
+          setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
+          setAllFetchedMovies([]); // clear full dataset
         }
-        setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
         setError((err as Error).message || 'Failed to load movie data.');
-        setMovies([]);
-        setSearchResults([]);
-        setTotalPages(0);
       } finally {
         setIsLoadingData(false);
       }
-    },
-    [selectedGenre]
-  ); // No dependencies, relies on arguments
+    };
+
+    fetchData();
+  }, [selectedGenre, debouncedQuery, pageSize, pageNum]); // No dependencies, relies on arguments
 
   // Effect to trigger data fetch on page, size, or debounced query change
-  useEffect(() => {
-    loadMovieData(pageSize, pageNum, debouncedQuery);
-  }, [pageSize, pageNum, debouncedQuery, loadMovieData]); // Dependencies that trigger a refetch
-
+  
   useEffect(() => {
     setPageNum(1); // Always go back to page 1 when changing genre
   }, [selectedGenre]);
 
-  const sourceMovies = hasSearched ? searchResults : movies;
+  const sourceMovies =
+    selectedGenre && !debouncedQuery
+      ? allFetchedMovies
+      : hasSearched
+        ? searchResults
+        : movies;
 
   // Determine which list is the source for image verification
-  const genreKey = selectedGenre ? genreKeyMap[selectedGenre] : null;
 
-  const filteredByGenre = sourceMovies.filter((movie) =>
-    genreKey ? (movie[genreKey] as number) > 0 : true
-  );
+
+  const paginatedMovies = allFetchedMovies.length
+  ? allFetchedMovies.slice((pageNum - 1) * pageSize, pageNum * pageSize)
+  : sourceMovies.slice((pageNum - 1) * pageSize, pageNum * pageSize);
 
   const sanitizeTitle = (title: string): string => {
     return title.replace(/[^a-zA-Z0-9 ]/g, '').trim(); // Remove special chars and trim
@@ -181,56 +178,56 @@ const SearchPage = () => {
 
   // --- Image Verification Effect ---
   useEffect(() => {
-    if (isLoadingData || filteredByGenre.length === 0) {
-      setDisplayableMovies([]); // Clear displayable movies if no source or still loading data
+    if (isLoadingData || paginatedMovies.length === 0) {
+      setDisplayableMovies([]);
       setIsVerifyingImages(false);
       return;
     }
-
+  
     const checkImage = (movie: MoviesTitle): Promise<MoviesTitle | null> => {
       return new Promise((resolve) => {
         if (!movie.title) {
-          resolve(null); // Skip if no title
+          resolve(null);
           return;
         }
         const img = new Image();
-        img.onload = () => resolve(movie); // Image exists
-        img.onerror = () => resolve(null); // Image failed to load
+        img.onload = () => resolve(movie);
+        img.onerror = () => resolve(null);
         img.src = getMovieImage(movie.title);
       });
     };
-
-    let isCancelled = false; // Flag to handle component unmount or dependency change during async operations
-    setIsVerifyingImages(true); // Start verification
-
-    Promise.all(filteredByGenre.map(checkImage))
+  
+    let isCancelled = false;
+    setIsVerifyingImages(true);
+  
+    Promise.all(paginatedMovies.map(checkImage))
       .then((results) => {
         if (!isCancelled) {
           const validMovies = results.filter(
             (movie) => movie !== null
           ) as MoviesTitle[];
           setDisplayableMovies(validMovies);
-          console.log('Displayable movies after verification:', validMovies);
         }
       })
-      .catch((err) => {
+      .catch((_err) => {
         if (!isCancelled) {
-          console.error('Error during image verification:', err);
           setError('Failed to verify some movie posters.');
-          setDisplayableMovies([]); // Clear display on verification error
+          setDisplayableMovies([]);
         }
       })
       .finally(() => {
         if (!isCancelled) {
-          setIsVerifyingImages(false); // Finish verification
+          setIsVerifyingImages(false);
         }
       });
-
+  
     return () => {
       isCancelled = true;
       setIsVerifyingImages(false);
     };
-  }, [sourceMovies, isLoadingData, genreKey]);
+  }, [paginatedMovies, isLoadingData]);
+
+    
 
   // --- Render Logic ---
   const handlePageSizeChange = (newSize: SetStateAction<number>) => {
