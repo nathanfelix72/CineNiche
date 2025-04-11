@@ -179,13 +179,6 @@ function LoginPage() {
                 </div>
                 <hr className="my-4" />
                 <div className="d-grid mb-2">
-                  <button
-                    className="btn btn-google btn-login text-uppercase fw-bold text-white"
-                    type="button"
-                  >
-                    <i className="fa-brands fa-google me-2"></i> Sign in with
-                    Google
-                  </button>
                 </div>
               </form>
               {error && <p className="error">{error}</p>}
