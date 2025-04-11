@@ -14,9 +14,7 @@ const HomePage = () => {
   const [recs, setRecs] = useState<{
     [key: string]: { id: number; title: string }[];
   }>({});
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -28,31 +26,40 @@ const HomePage = () => {
   // Featured movies and shows data
   const featuredContent = [
     {
-      id: 1,
-      title: "The Last Voyage",
+      id: 38,
+      title: "The Angry Birds Movie",
       type: "MOVIE",
       rating: "99% Match",
-      year: "2025",
-      description: "An epic sci-fi adventure where astronauts face the unknown in deep space. When their mission goes awry, survival becomes their only hope.",
-      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Featured/featured1.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
+      year: "2018",
+      description: "Birds Red Chuck and their feathered friends have lots of adventures while guarding eggs in their nest that pesky pigs keep trying to steal.",
+      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Angry%20Birds.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
     },
     {
-      id: 2,
-      title: "Echoes of Time",
-      type: "SERIES",
+      id: 42,
+      title: "Jaws",
+      type: "MOVIE",
       rating: "95% Match",
-      year: "2025",
-      description: "A mind-bending thriller that follows a detective who discovers she can communicate with victims from the past. Each echo reveals a deeper mystery.",
-      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Featured/featured2.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
+      year: "1975",
+      description: " When an insatiable great white shark terrorizes Amity Island a police chief an oceanographer and a grizzled shark hunter seek to destroy the beast.",
+      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Jaws.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
     },
     {
-      id: 3,
-      title: "Forgotten Kingdom",
-      type: "ORIGINAL",
+      id: 128,
+      title: "A Cinderella Story",
+      type: "MOVIE",
       rating: "92% Match",
-      year: "2025",
-      description: "In a hidden realm between worlds, ancient powers awaken. A CineNiche Original fantasy epic that critics are calling 'breathtaking'.",
-      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Featured/featured3.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
+      year: "2004",
+      description: "Teen Sam meets the boy of her dreams at a dance before returning to toil in her stepmother's diner. Can her lost cell phone bring them together?",
+      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/A%20Cinderella%20Story.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
+    },
+    {
+      id: 6243,
+      title: "Barbie: The Princess & The Popstar",
+      type: "MOVIE",
+      rating: "82% Match",
+      year: "2012",
+      description: "Barbie stars as a princess who would rather sing and dance than be a royal. When a famous pop star visits the kingdom they decide to switch places.",
+      backgroundImage: "https://intextmovieposter.blob.core.windows.net/intextmovieposters/Movie%20Posters/Barbie%20The%20Princess%20%20the%20Popstar.jpg?sp=r&st=2025-04-08T23:11:33Z&se=2025-04-30T07:11:33Z&spr=https&sv=2024-11-04&sr=c&sig=wXjBom%2BbH%2B0mdM%2FfkTY1l4mbOxjB3ELq6Y8BBoOItNI%3D"
     }
   ];
 
@@ -132,9 +139,7 @@ const HomePage = () => {
           }
         );
         const data = await res.json();
-        setUserEmail(data.email);
         setUserId(data.userId);
-        setUserName(data.name);
       } catch (error) {
         console.error('Error fetching current user info:', error);
       }
@@ -330,9 +335,9 @@ const HomePage = () => {
                 }}
               />
               
-              {/* Content */}
+             {/* Content */}
               <div className="container h-100 d-flex align-items-center position-relative" style={{ zIndex: 2 }}>
-                <div className="col-md-6">
+                <div className="col-md-6 text-start px-5">
                   <span 
                     className="badge mb-2"
                     style={{
@@ -349,6 +354,7 @@ const HomePage = () => {
                     style={{
                       color: '#fff',
                       textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                      textAlign: 'left',
                     }}
                   >
                     {item.title}
@@ -363,6 +369,7 @@ const HomePage = () => {
                       color: '#f5e9d9',
                       textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
                       maxWidth: '90%',
+                      textAlign: 'left',
                     }}
                   >
                     {item.description}
@@ -392,6 +399,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
+
             </div>
           ))}
           
@@ -462,9 +470,6 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-
-        <h1>Welcome {userName ? userName : userEmail}!</h1>
-
         {Object.entries(recs).map(([section, movies]) => (
           <div key={section} className={styles.carouselSection}>
             <h2>{section}</h2>
