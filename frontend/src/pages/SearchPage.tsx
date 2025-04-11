@@ -112,51 +112,52 @@ const SearchPage = () => {
 
   // --- Data Fetching ---
   const loadMovieData = useCallback(
-    async (pSize: number, pNum: number, query?: string) => {
-      console.log(
-        `Workspaceing: page=${pNum}, size=${pSize}, query='${query || ''}'`
-      );
+    async (pSize: number, pNum: number, baseQuery: string) => {
+      const combinedQuery =
+        selectedGenre && baseQuery
+          ? `${selectedGenre} ${baseQuery}`
+          : selectedGenre || baseQuery || '';
+  
+      console.log(`Loading: page=${pNum}, size=${pSize}, query='${combinedQuery}'`);
+  
       setIsLoadingData(true);
-      setIsVerifyingImages(false); // Reset verification state on new fetch
-      setDisplayableMovies([]); // Clear previous displayable movies
+      setIsVerifyingImages(false);
+      setDisplayableMovies([]);
       setError(null);
-
-      const isSearching = (query?.trim() || '').length > 0;
+  
+      const isSearching = combinedQuery.trim().length > 0;
       setHasSearched(isSearching);
-
+  
       try {
-        // Always use the provided pSize and pNum for the API call
-        const data = await fetchMovies(pSize, pNum, [], query);
-
+        const data = await fetchMovies(pSize, pNum, [], combinedQuery);
         if (isSearching) {
-          setMovies([]); // Clear browse movies when searching
+          setMovies([]);
           setSearchResults(data.movies);
-          console.log('Search results:', data.movies);
         } else {
-          setSearchResults([]); // Clear search results when Browse
+          setSearchResults([]);
           setMovies(data.movies);
-          console.log('Browse results:', data.movies);
         }
-
-        // Calculate total pages based on the API response and current pageSize
         setTotalPages(Math.ceil(data.totalNumMovies / pSize));
       } catch (err) {
-        console.error('Error fetching movie data:', err);
         setError((err as Error).message || 'Failed to load movie data.');
-        setMovies([]); // Clear data on error
+        setMovies([]);
         setSearchResults([]);
         setTotalPages(0);
       } finally {
-        setIsLoadingData(false); // Mark data loading as complete
+        setIsLoadingData(false);
       }
     },
-    []
+    [selectedGenre]
   ); // No dependencies, relies on arguments
 
   // Effect to trigger data fetch on page, size, or debounced query change
   useEffect(() => {
     loadMovieData(pageSize, pageNum, debouncedQuery);
   }, [pageSize, pageNum, debouncedQuery, loadMovieData]); // Dependencies that trigger a refetch
+
+  useEffect(() => {
+    setPageNum(1); // Always go back to page 1 when changing genre
+  }, [selectedGenre]);
 
   const sourceMovies = hasSearched ? searchResults : movies;
 
