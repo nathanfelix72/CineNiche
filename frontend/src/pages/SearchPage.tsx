@@ -444,6 +444,7 @@ const SearchPage = () => {
                         border: '2px solid #fff',
                         borderRadius: '4px',
                         display: 'block',
+                        margin: '0 auto 10px auto',
                       }}
                     loading="lazy"
                   />
