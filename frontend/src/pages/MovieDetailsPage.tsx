@@ -518,9 +518,9 @@ const MovieDetailsPage = () => {
                               style={{textDecoration: 'none'}}
                             >                              
                             <img
-                                src={getMovieImage(movie.title!)}
+                                src={getMovieImage(related.title!)}
                                 className="img-fluid"
-                                alt={movie.title}
+                                alt={related.title}
                                 style={{
                                   width: '200px',
                                   height: '300px',
