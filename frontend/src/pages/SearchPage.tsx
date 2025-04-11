@@ -9,6 +9,7 @@ import { MoviesTitle } from '../types/MoviesTitle'; // Adjust path if needed
 import { fetchMovies } from '../api/MoviesAPI'; // Adjust path if needed
 import Pagination from '../components/Pagination'; // Adjust path if needed
 import { Link } from 'react-router-dom';
+import GenreFilter from '../components/GenreFilter';
 import {
   FaHome,
   FaSearch,
@@ -73,6 +74,20 @@ const SearchPage = () => {
       handleAdminClick();
     }
   };
+
+  // State for genre filter
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+    // Popular genres for the filter
+    const popularGenres = [
+      'Action',
+      'Comedy',
+      'Drama',
+      'Horror',
+      'Thriller',
+      'Family',
+      'Documentary'
+    ];
 
   // --- Debouncing ---
   useEffect(() => {
@@ -374,7 +389,6 @@ const SearchPage = () => {
           }}
         />
 
-
         {/* Conditional Messages */}
         {hasSearched &&
           sourceMovies.length === 0 &&
@@ -406,6 +420,14 @@ const SearchPage = () => {
           movies.length === 0 &&
           !isLoadingData &&
           !isVerifyingImages && <p>No movies found.</p>}
+
+        <div className="filter-container">
+          <GenreFilter
+            genres={popularGenres}
+            selectedGenre={selectedGenre}
+            onGenreSelect={setSelectedGenre}
+          />
+        </div>
 
         {/* Movie Grid - Render directly from displayableMovies */}
         {displayableMovies.length > 0 && (
@@ -439,14 +461,14 @@ const SearchPage = () => {
                     className="img-fluid"
                     alt={movie.title}
                     style={{
-                        width: '200px',              // Set fixed width
-                        height: '300px',             // Set fixed height
-                        objectFit: 'cover',          // Crop image to fill box without distortion
-                        border: '2px solid #fff',
-                        borderRadius: '4px',
-                        display: 'block',
-                        margin: '0 auto 10px auto',
-                      }}
+                      width: '200px', // Set fixed width
+                      height: '300px', // Set fixed height
+                      objectFit: 'cover', // Crop image to fill box without distortion
+                      border: '2px solid #fff',
+                      borderRadius: '4px',
+                      display: 'block',
+                      margin: '0 auto 10px auto',
+                    }}
                     loading="lazy"
                   />
                   <h5 style={{ minHeight: '3em' }}>{movie.title}</h5>
